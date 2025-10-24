@@ -1,4 +1,4 @@
-import { SessionData } from "../session-types";
+type SessionData = any;
 
 export abstract class MockAction {
 	/**

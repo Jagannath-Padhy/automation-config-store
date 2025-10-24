@@ -1,20 +1,17 @@
-import { readFileSync } from "fs";
-import path from "path";
-import yaml from "js-yaml";
-import { SessionData as MockSessionData } from "./TRV14/session-types";
-import { createMockResponse } from "./TRV14/version-factory";
-import { getMockAction, listMockActions } from "./TRV14/action-factory";
+import MockRunner, {
+	MockPlaygroundConfigType,
+} from "@ondc/automation-mock-runner";
+import { MockAction, MockOutput, saveType } from "./mock-action";
 import logger from "@ondc/automation-logger";
-export { MockSessionData };
+import { RedisService } from "ondc-automation-cache-lib";
+import { randomUUID } from "crypto";
+export type MockSessionData = any;
 
-export const actionConfig = yaml.load(
-	readFileSync(path.join(__dirname, "./TRV14/factory.yaml"), "utf8")
-) as any;
+export const actionConfig: any = {
+	codes: [],
+};
 
-export const defaultSessionData = () =>
-	yaml.load(
-		readFileSync(path.join(__dirname, "./TRV14/session-data.yaml"), "utf8")
-	) as { session_data: MockSessionData };
+export const defaultSessionData = () => ({ session_data: {} });
 
 export async function generateMockResponse(
 	session_id: string,
@@ -22,51 +19,136 @@ export async function generateMockResponse(
 	action_id: string,
 	input?: any
 ) {
-	try {
-		const response = await createMockResponse(
-			session_id,
-			sessionData,
-			action_id,
-			input
+	sessionData.transaction_id = sessionData.transaction_id || randomUUID();
+	const mockAction = await getMockActionObject(action_id, session_id);
+	sessionData.user_input = input || {};
+	const res = await mockAction.generator({}, sessionData);
+	return res;
+}
+
+export async function getMockActionObject(
+	actionId: string,
+	sessionId?: string
+): Promise<MockAction> {
+	if (!sessionId) {
+		throw new Error("Session not provided for getting mock action object");
+	}
+	const playgroundConfig = await loadPlaygroundConfig(sessionId);
+	let apiServiceUrl =
+		process.env.API_SERVICE_URL ||
+		"https://dev-automation.ondc.org/api-service";
+	if (apiServiceUrl.endsWith("/")) {
+		apiServiceUrl = apiServiceUrl.slice(0, -1);
+	}
+	const ownerId = apiServiceUrl.split("//")[1].split("/")[0];
+	playgroundConfig.transaction_data.bap_id =
+		playgroundConfig.transaction_data.bpp_id = ownerId;
+	playgroundConfig.transaction_data.bap_uri = `${apiServiceUrl}/${playgroundConfig.meta.domain}/${playgroundConfig.meta.version}/buyer`;
+	playgroundConfig.transaction_data.bpp_uri = `${apiServiceUrl}/${playgroundConfig.meta.domain}/${playgroundConfig.meta.version}/seller`;
+	return new ConfigAction(playgroundConfig, actionId);
+}
+
+export function getUiMetaKeys() {
+	return [];
+}
+
+async function loadPlaygroundConfig(
+	sessionId: string
+): Promise<MockPlaygroundConfigType> {
+	const data = await RedisService.getKey(`PLAYGROUND_${sessionId}`);
+	if (!data) {
+		throw new Error(`No playground config found for session ID: ${sessionId}`);
+	}
+	return JSON.parse(data) as MockPlaygroundConfigType;
+}
+
+class ConfigAction implements MockAction {
+	playgroundConfig: MockPlaygroundConfigType;
+	actionId: string;
+	step: MockPlaygroundConfigType["steps"][0];
+	runner: MockRunner;
+	constructor(playgroundConfig: MockPlaygroundConfigType, actionId: string) {
+		this.runner = new MockRunner(playgroundConfig);
+		this.playgroundConfig = playgroundConfig;
+		if (
+			playgroundConfig.steps.findIndex(
+				(step) => step.action_id === actionId
+			) === -1
+		) {
+			throw new Error(`Action ID ${actionId} not found in playground config`);
+		}
+		this.actionId = actionId;
+		this.step = playgroundConfig.steps.find(
+			(step) => step.action_id === actionId
+		)!;
+	}
+	name(): string {
+		return this.actionId;
+	}
+	get description(): string {
+		return this.step.description;
+	}
+	async generator(_: any, sessionData: MockSessionData): Promise<any> {
+		const res = await this.runner.runGeneratePayloadWithSession(
+			this.actionId,
+			sessionData
 		);
-		response.context.timestamp = new Date().toISOString();
-		return response;
-	} catch (e) {
-		logger.error("Error in generating mock response", e);
-		throw e;
+		if (res.error) {
+			logger.error("Error in generating payload", { res });
+		}
+		return res.result;
 	}
-}
-
-export function getMockActionObject(actionId: string) {
-	return getMockAction(actionId);
-}
-
-export function getAllMockActionIds() {
-	return listMockActions();
-}
-
-export function getActionData(code: number) {
-	const actionData = actionConfig.codes.find(
-		(action: any) => action.code === code
-	);
-	if (actionData) {
-		return actionData;
+	async validate(
+		targetPayload: any,
+		sessionData?: MockSessionData
+	): Promise<MockOutput> {
+		const res = await this.runner.runValidatePayloadWithSession(
+			this.actionId,
+			targetPayload,
+			sessionData
+		);
+		if (res.error) {
+			logger.error("Error in validating payload", { res });
+		}
+		return res.result ?? { success: false, message: "Validation failed" };
 	}
-	throw new Error(`Action code ${code} not found`);
-}
-
-export function getSaveDataContent(version: string, action: string) {
-	let actionFolderPath = path.resolve(
-		__dirname,
-		`./TRV14/${version}/${action}`
-	);
-	const saveDataFilePath = path.join(actionFolderPath, "save-data.yaml");
-	const fileContent = readFileSync(saveDataFilePath, "utf8");
-	const cont = yaml.load(fileContent) as any;
-	console.log(cont);
-	return cont;
-}
-
-export function getUiMetaKeys(): (keyof MockSessionData)[] {
-	return ["first_form_testing"];
+	async meetRequirements(sessionData: MockSessionData): Promise<MockOutput> {
+		const res = await this.runner.runGeneratePayloadWithSession(
+			this.actionId,
+			sessionData
+		);
+		if (res.error) {
+			logger.error("Error in checking requirements", { res });
+		}
+		return res.result ?? { success: false, message: "Requirements not met" };
+	}
+	get saveData(): saveType {
+		const base = {
+			"save-data": this.step.mock.saveData || {},
+		};
+		base["save-data"].latestMessage_id = "$.context.message_id";
+		base["save-data"].latestTimestamp = "$.context.timestamp";
+		return base;
+	}
+	__forceSaveData(sessionData: MockSessionData): Promise<Record<string, any>> {
+		throw new Error("Method not implemented.");
+	}
+	get defaultData(): any {
+		return (
+			this.step.mock.defaultPayload.message ??
+			this.step.mock.defaultPayload.error ??
+			{}
+		);
+	}
+	get inputs(): any {
+		return this.step.mock.inputs;
+	}
+	public get mockActionConfig(): {
+		name: string;
+		description: string;
+		inputs: any;
+		saveData: saveType;
+	} {
+		throw new Error("Method not implemented.");
+	}
 }
