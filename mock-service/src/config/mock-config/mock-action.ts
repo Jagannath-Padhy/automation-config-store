@@ -1,4 +1,3 @@
-
 type SessionData = any;
 
 export abstract class MockAction {
