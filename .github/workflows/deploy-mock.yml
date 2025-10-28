@@ -2,13 +2,12 @@ name: Deploy Mock Service
 
 on:
   workflow_dispatch:
-  # push:
-  #   paths:
-  #     - "api-service/**"
-  #     - "mock-service/**"
-  #   branches:
-  #     - "draft-*"
-  #     - "release-*"
+  push:
+    paths:
+      - "mock-service/**"
+    # branches:
+    #   - "draft-*"
+    #   - "release-*"
 
       
 
