@@ -10,7 +10,9 @@ export async function onSelectGenerator(
   existingPayload.message.order.provider = sessionData.provider;
   existingPayload.message.order.fulfillments = transformFulfillments(
     sessionData.on_select_fulfillments?.[0],
-    sessionData?.on_select_fulfillments_tags
+    sessionData?.on_select_fulfillments_tags,
+    sessionData?.select_2_fulfillments,
+
   );
   existingPayload.message.order.quote = calculateQuote(sessionData);
 
@@ -93,16 +95,40 @@ function calculateQuote(sessionData: SessionData) {
     ttl: "PT10M",
   };
 }
+function transformFulfillments(
+  fulfillments: any[],
+  ticketTags: any[],
+  select_fulfillments: any[]
+) {
+  const seatNumbers = select_fulfillments
+        .filter((sf: any) => sf.id.startsWith("FT"))
+        .flatMap((sf: any) => {
+          const seatGridTag = sf.tags?.find(
+            (t: any) => t.descriptor?.code === "SEAT_GRID"
+          );
+          const numberItem = seatGridTag?.list?.find(
+            (i: any) => i.descriptor?.code === "NUMBER"
+          );
+          return numberItem ? numberItem.value : [];
+        });
 
-function transformFulfillments(fulfillments: any[], ticketTags: any[]) {
-  return fulfillments.map((f) => {
+  return fulfillments.map((f,index) => {
     if (f.type === "TRIP") {
       const { tags, ...rest } = f;
       return rest;
     } else if (f.type === "TICKET") {
+      const updatedTags = JSON.parse(JSON.stringify(ticketTags)); 
+      
+      updatedTags.list = updatedTags.list.map((item: any, idx: number) => {
+        if (item.descriptor?.code === "NUMBER" && seatNumbers[index-1]) {
+          return { ...item, value: seatNumbers[index-1] };
+        }
+        return item;
+      });
+
       return {
         ...f,
-        tags: [ticketTags],
+        tags: [updatedTags],
       };
     }
     return f;

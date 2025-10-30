@@ -17,40 +17,60 @@ export async function selectGenerator(
   return existingPayload;
 }
 
-function transformFulfillments(
-  fulfillments: any[],
-  ticketTags: any[],
-  sessionData: SessionData
-) {
-  return fulfillments.map((f) => {
-    if (f.type === "TRIP") {
-      return sessionData.select_fulfillments;
-    } else if (f.type === "TICKET") {
-      const filteredTags = [ticketTags].map((tag: any) => {
-        if (tag.descriptor.code === "SEAT_GRID") {
-          return {
-            descriptor: tag.descriptor,
-            list: [
-              ...tag.list.filter(
-                (item: any) =>
-                  item.descriptor.code === "NUMBER" ||
-                  item.descriptor.code === "ITEM_ID"
-              ),
-              {
-                descriptor: { code: "SELECTED" },
-                value: "true",
-              },
-            ],
-          };
-        }
-        return tag;
-      });
+      function transformFulfillments(
+        fulfillments: any[],
+        ticketTags: any[],
+        sessionData: SessionData
+      ) {
+        const seatItems = Array.isArray(sessionData?.user_inputs?.items)
+          ? sessionData.user_inputs.items
+          : [];
 
-      return {
-        id: f.id,
-        tags: filteredTags,
-      };
-    }
-    return f;
-  });
-}
+        return fulfillments.map((f, index) => {
+          if (f.type === "TRIP") {
+            return sessionData.select_fulfillments;
+          }
+
+          if (f.type === "TICKET") {
+            const filteredTags = [ticketTags].map((tag: any) => {
+              if (tag?.descriptor?.code === "SEAT_GRID") {
+                const filteredList = tag.list
+                  .filter(
+                    (item: any) =>
+                      item.descriptor.code === "NUMBER" ||
+                      item.descriptor.code === "ITEM_ID"
+                  )
+                  .map((item: any) => {
+                    if (item.descriptor.code === "NUMBER") {
+                      const seatData = seatItems[index-1];
+                      return {
+                        ...item,
+                        value: seatData?.seatNumber || item.value,
+                      };
+                    }
+                    return item;
+                  });
+
+                return {
+                  descriptor: tag.descriptor,
+                  list: [
+                    ...filteredList,
+                    {
+                      descriptor: { code: "SELECTED" },
+                      value: "true",
+                    },
+                  ],
+                };
+              }
+              return tag;
+            });
+
+            return {
+              id: f.id,
+              tags: filteredTags,
+            };
+          }
+
+          return f;
+        });
+      }

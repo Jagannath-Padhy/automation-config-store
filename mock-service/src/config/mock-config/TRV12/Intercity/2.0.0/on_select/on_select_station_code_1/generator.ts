@@ -55,12 +55,19 @@ export async function onSelectGenerator(
   const filteredStops = detailedFulfillment.stops.filter((stop: any) =>
     simplifiedStops.some((ss: any) => ss.id === stop.id)
   );
-  const tags = [
-    generateSeatGridTag("0", "0", "0", sessionData.seat_grid || "A1", "FEMALE", "I1"),
-    generateSeatGridTag("1", "0", "1", "F1", "MALE", "I1"),
-    generateSeatGridTag("1", "1", "1", "F2", "MALE", "I1"),
-    generateSeatGridTag("0", "1", "1", "A3", "MALE", "I1"),
-  ];
+
+  const seatCount = Number(sessionData?.selected_quantity?.selected?.count) || 2;
+  const tags = Array.from({ length: seatCount }, (_, index) => {
+    const seatNumber = `S${index + 1}`; 
+    const gender = "MALE"; 
+    const itemId = `I${index + 1}`; 
+    const x = String(index % 2); 
+    const y = String(Math.floor(index / 2));
+    const z = "0"; 
+  
+    return generateSeatGridTag(x, y, z, seatNumber, gender, itemId);
+  });
+  
   const updatedFulfillments = [
     {
       id: detailedFulfillment.id,
