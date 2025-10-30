@@ -20,6 +20,7 @@ export interface SessionData {
 	fullfillment_ids: string[]; // Assuming these are strings; adjust if needed
 	item_ids: string[]; // Assuming these are strings; adjust if needed
 	items: any[] | undefined;
+	seat_selection_count: any | undefined;
 	selected_items: any[] | undefined;
 	billing: any | undefined;
 	payments: any[] | undefined;
@@ -125,4 +126,5 @@ export interface Input {
 	returnToOrigin?: string;
 	default_feature?: string[];
 	seat_count?: string;
+	items?: any
 }

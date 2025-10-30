@@ -9,7 +9,7 @@ export async function initGenerator(
   existingPayload.message.order.items = [sessionData.select_items];
 
   existingPayload.message.order.fulfillments = transformFulfillments(
-    sessionData.select_1_fulfillments
+    sessionData.select_2_fulfillments
   );
 
   existingPayload.message.order.provider = { id: sessionData.provider_id };

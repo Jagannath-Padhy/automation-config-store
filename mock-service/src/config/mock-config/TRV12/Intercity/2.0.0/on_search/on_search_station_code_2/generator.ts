@@ -46,12 +46,10 @@ export async function onSearchGenerator(
         stop.id = `S${count}`;
         const timeOffset = new Date(Date.now() + count * 60 * 60 * 1000).toISOString();
 
-        if (stop.type === "PICKUP" || stop.type === "DROP") {
           stop.time = {
             label: "DATE_TIME",
             timestamp: timeOffset,
           };
-        }
         count++;
       }
       fulfillment.tags = tags;

@@ -18,7 +18,7 @@ export async function selectGenerator(
       id: sessionData.item_ids[0],
       quantity: {
         selected: {
-          count: sessionData?.user_inputs?.seat_count || 1,
+          count: Number(sessionData?.user_inputs?.seat_count) || 1,
         },
       },
     },
