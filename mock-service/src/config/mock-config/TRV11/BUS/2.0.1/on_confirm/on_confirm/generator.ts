@@ -26,8 +26,8 @@ function updateOrderTimestamps(payload: any) {
 	return payload;
   }
 
-function updateFulfillmentsWithParentInfo(fulfillments: any[]): void {
-	const validTo = "2024-07-23T23:59:59.999Z";
+function updateFulfillmentsWithParentInfo(fulfillments: any[],sessionData:SessionData): void {
+	const validTo = new Date(Date.now()+ 6*60*60*60).toISOString();
 
 	fulfillments.forEach((fulfillment) => {
 		// Generate a random QR token
@@ -90,7 +90,7 @@ export async function onConfirmGenerator(
 	const randomId = Math.random().toString(36).substring(2, 15);
 	const order_id = randomId;
 	existingPayload.message.order.payments = enhancePayments(sessionData.updated_payments)
-	updateFulfillmentsWithParentInfo(sessionData.fulfillments);
+	updateFulfillmentsWithParentInfo(sessionData.fulfillments,sessionData);
 	
 	  // Check if items is a non-empty array
 	if (sessionData.items.length > 0) {
