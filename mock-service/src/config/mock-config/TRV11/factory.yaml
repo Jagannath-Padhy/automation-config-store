@@ -539,8 +539,42 @@ codes:
     action: on_confirm
     default: BUS/2.0.1/on_confirm/on_confirm_vehicle/default.yaml
     message_id: false
-  - code: 189
+  - code: 205
     action_id: on_search_catalog5_BUS_201
     action: on_search
     default: BUS/2.0.1/on_search/on_search_catalog/default5.yaml
     message_id: false  
+  - code: 206
+    action_id: confirm_BUS_Without_Update
+    action: confirm
+    default: BUS/2.0.1/confirm/confirm_veh_con_without/default.yaml
+    message_id: true
+  - code: 191
+    action_id: on_confirm_BUS_Without_update
+    action: on_confirm
+    default: BUS/2.0.1/on_confirm/on_confirm_vehicle_without_update/default.yaml 
+    message_id: false
+  - code: 207
+    action_id: on_confirm_user_confirmation
+    action: on_confirm
+    default: BUS/2.0.1/on_confirm/on_confirm_user_confirmation/default.yaml 
+    message_id: false
+  - code: 208
+    action_id: update_BUS_201
+    action: update
+    default: BUS/2.0.1/update/update_/default.yaml
+    message_id: true
+  - code: 203
+    action_id: on_update_veh_QR_BUS_201
+    action: on_update
+    default: BUS/2.0.1/on_update/on_update_vehicle_qr/default.yaml
+    message_id: false
+  - code: 204
+    action_id: select_unlimited_pass
+    action: select
+    default: BUS/2.0.1/select/select_unlimited_pass/default.yaml
+    message_id: true
+  - code: 205
+    action_id: on_select_unlimited_pass
+    action: on_select
+    default: BUS/2.0.1/on_select/on_select_unlimited_pass/default.yaml

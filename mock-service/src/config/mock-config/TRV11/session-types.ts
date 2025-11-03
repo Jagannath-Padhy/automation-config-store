@@ -14,6 +14,8 @@ export interface SessionData {
 	buyer_app_fee: string | undefined;
 	vehicle_type: string | undefined;
 	fulfillments: any[]; // Replace `any` with a specific type if known
+	onselect_fulfillments: any[]; // Replace `any` with a specific type if known
+	cancellation_terms: any[]; // Replace `any` with a specific type if known
 	category_ids: string[]; // Assuming these are strings; adjust if needed
 	provider_id: string | undefined;
 	fullfillment_ids: string[]; // Assuming these are strings; adjust if needed

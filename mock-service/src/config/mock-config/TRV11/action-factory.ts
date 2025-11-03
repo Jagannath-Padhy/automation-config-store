@@ -4,6 +4,7 @@ import { MockCancelSoftBus201Class } from "./BUS/2.0.1/cancel/cancel_soft/class"
 import { MockCancelTechBus201Class } from "./BUS/2.0.1/cancel/cancel_tech/class";
 import { MockConfirmBus201Class } from "./BUS/2.0.1/confirm/confirm/class";
 import { MockConfirmVehConBus201Class } from "./BUS/2.0.1/confirm/confirm_veh_con/class";
+import { MockConfirmVehConWithoutBus201Class } from "./BUS/2.0.1/confirm/confirm_veh_con_without/class";
 import { MockInitBus201Class } from "./BUS/2.0.1/init/class";
 import { MockOnCancelBus201Class } from "./BUS/2.0.1/on_cancel/on_cancel/class";
 import { MockOnCancelHardBus201Class } from "./BUS/2.0.1/on_cancel/on_cancel_hard/class";
@@ -11,7 +12,9 @@ import { MockOnCancelInitBus201Class } from "./BUS/2.0.1/on_cancel/on_cancel_ini
 import { MockOnCancelSoftBus201Class } from "./BUS/2.0.1/on_cancel/on_cancel_soft/class";
 import { MockOnConfirmBus201Class } from "./BUS/2.0.1/on_confirm/on_confirm/class";
 import { MockOnConfirmDelayedBus201Class } from "./BUS/2.0.1/on_confirm/on_confirm_delayed/class";
+import { MockOnConfirmUserConfirmationBusClass } from "./BUS/2.0.1/on_confirm/on_confirm_user_confirmation/class";
 import { MockOnConfirmVehConBus201Class, MockOnConfirmVehConBusQr201Class } from "./BUS/2.0.1/on_confirm/on_confirm_vehicle/class";
+import { MockOnConfirmVehConWithoutUpdateBus201Class } from "./BUS/2.0.1/on_confirm/on_confirm_vehicle_without_update/class";
 import { MockOnInitBus201Class } from "./BUS/2.0.1/on_init/class";
 import { MockOnSearch1Bus201Class } from "./BUS/2.0.1/on_search/on_search/class";
 import {
@@ -22,6 +25,7 @@ import {
   MockOnSearchCatalog5Bus201Class,
 } from "./BUS/2.0.1/on_search/on_search_catalog/class";
 import { MockOnSelectBus201Class } from "./BUS/2.0.1/on_select/class";
+import { MockOnSelectBusUnlimitedPass201Class } from "./BUS/2.0.1/on_select/on_select_unlimited_pass/class";
 import { MockOnStatusActiveBus201Class } from "./BUS/2.0.1/on_status/on_status_active/class";
 import { MockOnStatusCancellationBus201Class } from "./BUS/2.0.1/on_status/on_status_cancellation/class";
 import { MockOnUpdateAcceptedBus201Class } from "./BUS/2.0.1/on_update/on_update_accepted/class";
@@ -30,6 +34,7 @@ import { MockOnUpdateVehicleQrBus201Class } from "./BUS/2.0.1/on_update/on_updat
 import { MockSearch0Bus201Class } from "./BUS/2.0.1/search/search0/class";
 import { MockSearch1Bus201Class } from "./BUS/2.0.1/search/search1/class";
 import { MockSelectBus201Class } from "./BUS/2.0.1/select/class";
+import { MockSelectUnlimitedPassBus201Class } from "./BUS/2.0.1/select/select_unlimited_pass/class";
 import { MockStatusBus201Class } from "./BUS/2.0.1/status/status_ref_id/class";
 import { MockUpdateBus201Class } from "./BUS/2.0.1/update/update_/class";
 import { MockUpdateQrBus201Class } from "./BUS/2.0.1/update/update_qr/class";
@@ -71,6 +76,7 @@ const registry = {
   cancel_soft_BUS_201: MockCancelSoftBus201Class,
   cancel_tech_BUS_201: MockCancelTechBus201Class,
   confirm_BUS_201: MockConfirmBus201Class,
+  confirm_BUS_Without_Update: MockConfirmVehConWithoutBus201Class,
   confirm_veh_con_BUS_201: MockConfirmVehConBus201Class,
   init_BUS_201: MockInitBus201Class,
   on_cancel_BUS_201: MockOnCancelBus201Class,
@@ -78,9 +84,11 @@ const registry = {
   on_cancel_init_BUS_201: MockOnCancelInitBus201Class,
   on_cancel_soft_BUS_201: MockOnCancelSoftBus201Class,
   on_confirm_BUS_201: MockOnConfirmBus201Class,
+  on_confirm_BUS_Without_update: MockOnConfirmVehConWithoutUpdateBus201Class,
   on_confirm_delayed_BUS_201: MockOnConfirmDelayedBus201Class,
   on_confirm_veh_con_BUS_201: MockOnConfirmVehConBus201Class,
   on_confirm_BUS_QR_201 :MockOnConfirmVehConBusQr201Class,
+  // on_confirm_user_confirmation :MockOnConfirmUserConfirmationBusClass,
   on_init_BUS_201: MockOnInitBus201Class,
   on_search_BUS_201: MockOnSearch1Bus201Class,
   on_search_catalog1_BUS_201: MockOnSearchCatalog1Bus201Class,
@@ -89,6 +97,7 @@ const registry = {
   on_search_catalog4_BUS_201: MockOnSearchCatalog4Bus201Class,
   on_search_catalog5_BUS_201: MockOnSearchCatalog5Bus201Class,
   on_select_BUS_201: MockOnSelectBus201Class,
+  on_select_unlimited_pass: MockOnSelectBusUnlimitedPass201Class,
   on_status_active_BUS_201: MockOnStatusActiveBus201Class,
   on_status_cancellation_BUS_201: MockOnStatusCancellationBus201Class,
   on_update_accepted_BUS_201: MockOnUpdateAcceptedBus201Class,
@@ -97,6 +106,7 @@ const registry = {
   search0_BUS_201: MockSearch0Bus201Class,
   search_BUS_201: MockSearch1Bus201Class,
   select_BUS_201: MockSelectBus201Class,
+  select_unlimited_pass: MockSelectUnlimitedPassBus201Class,
   status_BUS_201: MockStatusBus201Class,
   update_BUS_201: MockUpdateBus201Class,
   update_BUS_QR_201: MockUpdateQrBus201Class,
