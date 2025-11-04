@@ -76,9 +76,24 @@ function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
       breakup: [...quote.breakup, ...refundBreakups, cancellationBreakup],
     };
   }
+  const modifyPayments = (payments: any) => {
+    payments.forEach((payment: any) => {
+      payment.tags.forEach((tag: any) => {
+        if (tag.descriptor?.code === "SETTLEMENT_TERMS") {
+          tag.list.forEach((item: any) => {
+            if (item.descriptor?.code === "SETTLEMENT_AMOUNT") {
+              item.value = "0"
+            }
+          })
+        }
+      })
+    })
+    return payments
+  }
+
 export async function onUpdateAcceptedGenerator(existingPayload: any,sessionData: any){
   if (sessionData.updated_payments.length > 0) {
-		existingPayload.message.order.payments = sessionData.updated_payments;
+		existingPayload.message.order.payments = modifyPayments(sessionData.updated_payments);
 	  }
 	
 	if (sessionData.items.length > 0) {
@@ -93,6 +108,9 @@ export async function onUpdateAcceptedGenerator(existingPayload: any,sessionData
 	}
 	if(sessionData.quote != null){
 	existingPayload.message.order.quote = applyCancellation(sessionData.quote,15)
+	}
+  if(sessionData.provider){
+		existingPayload.message.order.provider=sessionData.provider
 	}
   const now = new Date().toISOString();
   existingPayload.message.order.created_at = sessionData.created_at

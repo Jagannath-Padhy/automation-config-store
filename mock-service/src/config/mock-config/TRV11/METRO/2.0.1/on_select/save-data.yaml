@@ -8,3 +8,6 @@ save-data:
   items: "$.message.order.items[*]"
   fulfillments: "$.message.order.fulfillments[*]"
   quote: "$.message.order.quote"
+  provider: "$.message.order.provider"
+  time_range: "$.message.order.provider.time"
+

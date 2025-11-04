@@ -28,6 +28,8 @@ export interface SessionData {
 	updated_payments: any[]; // Replace `any` with a specific type if known
 	order_id: string | undefined;
 	quote: any;
+	provider: any;
+	time_range: any;
 	status: string;
 	error_code: string | undefined;
 	error_message: string | undefined;

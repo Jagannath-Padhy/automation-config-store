@@ -94,6 +94,9 @@ export async function onConfirmGenerator(
 	if(sessionData.quote != null){
 	existingPayload.message.order.quote = sessionData.quote
 	}
+  if(sessionData.provider){
+		existingPayload.message.order.provider=sessionData.provider
+	}
 	existingPayload.message.order.id = order_id;
   const now = new Date().toISOString();
   existingPayload.message.order.created_at = now

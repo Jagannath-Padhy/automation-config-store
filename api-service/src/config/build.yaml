@@ -22914,6 +22914,7 @@ x-validations:
         enumList:
         - QR
         - USER_CONFIRMATION_AND_QR
+        - PASS
         enumPath: "$.message.intent.fulfillment.stops[*].authorization.type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23130,6 +23131,7 @@ x-validations:
         - ROUTE
         - TRIP
         - TICKET
+        - PASS
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23139,6 +23141,9 @@ x-validations:
         - END
         - INTERMEDIATE_STOP
         - TRANSIT_STOP
+        - TRIP
+        - TICKET
+        - PASS
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23343,6 +23348,7 @@ x-validations:
         - ROUTE
         - TRIP
         - TICKET
+        - PASS
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23352,6 +23358,9 @@ x-validations:
         - END
         - INTERMEDIATE_STOP
         - TRANSIT_STOP
+        - TRIP
+        - TICKET
+        - PASS
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23588,6 +23597,8 @@ x-validations:
         enumList:
         - ROUTE
         - TRIP
+        - TICKET
+        - PASS
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23597,6 +23608,9 @@ x-validations:
         - END
         - INTERMEDIATE_STOP
         - TRANSIT_STOP
+        - TRIP
+        - TICKET
+        - PASS
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23831,8 +23845,10 @@ x-validations:
         _RETURN_: enumPath all in enumList
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_3
         enumList:
-        - ROUTE
-        - TRIP
+          - ROUTE
+          - TRIP
+          - TICKET
+          - PASS
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -23842,6 +23858,9 @@ x-validations:
         - END
         - INTERMEDIATE_STOP
         - TRANSIT_STOP
+        - TRIP
+        - TICKET
+        - PASS
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -25008,6 +25027,7 @@ x-validations:
         - ROUTE
         - TRIP
         - TICKET
+        - PASS
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
         - METRO
@@ -25662,6 +25682,7 @@ x-validations:
         - ROUTE
         - TRIP
         - TICKET
+        - PASS
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
         - METRO
@@ -26349,6 +26370,7 @@ x-validations:
         - ROUTE
         - TRIP
         - TICKET
+        - PASS
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
         - BUS
@@ -26646,6 +26668,7 @@ x-validations:
         - ROUTE
         - TRIP
         - TICKET
+        - PASS
       - _NAME_: REQUIRED_MESSAGE_NAME_28
         attr: "$.message.order.fulfillments[*].stops[*].instructions.name"
         _RETURN_: attr are present
@@ -26789,20 +26812,6 @@ x-validations:
           - BUYER_FINDER_FEES
           - SETTLEMENT_TERMS
         _RETURN_: subTags all in validValues
-      - _NAME_: REQUIRED_CANCELLATION_DURATION
-        _SCOPE_: "$.message.order.cancellation_terms[*].cancel_by"
-        subTags: "$.duration"
-        _RETURN_: subTags are present
-      - _NAME_: REQUIRED_CANCELLATION_PERCENTAGE
-        _SCOPE_: "$.message.order.cancellation_terms[*].cancellation_fee"
-        subTags: "$.percentage"
-        _RETURN_: subTags are present
-      - _NAME_: VALIDATE_CANCELLATION_DURATION_FORMAT
-        _SCOPE_: "$.message.order.cancellation_terms[*].cancel_by"
-        subTags: "$.duration"
-        match1: ["^P(\\d+D)?(T(\\d+H)?(\\d+M)?)?$"]
-        _RETURN_: subTags follow regex match1
-
     on_status:
       - _NAME_: REQUIRED_PAYMENT_STATUS
         status: "$.message.order.payments[*].status"
@@ -26993,6 +27002,7 @@ x-validations:
         - ROUTE
         - TRIP
         - TICKET
+        - PASS
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
         - METRO
