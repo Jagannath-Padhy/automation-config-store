@@ -14,10 +14,36 @@ return payments.map((payment:any) => {
 			bank_code: "XXXXXXXX",
 			bank_account_number: "xxxxxxxxxxxxxx",
 		},
-		tags: payment.tags,
+		tags: modifyTags(payment.tags),
 		};
 	});
 };
+
+const modifyTags=(tags:any)=>{
+	  return tags.map((tag:any)=>{
+		if (tag.descriptor?.code === "SETTLEMENT_TERMS"){
+			return {
+				 ...tag,
+				list:[
+					...tag.list,
+					{
+						descriptor: {
+						  code: "SETTLEMENT_WINDOW" 
+						},
+						value: "P30D" 
+					  },
+					{
+						descriptor: {
+						  code: "SETTLEMENT_BASIS" 
+						},
+						value: "INVOICE_RECEIPT" 
+					  }
+				]
+			}
+		}
+		return tag
+	  })
+}
 export async function onInitGenerator(
 	existingPayload: any,
 	sessionData: SessionData
@@ -29,6 +55,9 @@ export async function onInitGenerator(
 	}
 	if (sessionData.fulfillments.length > 0) {
 	existingPayload.message.order.fulfillments = sessionData.fulfillments;
+	}
+	if(sessionData.provider){
+		existingPayload.message.order.provider=sessionData.provider
 	}
 	if(sessionData.quote != null){
 	existingPayload.message.order.quote = sessionData.quote

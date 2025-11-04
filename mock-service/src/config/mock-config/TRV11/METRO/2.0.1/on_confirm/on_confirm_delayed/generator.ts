@@ -19,7 +19,14 @@ function generateQrToken(): string {
   }
 
 function updateFulfillmentsWithParentInfo(fulfillments: any[]): void {
-    const validTo = "2024-07-23T23:59:59.999Z";
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000; 
+  const istNow = new Date(now.getTime() + istOffset);
+  const y = istNow.getFullYear();
+  const m = istNow.getMonth();
+  const d = istNow.getDate();
+  const endIST = new Date(Date.UTC(y, m, d + 1, 4 - 5, 30 - 30, 0)); 
+  const validTo = endIST.toISOString();
   
     fulfillments.forEach((fulfillment) => {
       // Check if the fulfillment has a parent tag
@@ -102,6 +109,9 @@ export async function onConfirmDelayedGenerator(existingPayload: any,sessionData
   const delay_duration = isoDurationToSeconds(sessionData.ttl) + 2
   console.log("the delay duration is", delay_duration)
   const now = new Date().toISOString();
+  if(sessionData.provider){
+		existingPayload.message.order.provider=sessionData.provider
+	}
   existingPayload.message.order.created_at = now
   existingPayload.message.order.updated_at = now 
   await delay(delay_duration*1000);

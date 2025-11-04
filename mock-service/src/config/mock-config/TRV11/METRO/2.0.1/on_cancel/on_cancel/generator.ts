@@ -91,6 +91,12 @@ export async function onCancelGenerator(existingPayload: any,sessionData: any){
   if (sessionData.fulfillments.length > 0) {
     existingPayload.message.order.fulfillments = sessionData.fulfillments;
   }
+  existingPayload.message.order.fulfillments.forEach((fulfillment:any) => {
+    fulfillment?.stops.forEach((stop:any) => {
+      delete stop.authorization
+    });
+});;
+
 	if (sessionData.order_id) {
     existingPayload.message.order.id = sessionData.order_id;
   }
@@ -98,6 +104,17 @@ export async function onCancelGenerator(existingPayload: any,sessionData: any){
     existingPayload.message.order.quote = applyCancellation(sessionData.quote,15)
     existingPayload.message.order.quote = sessionData.quote
   }
+  existingPayload.message.order.cancellation={
+    cancelled_by:"CONSUMER",
+    reason: {
+      descriptor: {
+          "code": sessionData.cancellation_reason_id
+      }
+  }
+  }
+  if(sessionData.provider){
+		existingPayload.message.order.provider=sessionData.provider
+	}
   const now = new Date().toISOString();
   existingPayload.message.order.created_at = sessionData.created_at
   existingPayload.message.order.updated_at = now

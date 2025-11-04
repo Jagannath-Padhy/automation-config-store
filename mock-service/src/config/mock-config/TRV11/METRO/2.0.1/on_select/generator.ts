@@ -84,6 +84,20 @@ function createAndAppendFulfillments(items: any[], fulfillments: any[]): void {
 	});
 }
 
+function updateItemTimestamp(payload: any) {
+	const now = new Date();
+	const istNow = new Date(now.getTime());
+	const y = istNow.getFullYear();
+	const m = istNow.getMonth();
+	const d = istNow.getDate();
+	const startIST = new Date(Date.UTC(y, m, d, 5 - 5, 30, 0));
+	const endIST = new Date(Date.UTC(y, m, d, 23 - 5, 30, 0));
+	const provider = payload?.message?.order?.provider;
+	provider.time.range.start = startIST.toISOString();
+	provider.time.range.end = endIST.toISOString();
+	return payload;
+  }
+
 function getUniqueFulfillmentIdsAndFilterFulfillments(
 	items: any[],
 	fulfillments: any[]
@@ -120,6 +134,7 @@ export async function onSelectGenerator(
 	sessionData: SessionData
 ) {
 	console.log("session data before the on_select call is ",sessionData)
+	existingPayload= updateItemTimestamp(existingPayload)
 	let items = filterItemsBySelectedIds(
 		sessionData.items,
 		sessionData.selected_item_ids

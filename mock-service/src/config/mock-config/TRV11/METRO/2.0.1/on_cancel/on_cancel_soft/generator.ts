@@ -103,6 +103,12 @@ function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
   
     if (sessionData.fulfillments.length > 0) {
     existingPayload.message.order.fulfillments = sessionData.fulfillments;
+    existingPayload.message.order.fulfillments.forEach((fulfillment:any) => {
+			fulfillment?.stops.forEach((stop:any) => {
+				delete stop.authorization
+			});
+	});;
+	
     existingPayload.message.order = removeTicketStops(existingPayload.message.order)
     }
     if (sessionData.order_id) {
@@ -112,6 +118,17 @@ function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
     existingPayload.message.order.quote = sessionData.quote
     }
     existingPayload.message.order.status = "SOFT_CANCEL"
+    existingPayload.message.order.cancellation={
+      cancelled_by:"CONSUMER",
+      reason: {
+        descriptor: {
+            "code": sessionData.cancellation_reason_id
+        }
+    }
+    }
+    if(sessionData.provider){
+      existingPayload.message.order.provider=sessionData.provider
+    }
     const now = new Date().toISOString();
     existingPayload.message.order.created_at = sessionData.created_at
     existingPayload.message.order.updated_at = now
