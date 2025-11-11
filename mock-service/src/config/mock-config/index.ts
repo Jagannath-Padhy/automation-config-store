@@ -83,9 +83,13 @@ class ConfigAction implements MockAction {
 		) {
 			throw new Error(`Action ID ${actionId} not found in playground config`);
 		}
-		this.actionId = actionId;
+		if (actionId.startsWith("GENERATED_")) {
+			this.actionId = actionId.replace("GENERATED_", "");
+		} else {
+			this.actionId = actionId;
+		}
 		this.step = playgroundConfig.steps.find(
-			(step) => step.action_id === actionId
+			(step) => step.action_id === this.actionId
 		)!;
 	}
 	name(): string {
