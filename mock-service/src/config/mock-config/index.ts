@@ -75,6 +75,12 @@ class ConfigAction implements MockAction {
 	runner: MockRunner;
 	constructor(playgroundConfig: MockPlaygroundConfigType, actionId: string) {
 		this.runner = new MockRunner(playgroundConfig);
+		// GENERATED_1_search or GENERATED_22_init -> search or init
+		if (actionId.startsWith("GENERATED_")) {
+			actionId = actionId.split("_")[2];
+		} else {
+			actionId = actionId;
+		}
 		this.playgroundConfig = playgroundConfig;
 		if (
 			playgroundConfig.steps.findIndex(
@@ -83,12 +89,7 @@ class ConfigAction implements MockAction {
 		) {
 			throw new Error(`Action ID ${actionId} not found in playground config`);
 		}
-		// GENERATED_1_search or GENERATED_22_init -> search or init
-		if (actionId.startsWith("GENERATED_")) {
-			this.actionId = actionId.split("_")[2];
-		} else {
-			this.actionId = actionId;
-		}
+		this.actionId = actionId;
 		this.step = playgroundConfig.steps.find(
 			(step) => step.action_id === this.actionId
 		)!;
