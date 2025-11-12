@@ -35541,24 +35541,7 @@ x-validations:
               - *init_REQUIRED_message_order_fulfillments_stops_location_gps
               - *init_REQUIRED_message_order_fulfillments_customer_person_name
               - *init_REQUIRED_message_order_fulfillments_customer_contact_phone
-              - &on_cancel_REQUIRED_message_order_fulfillments_agent_person_name
-                attr: $.message.order.fulfillments[*].agent.person.name
-                _RETURN_: attr are present
-                _NAME_: REQUIRED_message_order_fulfillments_agent_person_name
-              - &on_cancel_REQUIRED_message_order_fulfillments_agent_contact_phone
-                attr: $.message.order.fulfillments[*].agent.contact.phone
-                _RETURN_: attr are present
-                _NAME_: REQUIRED_message_order_fulfillments_agent_contact_phone
-              - &on_cancel_REQUIRED_message_order_fulfillments_vehicle_registration
-                attr: $.message.order.fulfillments[*].vehicle.registration
-                _RETURN_: attr are present
-                _NAME_: REQUIRED_message_order_fulfillments_vehicle_registration
-              - attr: $.message.order.fulfillments[*].vehicle.make
-                _RETURN_: attr are present
-                _NAME_: REQUIRED_message_order_fulfillments_vehicle_make
-              - attr: $.message.order.fulfillments[*].vehicle.model
-                _RETURN_: attr are present
-                _NAME_: REQUIRED_message_order_fulfillments_vehicle_model
+
               - *on_init_REQUIRED_message_order_fulfillments_type
           - _NAME_: fulfillments_Enums_Tests
             _RETURN_:
@@ -35656,11 +35639,11 @@ x-validations:
               - *select_REQUIRED_message_order_provider_id
               - *init_REQUIRED_message_order_fulfillments_id
               - *init_REQUIRED_message_order_fulfillments_stops_location_gps
-              - *on_cancel_REQUIRED_message_order_fulfillments_vehicle_registration
+              # - *on_cancel_REQUIRED_message_order_fulfillments_vehicle_registration
               - *init_REQUIRED_message_order_fulfillments_customer_person_name
               - *init_REQUIRED_message_order_fulfillments_customer_contact_phone
-              - *on_cancel_REQUIRED_message_order_fulfillments_agent_person_name
-              - *on_cancel_REQUIRED_message_order_fulfillments_agent_contact_phone
+              # - *on_cancel_REQUIRED_message_order_fulfillments_agent_person_name
+              # - *on_cancel_REQUIRED_message_order_fulfillments_agent_contact_phone
               - *on_init_REQUIRED_message_order_fulfillments_type
               - *on_select_REQUIRED_message_order_quote_price_value
               - *on_select_REQUIRED_message_order_quote_price_currency
@@ -35672,6 +35655,18 @@ x-validations:
               - *on_confirm_REQUIRED_message_order_created_at
               - *on_confirm_REQUIRED_message_order_updated_at
               - *update_REQUIRED_message_order_id
+              - &on_cancel_REQUIRED_message_order_fulfillments_agent_person_name
+                attr: $.message.order.fulfillments[*].agent.person.name
+                _RETURN_: attr are present
+                _NAME_: REQUIRED_message_order_fulfillments_agent_person_name
+              - &on_cancel_REQUIRED_message_order_fulfillments_agent_contact_phone
+                attr: $.message.order.fulfillments[*].agent.contact.phone
+                _RETURN_: attr are present
+                _NAME_: REQUIRED_message_order_fulfillments_agent_contact_phone
+              - &on_cancel_REQUIRED_message_order_fulfillments_vehicle_registration
+                attr: $.message.order.fulfillments[*].vehicle.registration
+                _RETURN_: attr are present
+                _NAME_: REQUIRED_message_order_fulfillments_vehicle_registration
           - _NAME_: order_Enums_Tests
             _RETURN_:
               - *on_select_VALID_ENUM_message_order_items_descriptor_code
