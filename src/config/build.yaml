@@ -25444,6 +25444,7 @@ x-validations:
       - _NAME_: validate_tag_2
         validTags:
           - type
+          - weight_slab
         tagPath: $.message.catalog['bpp/providers'][*].items[*].tags[*].code
         _CONTINUE_: "!(tagPath are present)"
         _RETURN_: tagPath all in validTags
