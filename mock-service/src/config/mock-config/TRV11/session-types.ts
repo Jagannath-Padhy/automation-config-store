@@ -15,6 +15,7 @@ export interface SessionData {
 	vehicle_type: string | undefined;
 	fulfillments: any[]; // Replace `any` with a specific type if known
 	onselect_fulfillments: any[]; // Replace `any` with a specific type if known
+	update_1_fulfillments: any[]; // Replace `any` with a specific type if known
 	cancellation_terms: any[]; // Replace `any` with a specific type if known
 	category_ids: string[]; // Assuming these are strings; adjust if needed
 	provider_id: string | undefined;
@@ -28,6 +29,7 @@ export interface SessionData {
 	updated_payments: any[]; // Replace `any` with a specific type if known
 	order_id: string | undefined;
 	quote: any;
+	update_end_stop: any;
 	provider: any;
 	time_range: any;
 	status: string;
