@@ -1,4 +1,4 @@
-import { SessionData } from "../../../../session-types";
+import { SessionData } from "config/mock-config/TRV11/session-types";
 
 type Price = {
   value: string;
@@ -39,27 +39,41 @@ export function updateCancellationTimestamp(payload: any) {
 
   return clone;
 }
-function updateSettlementAmount(order: any, sessionData: SessionData) {
+export function updateSettlementAmount(order: any, sessionData: SessionData) {
   if (!order?.payments || !order?.quote?.price?.value) return order;
 
   const quoteValue = parseFloat(order.quote.price.value);
-  const buyerFinderFee = parseFloat(sessionData.buyer_app_fee || "3");
-  const newSettlementAmount = ((quoteValue * buyerFinderFee) / 100).toFixed(2);
+  if (Number.isNaN(quoteValue)) return order;
+
+  const buyerFinderFee = parseFloat(sessionData.buyer_app_fee ?? "3");
+  const buyerFinderAmount = (quoteValue * (isNaN(buyerFinderFee) ? 3 : buyerFinderFee)) / 100;
+
+  // formatted strings to store in payload
+  const buyerFinderAmountStr = buyerFinderAmount.toFixed(2);
+  const remainderAmountStr = (quoteValue - buyerFinderAmount).toFixed(2);
+
+  const sessionCollector = (sessionData.collected_by || "").toUpperCase();
 
   order.payments = order.payments.map((payment: any) => {
-    if (!payment.tags) return payment;
+    if (!payment?.tags || !Array.isArray(payment.tags)) return payment;
+
+    const paymentCollector = (payment.collected_by || "").toUpperCase();
 
     payment.tags = payment.tags.map((tag: any) => {
-      if (
-        tag.descriptor?.code === "SETTLEMENT_TERMS" &&
-        Array.isArray(tag.list)
-      ) {
+
+      if (tag.descriptor?.code === "SETTLEMENT_TERMS" && Array.isArray(tag.list)) {
         tag.list = tag.list.map((item: any) => {
           if (item.descriptor?.code === "SETTLEMENT_AMOUNT") {
-            return {
-              ...item,
-              value: newSettlementAmount,
-            };
+            if (sessionCollector === "BPP") {
+              if (paymentCollector === "BPP") {
+                return { ...item, value: buyerFinderAmountStr };
+              } else if (paymentCollector === "BAP") {
+                return { ...item, value: remainderAmountStr };
+              }
+              return item;
+            }
+
+            return { ...item, value: buyerFinderAmountStr };
           }
           return item;
         });
