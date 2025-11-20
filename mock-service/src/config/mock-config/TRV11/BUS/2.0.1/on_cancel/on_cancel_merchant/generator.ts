@@ -1,5 +1,6 @@
 import { SessionData } from "../../../../session-types";
 
+
 type Price = {
   value: string;
   currency: string;

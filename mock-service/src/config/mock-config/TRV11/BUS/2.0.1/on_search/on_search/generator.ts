@@ -1,63 +1,43 @@
 import { SessionData } from "../../../../session-types";
 import { createFullfillment } from "./fullfillment-generator";
 
-export function updateItemTimestamps(onSearchPayload: any) {
-  const updated = JSON.parse(JSON.stringify(onSearchPayload)); // deep clone to avoid mutation
-  const now = new Date().toISOString();
 
-  const providers = updated?.message?.catalog?.providers || [];
+function updatePaymentDetails(payload: any, sessionData: SessionData) {
+  const providers = payload?.message?.catalog?.providers || [];
 
-  for (const provider of providers) {
-    if (!provider.items) continue;
+  providers.forEach((provider: any) => {
+    const payments = provider?.payments || [];
 
-    for (const item of provider.items) {
-      if (item.time && item.time.timestamp) {
-        item.time.timestamp = now;
+    payments.forEach((payment: any) => {
+      // Update collected_by
+      payment.collected_by = sessionData.collected_by;
+
+      // Update BUYER_FINDER_FEES_PERCENTAGE in tags
+      const buyerFinderTag = payment.tags?.find(
+        (tag: any) => tag.descriptor?.code === "BUYER_FINDER_FEES"
+      );
+
+      if (buyerFinderTag?.list) {
+        const feeEntry = buyerFinderTag.list.find(
+          (item: any) =>
+            item.descriptor?.code === "BUYER_FINDER_FEES_PERCENTAGE"
+        );
+
+        if (feeEntry) {
+          feeEntry.value = sessionData.buyer_app_fee;
+        } else {
+          // Add it if not present
+          buyerFinderTag.list.push({
+            descriptor: { code: "BUYER_FINDER_FEES_PERCENTAGE" },
+            value: sessionData.buyer_app_fee,
+          });
+        }
       }
-    }
-  }
-  
-  return updated;
-}
+    });
+  });
 
-function updatePaymentDetails(
-	payload: any,
-	sessionData: SessionData
-  ) {
-	const providers = payload?.message?.catalog?.providers || [];
-  
-	providers.forEach((provider: any) => {
-	  const payments = provider?.payments || [];
-  
-	  payments.forEach((payment: any) => {
-		// Update collected_by
-		payment.collected_by = sessionData.collected_by;
-  
-		// Update BUYER_FINDER_FEES_PERCENTAGE in tags
-		const buyerFinderTag = payment.tags?.find(
-		  (tag: any) => tag.descriptor?.code === "BUYER_FINDER_FEES"
-		);
-  
-		if (buyerFinderTag?.list) {
-		  const feeEntry = buyerFinderTag.list.find(
-			(item: any) => item.descriptor?.code === "BUYER_FINDER_FEES_PERCENTAGE"
-		  );
-  
-		  if (feeEntry) {
-			feeEntry.value = sessionData.buyer_app_fee;
-		  } else {
-			// Add it if not present
-			buyerFinderTag.list.push({
-			  descriptor: { code: "BUYER_FINDER_FEES_PERCENTAGE" },
-			  value: sessionData.buyer_app_fee
-			});
-		  }
-		}
-	  });
-	});
-  
-	return payload;
-  }
+  return payload;
+}
 const createCustomRoute = (
   routeData: any[],
   startStationCode: string,
@@ -122,7 +102,7 @@ export async function onSearchGenerator(
   existingPayload: any,
   sessionData: SessionData
 ) {
-  existingPayload = updatePaymentDetails(existingPayload,sessionData)
+  existingPayload = updatePaymentDetails(existingPayload, sessionData);
   try {
     const route = createFullfillment(
       sessionData.city_code ?? "std:011"
@@ -132,14 +112,29 @@ export async function onSearchGenerator(
       throw new Error("Start and End station codes are required");
     }
     const fulfillments = createCustomRoute(route, start_code, end_code);
-    const updatedFulfillments = fulfillments.map(f => ({
+    const updatedFulfillments = fulfillments.map((f) => ({
       ...f,
-      type: "TRIP"
+      type: "TRIP",
+      tags: [
+        {
+          descriptor: { code: "ROUTE_INFO" },
+          list: [
+            {
+              descriptor: { code: "ROUTE_ID" },
+              value: "242",
+            },
+            {
+              descriptor: { code: "ROUTE_DIRECTION" },
+              value: "UP",
+            },
+          ],
+        },
+      ],
     }));
-    existingPayload.message.catalog.providers[0].fulfillments = updatedFulfillments;
-    const updatedPayload = updateItemTimestamps(existingPayload);
-
-    return updatedPayload;
+    existingPayload.message.catalog.providers[0].fulfillments =
+      updatedFulfillments;
+    
+    return existingPayload;
   } catch (err) {
     console.error(err);
     delete existingPayload.message;
