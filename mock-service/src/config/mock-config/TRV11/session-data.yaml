@@ -40,3 +40,8 @@ session_data:
   user_inputs: null
   first_form_testing: []
   cancellation_reason_id: null
+  latest_issue_payload: null
+  igm_action: null
+  issue_action: []
+  issue_resolution: []
+  issue_id: null
