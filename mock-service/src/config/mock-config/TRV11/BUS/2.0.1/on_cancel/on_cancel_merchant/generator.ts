@@ -1,5 +1,6 @@
 import { SessionData } from "../../../../session-types";
 
+
 type Price = {
   value: string;
   currency: string;
@@ -57,15 +58,23 @@ export function updateSettlementAmount(order: any, sessionData: SessionData) {
   order.payments = order.payments.map((payment: any) => {
     if (!payment?.tags || !Array.isArray(payment.tags)) return payment;
 
+    const paymentCollector = (payment.collected_by || "").toUpperCase();
 
     payment.tags = payment.tags.map((tag: any) => {
+
       if (tag.descriptor?.code === "SETTLEMENT_TERMS" && Array.isArray(tag.list)) {
         tag.list = tag.list.map((item: any) => {
           if (item.descriptor?.code === "SETTLEMENT_AMOUNT") {
             if (sessionCollector === "BPP") {
+              if (paymentCollector === "BPP") {
                 return { ...item, value: buyerFinderAmountStr };
+              } else if (paymentCollector === "BAP") {
+                return { ...item, value: remainderAmountStr };
+              }
+              return item;
             }
-            return { ...item, value: remainderAmountStr };
+
+            return { ...item, value: buyerFinderAmountStr };
           }
           return item;
         });
@@ -97,8 +106,13 @@ function stripTicketAuthorizations(order: any) {
   return order;
 }
 
+// Example usage:
+
 function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
+  // Parse the current price
   const currentTotal = parseFloat(quote.price.value);
+
+  // Calculate the total refund for items
   const refundAmount = quote.breakup
     .filter((b) => b.title === "BASE_FARE" && b.item)
     .reduce((sum, breakup) => {
@@ -106,6 +120,7 @@ function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
       return sum + itemTotal;
     }, 0);
 
+  // Create a REFUND breakup for items
   const refundBreakups: Breakup[] = quote.breakup
     .filter((b) => b.title === "BASE_FARE" && b.item)
     .map((baseFare) => ({
@@ -114,12 +129,12 @@ function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
         ...baseFare.item!,
         price: {
           ...baseFare.item!.price,
-          value: `-${baseFare.item!.price.value}`,
+          value: `-${baseFare.item!.price.value}`, // Negative for refund
         },
       },
       price: {
         ...baseFare.price,
-        value: `-${baseFare.price.value}`,
+        value: `-${baseFare.price.value}`, // Negative for refund
       },
     }));
 
@@ -132,8 +147,10 @@ function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
     },
   };
 
+  // Update the total price
   const newTotal = currentTotal - refundAmount + cancellationCharges;
 
+  // Return the updated quote
   return {
     price: {
       ...quote.price,
@@ -143,7 +160,7 @@ function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
   };
 }
 
-export async function onCancelGenerator(
+export async function onCancelMerchantGenerator(
   existingPayload: any,
   sessionData: SessionData
 ) {
