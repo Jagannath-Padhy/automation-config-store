@@ -126,9 +126,7 @@ export async function onSearch2Generator(
   try {
     existingPayload = updatePaymentDetails(existingPayload, sessionData);
     existingPayload = updateTimestamps(existingPayload);
-    const route = createFullfillment(
-      sessionData.city_code ?? "std:011"
-    ).fulfillments;
+    const route = createFullfillment().fulfillments;
     const { start_code, end_code } = sessionData;
     console.log("The start and end code are ", start_code, end_code);
     if (!start_code || !end_code) {

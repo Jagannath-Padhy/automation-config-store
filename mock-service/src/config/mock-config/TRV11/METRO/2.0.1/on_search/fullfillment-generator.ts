@@ -558,7 +558,7 @@ const exampleFullfillment = {
 	],
 };
 
-export function createFullfillment(cityCode: string) {
+export function createFullfillment() {
 	const fake = exampleFullfillment.fulfillments;
 	let index = 1;
 	for (const full of fake) {
