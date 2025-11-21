@@ -27683,9 +27683,9 @@ x-validations:
         - TRIP
         - TICKET
         - PASS
-      - _NAME_: REQUIRED_MESSAGE_NAME_28
-        attr: "$.message.order.fulfillments[*].stops[*].instructions.name"
-        _RETURN_: attr are present
+      # - _NAME_: REQUIRED_MESSAGE_NAME_28
+      #   attr: "$.message.order.fulfillments[*].stops[*].instructions.name"
+      #   _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CODE_30
         attr: "$.message.order.fulfillments[*].stops[*].location.descriptor.code"
         _RETURN_: attr are present
