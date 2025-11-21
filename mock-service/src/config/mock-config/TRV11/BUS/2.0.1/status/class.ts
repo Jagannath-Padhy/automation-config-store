@@ -3,7 +3,7 @@ import yaml from "js-yaml";
 import path from "path";
 import { statusPurchaseFlowGenerator } from "./generator";
 import { SessionData } from "../../../session-types";
-import { MockAction, MockOutput, saveType } from "config/mock-config/TRV11/classes/mock-action";
+import { MockAction, MockOutput, saveType } from "../../../classes/mock-action";
 
 
 export class MockStatusPurchaseFlowBus201Class extends MockAction {
