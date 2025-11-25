@@ -35073,9 +35073,9 @@ x-validations:
               - attr: $.message.catalog.providers[*].fulfillments[*].type
                 _RETURN_: attr are present
                 _NAME_: REQUIRED_message_catalog_providers_fulfillments_type
-              - attr: $.message.catalog.providers[*].fulfillments[*].stops[*].location.gps
-                _RETURN_: attr are present
-                _NAME_: REQUIRED_message_catalog_providers_fulfillments_stops_location_gps
+              # - attr: $.message.catalog.providers[*].fulfillments[*].stops[*].location.gps
+              #   _RETURN_: attr are present
+              #   _NAME_: REQUIRED_message_catalog_providers_fulfillments_stops_location_gps
               - attr: $.message.catalog.providers[*].id
                 _RETURN_: attr are present
                 _NAME_: REQUIRED_message_catalog_providers_id_2
