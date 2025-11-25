@@ -47,6 +47,7 @@ const onInit = async (data: any) => {
       return result;
     }
 
+ 
     // try {
     //   const previousCallPresent = await addActionToRedisSet(
     //     context.transaction_id,
@@ -527,7 +528,7 @@ const onInit = async (data: any) => {
       console.info(`Validating fulfillments`);
       on_init?.fulfillments.forEach((fulfillment: any) => {
         const { type } = fulfillment;
-        if (type == "Delivery") {
+        if (type == "Delivery" || type == "Buyer-Delivery") {
           if (fulfillment.tags && fulfillment.tags.length > 0) {
             result.push({
               valid: false,
@@ -535,7 +536,7 @@ const onInit = async (data: any) => {
               description: `/message/order/fulfillment of type 'delivery' should not have tags`,
             });
           }
-        } else if (type !== "Delivery") {
+        } else if (type !== "Delivery" || type !== "Buyer-Delivery") {
           result.push({
             valid: false,
             code: 20000,
