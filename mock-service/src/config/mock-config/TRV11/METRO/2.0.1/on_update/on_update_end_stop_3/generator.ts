@@ -1,7 +1,4 @@
 import { v4 as uuidV4 } from "uuid";
-const generateRandomId = () => {
-  return Math.random().toString(36).substring(2, 15);
-};
 export async function onUpdateStopEndGenerator(
   existingPayload: any,
   sessionData: any
@@ -28,21 +25,13 @@ export async function onUpdateStopEndGenerator(
   }
   if (sessionData.payments) {
     existingPayload.message.order.payments = sessionData.payments;
-    const newPayment = {
-      ...existingPayload.message.order.payments[1],
-      id: generateRandomId(),
-      status: "PAID",
-      collected_by: existingPayload.message.order.payments[0].collected_by,
-      type: 'POST-FULFILLMENT',
-      params: {
+    existingPayload.message.order.payments[1].params = {
         transaction_id: uuidV4(),
         amount:
           sessionData?.updated_price ||
           existingPayload.message.order.quote.price.value,
         currency: "INR",
-      },
-    };
-    existingPayload.message.order.payments[1] = newPayment;
+      }
   }
 
   const now = new Date().toISOString();
