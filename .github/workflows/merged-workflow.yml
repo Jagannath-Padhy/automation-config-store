@@ -2,13 +2,13 @@ name: Deploy merged Service
 
 on:
   workflow_dispatch:
-  push:
+  # push:
     # paths:
     #   - "api-service/**"
     #   - "mock-service/**"
-    branches:
-      - "draft-*"
-      - "release-*"
+    # branches:
+    #   - "draft-*"
+    #   - "release-*"
 
 jobs:
   build-and-verify:
