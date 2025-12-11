@@ -43,10 +43,10 @@ export class MockOnStatusCancelMetro201Class extends MockAction {
   }
 
   // 0.1 check order state
-  if (order?.state !== "CANCELLED") {
+  if (order?.status !== "COMPLETE") {
     return {
       valid: false,
-      message: `Invalid order state. Expected "ACTIVE", got ${order?.state}`,
+      message: `Invalid order state. Expected "COMPLETE", got ${order?.status}`,
     };
   }
 
