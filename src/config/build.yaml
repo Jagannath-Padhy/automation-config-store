@@ -29065,7 +29065,7 @@ x-validations:
       - _NAME_: start_address_validations
         _DESCRIPTION_: Valid address should be sent in fulfillments/start/location
         startLocation: >-
-          $.message.order.fulfillments[?(@.type=='Delivery')].start.location.address.city
+          $.message.order.fulfillments[?(@.type=='Delivery' || @.type=='Return')].start.location.address.city
         _RETURN_: startLocation are present
       - _NAME_: end_address_validations
         _DESCRIPTION_: Valid address should be sent in fulfillments/end/location
