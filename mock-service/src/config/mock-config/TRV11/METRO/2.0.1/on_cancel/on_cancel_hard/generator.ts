@@ -109,7 +109,7 @@ export async function onCancelHardGenerator(
 
   console.log(
     "existingPayload.message.order.fulfillments",
-    JSON.stringify(existingPayload.message.order.fulfillments, sessionData)
+    JSON.stringify(existingPayload.message.order.fulfillments)
   );
 
   existingPayload.message.order.fulfillments.forEach((fulfillment: any) => {
