@@ -31,4 +31,4 @@ message:
               value: "2.5"
             - descriptor:
                 code: STATIC_TERMS
-              value: https://api.example-bap.com/booking/terms
+              value: https://www.abc.com/settlement-terms/
