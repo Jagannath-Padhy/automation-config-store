@@ -179,7 +179,7 @@ message:
                     value: New Delhi
                   - descriptor:
                       code: STATIC_TERMS
-                    value: "https://api.transit-solutions.com/booking/terms"
+                    value: "https://www.abc.com/settlement-terms/"
     tags:
       - descriptor:
           code: PAGINATION

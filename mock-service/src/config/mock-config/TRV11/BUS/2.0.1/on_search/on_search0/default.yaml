@@ -3,7 +3,7 @@ message:
     descriptor:
       name: Transit Solutions
       images:
-        - url: 'https://transitsolutions.in/logos/logo.ico'
+        - url: "https://transitsolutions.in/logos/logo.ico"
           # size_type: xs
     providers:
       - id: P1
@@ -22,8 +22,8 @@ message:
                   descriptor:
                     name: kashmere gate
                     code: KASHMERE_GATE
-                  gps: '28.666576, 77.233332'
-                id: '1'
+                  gps: "28.666576, 77.233332"
+                id: "1"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 1
@@ -31,9 +31,9 @@ message:
                   descriptor:
                     name: Indira Gandhi Technical Unviversity
                     code: INDIRA_GANDHI_TECHNICAL_UNIV
-                  gps: '28.624097, 77.204991'
-                id: '2'
-                parent_stop_id: '1'
+                  gps: "28.624097, 77.204991"
+                id: "2"
+                parent_stop_id: "1"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 2
@@ -41,9 +41,9 @@ message:
                   descriptor:
                     name: Yamuna Bazar
                     code: YAMUNA_BAZAR
-                  gps: '28.625972,77.209917'
-                id: '3'
-                parent_stop_id: '2'
+                  gps: "28.625972,77.209917"
+                id: "3"
+                parent_stop_id: "2"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 3
@@ -51,9 +51,9 @@ message:
                   descriptor:
                     name: dhaula kuan
                     code: DHAULA_KUAN
-                  gps: '28.610972,77.201717'
-                id: '4'
-                parent_stop_id: '3'
+                  gps: "28.610972,77.201717"
+                id: "4"
+                parent_stop_id: "3"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 4
@@ -61,17 +61,17 @@ message:
                   descriptor:
                     name: gpo
                     code: GPO
-                  gps: '28.623097,77.209917'
-                id: '5'
-                parent_stop_id: '4'
+                  gps: "28.623097,77.209917"
+                id: "5"
+                parent_stop_id: "4"
               - type: END
                 location:
                   descriptor:
                     name: Greater Kailash
                     code: GREATER_KAILASH
-                  gps: '28.548230, 77.238039'
-                id: '6'
-                parent_stop_id: '5'
+                  gps: "28.548230, 77.238039"
+                id: "6"
+                parent_stop_id: "5"
             vehicle:
               category: BUS
             tags:
@@ -80,7 +80,7 @@ message:
                 list:
                   - descriptor:
                       code: ROUTE_ID
-                    value: '242'
+                    value: "242"
                   - descriptor:
                       code: ROUTE_DIRECTION
                     value: UP
@@ -92,8 +92,8 @@ message:
                   descriptor:
                     name: Greater Kailash
                     code: GREATER_KAILASH
-                  gps: '28.548230, 77.238039'
-                id: '1'
+                  gps: "28.548230, 77.238039"
+                id: "1"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 1
@@ -101,9 +101,9 @@ message:
                   descriptor:
                     name: gpo
                     code: GPO
-                  gps: '28.623097,77.209917'
-                id: '2'
-                parent_stop_id: '1'
+                  gps: "28.623097,77.209917"
+                id: "2"
+                parent_stop_id: "1"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 2
@@ -111,9 +111,9 @@ message:
                   descriptor:
                     name: dhaula kuan
                     code: DHAULA_KUAN
-                  gps: '28.610972,77.201717'
-                id: '3'
-                parent_stop_id: '2'
+                  gps: "28.610972,77.201717"
+                id: "3"
+                parent_stop_id: "2"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 3
@@ -121,9 +121,9 @@ message:
                   descriptor:
                     name: Yamuna Bazar
                     code: YAMUNA_BAZAR
-                  gps: '28.625972,77.209917'
-                id: '4'
-                parent_stop_id: '3'
+                  gps: "28.625972,77.209917"
+                id: "4"
+                parent_stop_id: "3"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 4
@@ -131,17 +131,17 @@ message:
                   descriptor:
                     name: Indira Gandhi Technical Unviversity
                     code: INDIRA_GANDHI_TECHNICAL_UNIV
-                  gps: '28.624097, 77.204991'
-                id: '5'
-                parent_stop_id: '4'
+                  gps: "28.624097, 77.204991"
+                id: "5"
+                parent_stop_id: "4"
               - type: END
                 location:
                   descriptor:
                     name: kashmere gate
                     code: KASHMERE_GATE
-                  gps: '28.666576, 77.233332'
-                id: '6'
-                parent_stop_id: '5'
+                  gps: "28.666576, 77.233332"
+                id: "6"
+                parent_stop_id: "5"
             vehicle:
               category: BUS
             tags:
@@ -150,7 +150,7 @@ message:
                 list:
                   - descriptor:
                       code: ROUTE_ID
-                    value: '242'
+                    value: "242"
                   - descriptor:
                       code: ROUTE_DIRECTION
                     value: DOWN
@@ -162,8 +162,8 @@ message:
                   descriptor:
                     name: kashmere gate
                     code: KASHMERE_GATE
-                  gps: '28.666576, 77.233332'
-                id: '1'
+                  gps: "28.666576, 77.233332"
+                id: "1"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 1
@@ -171,17 +171,17 @@ message:
                   descriptor:
                     name: Indira Gandhi Technical Unviversity
                     code: INDIRA_GANDHI_TECHNICAL_UNIV
-                  gps: '28.624097, 77.204991'
-                id: '2'
-                parent_stop_id: '1'
+                  gps: "28.624097, 77.204991"
+                id: "2"
+                parent_stop_id: "1"
               - type: END
                 location:
                   descriptor:
                     name: Greater Kailash
                     code: GREATER_KAILASH
-                  gps: '28.548230, 77.238039'
-                id: '3'
-                parent_stop_id: '2'
+                  gps: "28.548230, 77.238039"
+                id: "3"
+                parent_stop_id: "2"
             vehicle:
               category: BUS
             tags:
@@ -190,7 +190,7 @@ message:
                 list:
                   - descriptor:
                       code: ROUTE_ID
-                    value: '241'
+                    value: "241"
                   - descriptor:
                       code: ROUTE_DIRECTION
                     value: UP
@@ -202,8 +202,8 @@ message:
                   descriptor:
                     name: Greater Kailash
                     code: GREATER_KAILASH
-                  gps: '28.548230, 77.238039'
-                id: '1'
+                  gps: "28.548230, 77.238039"
+                id: "1"
               - type: INTERMEDIATE_STOP
                 instructions:
                   name: Stop 1
@@ -211,17 +211,17 @@ message:
                   descriptor:
                     name: Indira Gandhi Technical Unviversity
                     code: INDIRA_GANDHI_TECHNICAL_UNIV
-                  gps: '28.624097, 77.204991'
-                id: '2'
-                parent_stop_id: '1'
+                  gps: "28.624097, 77.204991"
+                id: "2"
+                parent_stop_id: "1"
               - type: END
                 location:
                   descriptor:
                     name: kashmere gate
                     code: KASHMERE_GATE
-                  gps: '28.666576, 77.233332'
-                id: '3'
-                parent_stop_id: '2'
+                  gps: "28.666576, 77.233332"
+                id: "3"
+                parent_stop_id: "2"
             vehicle:
               category: BUS
             tags:
@@ -230,7 +230,7 @@ message:
                 list:
                   - descriptor:
                       code: ROUTE_ID
-                    value: '241'
+                    value: "241"
                   - descriptor:
                       code: ROUTE_DIRECTION
                     value: DOWN
@@ -243,7 +243,7 @@ message:
                 list:
                   - descriptor:
                       code: BUYER_FINDER_FEES_PERCENTAGE
-                    value: '1'
+                    value: "1"
               - descriptor:
                   code: SETTLEMENT_TERMS
                 display: false
@@ -256,10 +256,10 @@ message:
                     value: INVOICE_RECEIPT
                   - descriptor:
                       code: MANDATORY_ARBITRATION
-                    value: 'TRUE'
+                    value: "TRUE"
                   - descriptor:
                       code: COURT_JURISDICTION
                     value: New Delhi
                   - descriptor:
                       code: STATIC_TERMS
-                    value: 'https://api.transit-solutions.com/booking/terms'
+                    value: "https://www.abc.com/settlement-terms/"

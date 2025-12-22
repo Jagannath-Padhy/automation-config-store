@@ -12,7 +12,7 @@ message:
           images:
             - url: >-
                 https://dtc.delhi.gov.in/sites/default/files/DTC/logo/dtc_logo_2.png
-              size_type: xs    
+              size_type: xs
         fulfillments:
           - id: F1
             type: TRIP
@@ -118,4 +118,4 @@ message:
                     value: New Delhi
                   - descriptor:
                       code: STATIC_TERMS
-                    value: "https://api.transit-solutions.com/booking/terms"
+                    value: "https://www.abc.com/settlement-terms/"
