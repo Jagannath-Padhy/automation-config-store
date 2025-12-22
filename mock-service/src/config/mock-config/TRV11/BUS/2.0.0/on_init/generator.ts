@@ -65,7 +65,7 @@ export async function onInitGenerator(
               descriptor: {
                 code: "MANDATORY_ARBITRATION",
               },
-              value: "true",
+              value: "TRUE",
             },
             {
               descriptor: {
