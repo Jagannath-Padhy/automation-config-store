@@ -2,10 +2,10 @@ import { readFileSync } from "fs";
 import yaml from "js-yaml";
 import path from "path";
 import { MockAction, MockOutput, saveType } from "../../../../classes/mock-action";
-import { onSearchGenerator } from "./generator";
 import { SessionData } from "../../../../session-types";
+import { onSearch0Generator } from "./generator";
 
-export class MockOnSearch1Bus201Class extends MockAction {
+export class MockOnSearch0Bus201Class extends MockAction {
   get saveData(): saveType {
     return yaml.load(
       readFileSync(path.resolve(__dirname, "../save-data.yaml"), "utf8")
@@ -20,13 +20,13 @@ export class MockOnSearch1Bus201Class extends MockAction {
     return {};
   }
   name(): string {
-    return "on_search_BUS_201";
+    return "on_search0_BUS_201";
   }
   get description(): string {
     return "Mock for on_search_BUS_201";
   }
   generator(existingPayload: any, sessionData: SessionData): Promise<any> {
-    return onSearchGenerator(existingPayload, sessionData);
+    return onSearch0Generator(existingPayload, sessionData);
   }
   async validate(
   targetPayload: any,
@@ -39,6 +39,7 @@ export class MockOnSearch1Bus201Class extends MockAction {
       message: `City code mismatch: expected ${sessionData.city_code}, got ${targetCityCode}`
     };
   }
+
   return { valid: true };
 }
 
