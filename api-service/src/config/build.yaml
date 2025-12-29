@@ -27829,6 +27829,7 @@ x-validations:
           - POST-FULFILLMENT
       - _NAME_: REQUIRED_MESSAGE_TRANSACTION_ID_47
         attr: "$.message.order.payments[*].params.transaction_id"
+        _CONTINUE_: "!(attr are present)"
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_48
         attr: "$.message.order.payments[*].params.currency"
