@@ -56,6 +56,7 @@ export interface SessionData {
 	updated_price: string
   issue_level: any
   flow_id: any
+  newPaymentId: any
 }
 
 export type BecknContext = {
