@@ -105,7 +105,9 @@ export async function onSelect1Generator(existingPayload: any, sessionData: any)
       
       // Store consent handler in session data for later use (verify step)
       sessionData.consent_handler = consentHandler;
+      console.log("sessionData.consent_handler", sessionData.consent_handler);
       console.log("Stored consent_handler in session data");
+      console.log("consent handler in response", consentHandler);
       
       // Inject consent handler into payload tags
       if (existingPayload.message?.order?.items?.[0]) {
@@ -114,14 +116,21 @@ export async function onSelect1Generator(existingPayload: any, sessionData: any)
         // Initialize tags array if it doesn't exist
         if (!item.tags) {
           item.tags = [];
+          console.log("Initialized tags array");
         }
         
         // Find existing CONSENT_INFO tag or create new one
-        let consentInfoTag = item.tags.find((tag: any) => 
+        let consentInfoTagIndex = item.tags.findIndex((tag: any) => 
           tag.descriptor?.code === 'CONSENT_INFO'
         );
         
-        if (!consentInfoTag) {
+        let consentInfoTag;
+        if (consentInfoTagIndex >= 0) {
+          consentInfoTag = item.tags[consentInfoTagIndex];
+          console.log("Found existing CONSENT_INFO tag at index:", consentInfoTagIndex);
+          console.log("Existing CONSENT_HANDLER value:", 
+            consentInfoTag.list?.find((l: any) => l.descriptor?.code === 'CONSENT_HANDLER')?.value || 'not found');
+        } else {
           // Create new CONSENT_INFO tag structure
           consentInfoTag = {
             descriptor: {
@@ -132,9 +141,21 @@ export async function onSelect1Generator(existingPayload: any, sessionData: any)
             display: false
           };
           item.tags.push(consentInfoTag);
+          consentInfoTagIndex = item.tags.length - 1;
+          console.log("Created new CONSENT_INFO tag at index:", consentInfoTagIndex);
         }
         
-        // Update or add CONSENT_HANDLER in the list
+        // Ensure list exists
+        if (!consentInfoTag.list) {
+          consentInfoTag.list = [];
+          console.log("Initialized CONSENT_INFO list");
+        }
+        
+        // Find and update existing CONSENT_HANDLER or add new one
+        const existingHandlerIndex = consentInfoTag.list.findIndex((listItem: any) => 
+          listItem.descriptor?.code === 'CONSENT_HANDLER'
+        );
+        
         const consentHandlerItem = {
           descriptor: {
             code: 'CONSENT_HANDLER',
@@ -143,25 +164,34 @@ export async function onSelect1Generator(existingPayload: any, sessionData: any)
           value: consentHandler
         };
         
-        // Find and update existing CONSENT_HANDLER or add new one
-        const existingHandlerIndex = consentInfoTag.list?.findIndex((item: any) => 
-          item.descriptor?.code === 'CONSENT_HANDLER'
-        );
-        
-        if (existingHandlerIndex !== undefined && existingHandlerIndex >= 0) {
-          consentInfoTag.list[existingHandlerIndex] = consentHandlerItem;
-          console.log("Updated existing CONSENT_HANDLER in tags");
+        if (existingHandlerIndex >= 0) {
+          // Update existing CONSENT_HANDLER value directly
+          consentInfoTag.list[existingHandlerIndex].value = consentHandler;
+          console.log(`✅ Updated existing CONSENT_HANDLER at index ${existingHandlerIndex} with new value: ${consentHandler}`);
+          console.log("Verification - CONSENT_HANDLER value in payload:", 
+            item.tags[consentInfoTagIndex].list[existingHandlerIndex].value);
         } else {
-          if (!consentInfoTag.list) {
-            consentInfoTag.list = [];
-          }
+          // Add new CONSENT_HANDLER
           consentInfoTag.list.push(consentHandlerItem);
-          console.log("Added new CONSENT_HANDLER to tags");
+          console.log(`✅ Added new CONSENT_HANDLER to list with value: ${consentHandler}`);
+          console.log("Verification - CONSENT_HANDLER value in payload:", 
+            item.tags[consentInfoTagIndex].list[consentInfoTag.list.length - 1].value);
         }
         
-        console.log("✅ Finvu AA integration successful - consent handler injected into payload");
+        // Final verification - check the actual payload structure
+        const finalValue = existingPayload.message.order.items[0].tags
+          ?.find((t: any) => t.descriptor?.code === 'CONSENT_INFO')
+          ?.list?.find((l: any) => l.descriptor?.code === 'CONSENT_HANDLER')
+          ?.value;
+        
+        if (finalValue === consentHandler) {
+          console.log("✅ Verification passed - consent handler successfully updated in payload");
+        } else {
+          console.error("❌ Verification failed - consent handler not properly updated. Expected:", consentHandler, "Got:", finalValue);
+        }
       } else {
         console.warn("⚠️ Cannot inject consent handler - items[0] not found in payload");
+        console.log("Payload structure:", JSON.stringify(existingPayload.message?.order, null, 2));
       }
       
     } catch (error: any) {
@@ -182,6 +212,8 @@ export async function onSelect1Generator(existingPayload: any, sessionData: any)
   }
   
   console.log("--- Finvu AA Integration End ---");
+
+
 
   // ========== FORM URL UPDATE ==========
   
