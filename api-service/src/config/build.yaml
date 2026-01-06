@@ -25130,13 +25130,6 @@ x-validations:
         useCode:
           - METRO
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_22
-        attr: "$.message.catalog.providers[*].fulfillments[*].stops[*].location.gps"
-        _RETURN_: attr are present
-        useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
-        useCode:
-          - METRO
-        _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_23
         attr: "$.message.catalog.providers[*].fulfillments[*].id"
         _RETURN_: attr are present
@@ -25206,13 +25199,6 @@ x-validations:
         _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_48
         attr: "$.message.catalog.providers[*].fulfillments[*].type"
-        _RETURN_: attr are present
-        useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_49
-        attr: "$.message.catalog.providers[*].fulfillments[*].stops[*].location.gps"
         _RETURN_: attr are present
         useCasePath: "$.message.catalog.providers[*].fulfillments[*].vehicle.category"
         useCode:
@@ -25589,13 +25575,6 @@ x-validations:
         useCode:
           - METRO
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_29
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - METRO
-        _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_30
         attr: "$.message.order.fulfillments[*].id"
         _RETURN_: attr are present
@@ -25836,13 +25815,7 @@ x-validations:
         useCode:
           - BUS
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_68
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_69
         attr: "$.message.order.fulfillments[*].vehicle.category"
         _RETURN_: attr are present
@@ -26143,13 +26116,6 @@ x-validations:
         useCode:
           - METRO
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_29
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - METRO
-        _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_30
         attr: "$.message.order.fulfillments[*].id"
         _RETURN_: attr are present
@@ -26423,13 +26389,6 @@ x-validations:
         _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_71
         attr: "$.message.order.fulfillments[*].type"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_72
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
@@ -26797,13 +26756,6 @@ x-validations:
         useCode:
           - METRO
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_30
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - METRO
-        _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_31
         attr: "$.message.order.fulfillments[*].stops[*].authorization.type"
         _RETURN_: attr are present && attr all in enumList
@@ -27052,13 +27004,6 @@ x-validations:
         _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_82
         attr: "$.message.order.fulfillments[*].type"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_83
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
@@ -27484,13 +27429,6 @@ x-validations:
         useCode:
           - BUS
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_35
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_36
         attr: "$.message.order.fulfillments[*].vehicle.category"
         _RETURN_: attr are present && attr all in enumList
@@ -27768,9 +27706,6 @@ x-validations:
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_CODE_30
         attr: "$.message.order.fulfillments[*].stops[*].location.descriptor.code"
-        _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_GPS_31
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_ID_35
         attr: "$.message.order.fulfillments[*].id"
@@ -28136,13 +28071,6 @@ x-validations:
         useCode:
           - METRO
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_32
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - METRO
-        _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_33
         attr: "$.message.order.fulfillments[*].id"
         _RETURN_: attr are present
@@ -28455,13 +28383,6 @@ x-validations:
         _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_81
         attr: "$.message.order.fulfillments[*].type"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_GPS_82
-        attr: "$.message.order.fulfillments[*].stops[*].location.gps"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
