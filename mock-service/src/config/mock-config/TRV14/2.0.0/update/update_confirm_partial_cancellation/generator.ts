@@ -11,7 +11,6 @@
 export async function updateConfirmPartialCancellationGenerator(existingPayload: any, sessionData: any) {
   // Get the selected item from session (stored during select)
   const selectedItem = sessionData.selected_items?.[0];
-
   if (!selectedItem) {
     throw new Error("No selected item found in session for partial cancellation");
   }

@@ -129,6 +129,5 @@ export async function onInitGenerator(existingPayload: any, sessionData: any) {
     existingPayload.message.order.tags = tags;
   }
 
-
   return existingPayload;
 } 

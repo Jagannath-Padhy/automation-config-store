@@ -2,7 +2,6 @@ catalog:
   descriptor:
     name: India tourism
     long_desc: Online ticket booking service
-    short_desc: Online ticket booking service
     images:
     - url: https://api.unreserved-entry-pass.com/logos/logo.ico
       size_type: xs
