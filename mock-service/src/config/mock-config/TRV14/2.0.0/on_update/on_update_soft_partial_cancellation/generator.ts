@@ -37,7 +37,6 @@ export async function onUpdateSoftPartialCancellationGenerator(existingPayload: 
             }
           }
         };
-
         // Update add-ons quantity if present
         if (items[itemIndex].add_ons) {
           items[itemIndex].add_ons = items[itemIndex].add_ons.map((addOn: any) => ({
@@ -59,17 +58,14 @@ export async function onUpdateSoftPartialCancellationGenerator(existingPayload: 
   if (sessionData.fulfillments) {
     existingPayload.message.order.fulfillments = sessionData.fulfillments;
   }
-
   // Load provider from session
   if (sessionData.provider) {
     existingPayload.message.order.provider = sessionData.provider;
   }
-
   // Load billing from session
   if (sessionData.billing) {
     existingPayload.message.order.billing = sessionData.billing;
   }
-
   // Load payments from session
   if (sessionData.payments) {
     existingPayload.message.order.payments = sessionData.payments;
@@ -84,7 +80,6 @@ export async function onUpdateSoftPartialCancellationGenerator(existingPayload: 
   if (sessionData.cancellation_terms) {
     existingPayload.message.order.cancellation_terms = sessionData.cancellation_terms;
   }
-
   // Load replacement_terms from session
   if (sessionData.replacement_terms) {
     existingPayload.message.order.replacement_terms = sessionData.replacement_terms;
@@ -136,7 +131,6 @@ export async function onUpdateSoftPartialCancellationGenerator(existingPayload: 
         value: `-${refundAmount}`
       }
     });
-
     // Add cancellation charges (0 for soft cancel)
     breakup.push({
       title: "CANCELLATION_CHARGES",
@@ -158,12 +152,10 @@ export async function onUpdateSoftPartialCancellationGenerator(existingPayload: 
       }
     };
   }
-
   // Add timestamps
   if (sessionData.created_at) {
     existingPayload.message.order.created_at = sessionData.created_at;
   }
   existingPayload.message.order.updated_at = existingPayload.context.timestamp;
-
   return existingPayload;
 }

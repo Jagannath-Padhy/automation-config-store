@@ -43,7 +43,6 @@ function mergeAddOnsWithSelection(fullAddOns: any[], selectedAddOns: any[]): any
  */
 function createItemWithSelection(fullItem: any, selectedItem: any): any {
   const itemPayload = { ...fullItem };
-
   // Merge selected quantity
   if (selectedItem.quantity?.selected) {
     itemPayload.quantity = {
@@ -56,7 +55,6 @@ function createItemWithSelection(fullItem: any, selectedItem: any): any {
   if (selectedItem.add_ons && fullItem.add_ons) {
     itemPayload.add_ons = mergeAddOnsWithSelection(fullItem.add_ons, selectedItem.add_ons);
   }
-
   return itemPayload;
 }
 
@@ -79,7 +77,6 @@ function calculateQuote(items: any[]): any {
     const itemPrice = parseFloat(item.price.value);
     const quantity = item.quantity.selected.count;
     const itemTotal = itemPrice * quantity;
-
     breakup.push({
       title: "BASE_FARE",
       item: {
@@ -111,7 +108,6 @@ function calculateQuote(items: any[]): any {
       value: "0"
     }
   });
-
   // Calculate ADD_ONS for each priceable item (excluding parent items)
   // Loop through priceable items and their add_ons, calculate add-on prices
   priceableItems.forEach((item: any) => {
@@ -121,7 +117,6 @@ function calculateQuote(items: any[]): any {
           const addOnPrice = parseFloat(addOn.price.value);
           const addOnQuantity = addOn.quantity.selected.count;
           const addOnTotal = addOnPrice * addOnQuantity;
-
           breakup.push({
             title: "ADD_ONS",
             item: {
@@ -133,13 +128,11 @@ function calculateQuote(items: any[]): any {
               value: addOnTotal.toString()
             }
           });
-
           totalValue += addOnTotal;
         }
       });
     }
   });
-
   return {
     breakup,
     price: {
@@ -163,7 +156,6 @@ export async function onSelectWithoutFormGenerator(existingPayload: any, session
   sessionData.selected_items.forEach((selectedItem: any) => {
     // Find the full item details from sessionData.items
     const fullItem = sessionData.items.find((item: any) => item.id === selectedItem.id);
-
     if (fullItem) {
       // If selected item has a parent_item_id, include the parent item first (for demonstration)
       if (fullItem.parent_item_id && !addedParentIds.has(fullItem.parent_item_id)) {
@@ -180,7 +172,6 @@ export async function onSelectWithoutFormGenerator(existingPayload: any, session
           addedParentIds.add(fullItem.parent_item_id);
         }
       }
-
       // Clean up selected item
       delete fullItem.cancellation_terms;
       delete fullItem.replacement_terms;
@@ -201,6 +192,5 @@ export async function onSelectWithoutFormGenerator(existingPayload: any, session
     existingPayload.message.order.fulfillments = sessionData.fulfillments?.filter((fulfillment: any) => fulfillment.id === sessionData.selected_fulfillments[0].id);
   }
   // No xinput form for this on_select_without_form variant
-
   return existingPayload;
 } 
