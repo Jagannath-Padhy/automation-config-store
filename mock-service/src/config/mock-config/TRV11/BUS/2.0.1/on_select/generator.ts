@@ -145,9 +145,10 @@ export async function onSelectGenerator(
   const updatedItems = items
     .map((item: any, index: number) => ({
       ...item,
-      price:
-        existingPayload.message.order.items[index]?.price ||
-        existingPayload.message.order.items[0]?.price,
+      price:{
+        "currency":"INR",
+        "value": item.price.value
+      },
       quantity: {
         selected: {
           count: ids_with_quantities["items"][item.id] ?? 0, // Default to 0 if not in the mapping

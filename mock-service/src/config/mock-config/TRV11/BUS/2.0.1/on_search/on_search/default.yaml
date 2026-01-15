@@ -53,6 +53,9 @@ message:
                 count: 6
               minimum:
                 count: 1
+            time:
+              label: Validity
+              duration: P2D
             tags:
               - descriptor:
                   code: FARE_POLICY
@@ -81,6 +84,9 @@ message:
                 count: 6
               minimum:
                 count: 1
+            time:
+              label: Validity
+              duration: P2D
             tags:
               - descriptor:
                   code: FARE_POLICY
@@ -109,6 +115,9 @@ message:
                 count: 6
               minimum:
                 count: 1
+            time:
+              label: Validity
+              duration: P2D
           - id: I5
             descriptor:
               name: Special Fair Single Journey Ticket
@@ -127,6 +136,9 @@ message:
                 count: 6
               minimum:
                 count: 1
+            time:
+              label: Validity
+              duration: P2D
             tags:
               - descriptor:
                   code: FARE_POLICY
@@ -155,6 +167,9 @@ message:
                 count: 6
               minimum:
                 count: 1
+            time:
+              label: Validity
+              duration: P2D
             tags:
               - descriptor:
                   code: FARE_POLICY
