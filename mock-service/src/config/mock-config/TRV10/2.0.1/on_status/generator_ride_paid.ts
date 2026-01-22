@@ -6,7 +6,7 @@ function updateFulfillmentStatus(order: any) {
   if (order.fulfillments) {
     order.fulfillments.forEach((fulfillment: any) => {
       fulfillment.state.descriptor.code = "RIDE_ENDED";
-      fulfillment.state.descriptor.name = "Your ride has ended"
+      fulfillment.state.descriptor.name = "Your ride has ended";
     });
   }
   return order;
@@ -46,5 +46,21 @@ export async function onStatusRidePaidGenerator(
     existingPayload.message.order,
   );
   existingPayload.message.order.status = "COMPLETE";
+  existingPayload.message.order.fulfillments =
+    existingPayload.message.order.fulfillments.map((fulfillment: any) => ({
+      ...fulfillment,
+      stops: fulfillment.stops.map((stop: any) =>
+        stop.type === "START" && stop.authorization
+          ? {
+              ...stop,
+              authorization: {
+                ...stop.authorization,
+                status: "CLAIMED",
+              },
+            }
+          : stop,
+      ),
+    }));
+
   return existingPayload;
 }
