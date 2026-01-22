@@ -1,7 +1,10 @@
 import { MockAction } from "./classes/mock-action";
 
 // search
-import { MockSearchFemaleRideClass, MockSearchMultipleStopsClass } from "./2.0.1/search/class_multiple_stops";
+import {
+  MockSearchFemaleRideClass,
+  MockSearchMultipleStopsClass,
+} from "./2.0.1/search/class_multiple_stops";
 import { MockSearchClass } from "./2.0.1/search/class";
 import { MockSearchRentalClass } from "./2.0.1/search/class_rental";
 import { MockSearchRentalEndClass } from "./2.0.1/search/class_rental_end";
@@ -104,7 +107,7 @@ import { MockOnCancelHardClass } from "./2.0.1/on_cancel/on_cancel_hard/class";
 import { MockOnCancelRiderNotFoundClass } from "./2.0.1/on_cancel/on_cancel_rider_not_found/class";
 
 // IGM 1.0.0
-import {MockIssueOpenTRV10_201_100_Class } from "./2.0.1/issue/issue_100/issue_open/class";
+import { MockIssueOpenTRV10_201_100_Class } from "./2.0.1/issue/issue_100/issue_open/class";
 import { MockIssueCloseTRV10_201_100_Class } from "./2.0.1/issue/issue_100/issue_close/class";
 import { MockOnIssueProcessingTRV10_201_100_Class } from "./2.0.1/on_issue/on_issue_100/on_issue_processing/class";
 import { MockOnIssueResolvedTRV10_201_100_Class } from "./2.0.1/on_issue/on_issue_100/on_issue_resolved/class";
