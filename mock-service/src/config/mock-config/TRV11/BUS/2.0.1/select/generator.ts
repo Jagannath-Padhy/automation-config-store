@@ -40,25 +40,25 @@ const transformToItemFormat = (userInputItems: any[]): any => {
 };
 export async function selectGenerator(existingPayload: any, sessionData: any) {
 // Note: commits should be uncommits
-	// const userInputItems = sessionData?.user_inputs?.items;
-	// const items_min_max = transformToItemFormat(userInputItems);
-	// const items_chosen = items_min_max;
-	// if(items_chosen){
-	// 	existingPayload.message.order.items = items_chosen;
-	// }
-	// if(sessionData.provider_id){
-	// 	existingPayload.message.order.provider.id = sessionData.provider_id
-	//   }
-	//   const chosenItemsIds = items_min_max.map((item:any) => item.id);
-	//   const filteredItems = sessionData.items.filter((item:any) => 
-	// 	chosenItemsIds.includes(item.id)
-	//   );
-	//   const uniqueFulfillmentIds = [
-	// 	...new Set(
-	// 		filteredItems.flatMap((item:any) => item.fulfillment_ids || [])
-	// 	)
-	//   ];
-	//   const formattedFulfillmentIds = uniqueFulfillmentIds.map(id => ({ id }));
-	//   existingPayload.message.order.fulfillments = formattedFulfillmentIds
+	const userInputItems = sessionData?.user_inputs?.items;
+	const items_min_max = transformToItemFormat(userInputItems);
+	const items_chosen = items_min_max;
+	if(items_chosen){
+		existingPayload.message.order.items = items_chosen;
+	}
+	if(sessionData.provider_id){
+		existingPayload.message.order.provider.id = sessionData.provider_id
+	  }
+	  const chosenItemsIds = items_min_max.map((item:any) => item.id);
+	  const filteredItems = sessionData.items.filter((item:any) => 
+		chosenItemsIds.includes(item.id)
+	  );
+	  const uniqueFulfillmentIds = [
+		...new Set(
+			filteredItems.flatMap((item:any) => item.fulfillment_ids || [])
+		)
+	  ];
+	  const formattedFulfillmentIds = uniqueFulfillmentIds.map(id => ({ id }));
+	  existingPayload.message.order.fulfillments = formattedFulfillmentIds
 	return existingPayload;
 }
