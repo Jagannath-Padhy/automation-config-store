@@ -96,6 +96,7 @@ export async function onSelectUnlimitedPassesGenerator(
     }))
     .filter((item) => item.quantity.selected.count > 0);
   existingPayload.message.order.items = updatedItems
+  const stationId = sessionData.start_code?.match(/\d+$/)?.[0] || "1";
   existingPayload.message.order.fulfillments = sessionData.fulfillments.map(
     (fulfillment) => ({
       ...fulfillment,
@@ -108,7 +109,7 @@ export async function onSelectUnlimitedPassesGenerator(
             },
             gps: "28.666576, 77.233332",
           },
-          id: "1",
+          id: stationId,
         },
       ],
       vehicle: {
