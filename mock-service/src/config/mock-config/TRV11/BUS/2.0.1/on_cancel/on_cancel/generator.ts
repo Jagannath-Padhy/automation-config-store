@@ -161,6 +161,14 @@ export async function onCancelGenerator(
     existingPayload.message.order,
     sessionData
   );
+  existingPayload.message.order.cancellation = {
+  "cancelled_by": "CONSUMER",
+  "reason": {
+    "descriptor": {
+      "code": sessionData.cancellation_reason_id || "000"
+    }
+  }
+}
   existingPayload.message.order.cancellation.reason.descriptor.code = sessionData.cancellation_reason_id || "000";
   const now = new Date().toISOString();
   existingPayload.message.order.created_at = sessionData.created_at;
