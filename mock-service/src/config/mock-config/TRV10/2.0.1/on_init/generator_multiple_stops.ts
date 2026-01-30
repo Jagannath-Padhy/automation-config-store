@@ -48,7 +48,7 @@ export async function onInitMultipleStopsGenerator(
   }
 
   existingPayload.message.order.payments = sessionData.payments?.flat()
-  existingPayload.message.order.payments[0].id = crypto.randomUUID()
+  existingPayload.message.order.payments[0].id = randomPaymentId
   existingPayload.message.order.provider.id = sessionData.provider_id;
   return existingPayload;
 }

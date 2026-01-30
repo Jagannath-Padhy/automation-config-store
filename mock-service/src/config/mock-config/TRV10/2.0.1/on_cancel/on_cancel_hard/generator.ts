@@ -29,7 +29,7 @@ export async function onCancelHardGenerator(
       energy_type: "CNG",
     };
 
-    fulfillment.state.descriptor.code = "RIDE_CANCELLED"
+    fulfillment.state.descriptor.code = "RIDE_CANCELLED";
 
     if (Array.isArray(fulfillment.stops)) {
       fulfillment.stops = fulfillment.stops
@@ -68,7 +68,8 @@ export async function onCancelHardGenerator(
       title: "CANCELLATION_CHARGES",
       price: {
         currency: "INR",
-        value: "10",
+        value:
+          sessionData?.flow_id === "Technical_cancellation_flow" ? "0" : "10",
       },
     },
     {
@@ -79,14 +80,19 @@ export async function onCancelHardGenerator(
       },
     },
   );
-  existingPayload.message.order.quote.price = { currency: "INR", value: "10" };
+  existingPayload.message.order.quote.price = {
+    currency: "INR",
+    value: sessionData?.flow_id === "Technical_cancellation_flow" ? "0" : "10",
+  };
   const now = new Date().toISOString();
 
   const payment0 = existingPayload?.message?.order?.payments?.[0];
   if (!payment0) return;
 
   const collectedBy = payment0?.collected_by; // "BAP" | "BPP"
-  const price = Number(existingPayload?.message?.order?.quote?.price?.value ?? 0);
+  const price = Number(
+    existingPayload?.message?.order?.quote?.price?.value ?? 0,
+  );
 
   const buyerFinderFeesTag = payment0?.tags?.find(
     (tag: any) => tag?.descriptor?.code === "BUYER_FINDER_FEES",
