@@ -69,13 +69,8 @@ function stripTicketAuthorizations(order: any) {
 
   order.fulfillments = order.fulfillments.map((fulfillment: any) => {
     if (fulfillment.type === "TICKET") {
-      return {
-        ...fulfillment,
-        stops: fulfillment.stops.map((stop: any) => {
-          const { authorization, ...rest } = stop;
-          return rest;
-        }),
-      };
+      const { stops, ...restFulfillment } = fulfillment;
+      return restFulfillment; 
     }
     return fulfillment;
   });
@@ -170,7 +165,7 @@ export async function onCancelGenerator(
   }
 }
   existingPayload.message.order.cancellation.reason.descriptor.code = sessionData.cancellation_reason_id || "000";
-  const now = new Date().toISOString();
+  const now = new Date().toISOString();  // Current Timestamp
   existingPayload.message.order.created_at = sessionData.created_at;
   existingPayload.message.order.updated_at = now;
   return existingPayload;
