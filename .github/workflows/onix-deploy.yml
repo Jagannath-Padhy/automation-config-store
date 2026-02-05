@@ -43,10 +43,10 @@ jobs:
           npm ci --prefer-offline --no-audit
           echo "GENERATOR_SHA=${GENERATOR_SHA}" >> $GITHUB_OUTPUT
 
+      # ✅ FIX 1: Added release case
       - name: Generate environment file
         run: |
           BUILD_TYPE="${{ steps.detect-env.outputs.build_type }}"
-
           if [[ "$BUILD_TYPE" == "draft" ]]; then
             cat > ./generator/.env <<EOF
           NODE_ENV=${{ vars.NODE_ENV }}
@@ -80,7 +80,6 @@ jobs:
           RECORDER_SERVICE_GRPC_URL=${{ vars.RECORDER_SERVICE_GRPC_URL }}
           RECORDER_SERVICE_HTTP_URL=${{ vars.RECORDER_SERVICE_HTTP_URL }}
           EOF
-
           elif [[ "$BUILD_TYPE" == "release" ]]; then
             cat > ./generator/.env <<EOF
           NODE_ENV=${{ vars.NODE_ENV }}
@@ -116,8 +115,6 @@ jobs:
           EOF
           fi
 
-          echo "✅ Environment file generated for $BUILD_TYPE"
-
       - name: Build and generate output
         working-directory: generator
         run: |
@@ -141,33 +138,31 @@ jobs:
           set -e
           CONFIG_SHA="${GITHUB_SHA}"
           GENERATOR_SHA="${{ steps.prepare.outputs.GENERATOR_SHA }}"
+          ONIX_SHA="${BECKN_ONIX_SHA}"
           BUILD_TYPE="${{ steps.detect-env.outputs.build_type }}"
 
           if [ -d "./build-output/temp/automation-beckn-plugins" ]; then
-            PLUGIN_SHA=$(git -C ./build-output/temp/automation-beckn-plugins rev-parse HEAD 2>/dev/null || echo "none")
+            PLUGIN_SHA=$(git -C ./build-output/temp/automation-beckn-plugins rev-parse HEAD)
           else
             PLUGIN_SHA="none"
           fi
 
-          ONIX_SHA="${BECKN_ONIX_SHA}"
-          BUILD_TAG="${CONFIG_SHA:0:8}-${GENERATOR_SHA:0:8}-${PLUGIN_SHA:0:8}-${ONIX_SHA:0:8}"
-          TAG_HASH=$(echo -n "$BUILD_TAG" | sha256sum | awk '{print substr($1,1,16)}')
+          COMBINED_SHA="${CONFIG_SHA}${GENERATOR_SHA}${PLUGIN_SHA}${ONIX_SHA}"
+          COMBINED_HASH=$(echo -n "$COMBINED_SHA" | sha256sum | awk '{print $1}')
+          SHORT_HASH="${COMBINED_HASH: -5}"
           IMAGE_NAME="${{ env.REGISTRY }}/${{ env.REGISTRY_NAMESPACE }}/ondc-onix-${{ vars.CONTAINER_NAME }}"
 
           if [[ "$BUILD_TYPE" == "release" ]]; then
-            DEPLOYMENT_TAG="prod-${TAG_HASH}"
+            DEPLOYMENT_TAG="prod-${SHORT_HASH}"
           else
-            DEPLOYMENT_TAG="dev-${TAG_HASH}"
+            DEPLOYMENT_TAG="dev-${SHORT_HASH}"
           fi
 
-          echo "build_tag=${BUILD_TAG}" >> $GITHUB_OUTPUT
-          echo "deployment_tag=${DEPLOYMENT_TAG}" >> $GITHUB_OUTPUT
           echo "image_name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "deployment_tag=${DEPLOYMENT_TAG}" >> $GITHUB_OUTPUT
           echo "build_type=${BUILD_TYPE}" >> $GITHUB_OUTPUT
-
-          echo "BUILD_TAG=${BUILD_TAG}" >> $GITHUB_ENV
-          echo "DEPLOYMENT_TAG=${DEPLOYMENT_TAG}" >> $GITHUB_ENV
           echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
+          echo "DEPLOYMENT_TAG=${DEPLOYMENT_TAG}" >> $GITHUB_ENV
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -180,28 +175,24 @@ jobs:
         working-directory: generator
         run: |
           cd build-output
-          docker build -t $IMAGE_NAME:$BUILD_TAG .
+          docker build -t $IMAGE_NAME:$DEPLOYMENT_TAG .
         env:
           DOCKER_BUILDKIT: 1
 
+      # ✅ FIX 2: Added stable tag for release
       - name: Tag & Push Images
         run: |
           BUILD_TYPE="${{ steps.detect-env.outputs.build_type }}"
 
-          docker tag $IMAGE_NAME:$BUILD_TAG $IMAGE_NAME:$DEPLOYMENT_TAG
-
-          if [[ "$BUILD_TYPE" == "release" ]]; then
-            docker tag $IMAGE_NAME:$BUILD_TAG $IMAGE_NAME:stable
-          fi
-
-          docker push $IMAGE_NAME:$BUILD_TAG
           docker push $IMAGE_NAME:$DEPLOYMENT_TAG
 
           if [[ "$BUILD_TYPE" == "release" ]]; then
+            docker tag $IMAGE_NAME:$DEPLOYMENT_TAG $IMAGE_NAME:stable
             docker push $IMAGE_NAME:stable
+            echo "✅ Pushed: $DEPLOYMENT_TAG and stable"
+          else
+            echo "✅ Pushed: $DEPLOYMENT_TAG"
           fi
-
-          echo "✅ Images pushed"
 
   deploy:
     needs: build-and-push
@@ -226,11 +217,9 @@ jobs:
             REPO_DIR="$HOME/ONDC-automation-framework/api-service/${CONTAINER_NAME}"
 
             echo "🚀 Deploying ${IMAGE_NAME}:${DEPLOYMENT_TAG}"
-
             mkdir -p ${REPO_DIR}
             cd ${REPO_DIR}
 
-            # Generate .env directly on the server
             if [[ "$BUILD_TYPE" == "draft" ]]; then
               cat > .env <<EOF
             NODE_ENV=${{ vars.NODE_ENV }}
@@ -299,7 +288,13 @@ jobs:
             EOF
             fi
 
-            # Pull and deploy
+            # ✅ FIX 3: Added rollback capability
+            OLD_CONTAINER_ID=$(docker ps -q -f name=${CONTAINER_NAME} 2>/dev/null || echo "")
+            if [ -n "$OLD_CONTAINER_ID" ]; then
+              OLD_IMAGE=$(docker inspect --format='{{.Image}}' ${OLD_CONTAINER_ID})
+              echo "OLD_IMAGE=${OLD_IMAGE}" > ${REPO_DIR}/.rollback
+            fi
+
             docker pull ${IMAGE_NAME}:${DEPLOYMENT_TAG}
             docker stop ${CONTAINER_NAME} 2>/dev/null || true
             docker rm ${CONTAINER_NAME} 2>/dev/null || true
@@ -310,6 +305,19 @@ jobs:
               -p ${{ vars.API_SERVICE_PORT }}:${{ vars.API_SERVICE_PORT }} \
               ${IMAGE_NAME}:${DEPLOYMENT_TAG}
 
+            # ✅ FIX 3: Added health check with rollback
             sleep 5
+            if ! docker ps | grep -q ${CONTAINER_NAME}; then
+              echo "❌ Container failed!"
+              docker logs --tail 50 ${CONTAINER_NAME}
+              if [ -f "${REPO_DIR}/.rollback" ]; then
+                source ${REPO_DIR}/.rollback
+                echo "🔄 Rolling back..."
+                docker run -d --name ${CONTAINER_NAME} --restart unless-stopped --env-file ${REPO_DIR}/.env -p ${{ vars.API_SERVICE_PORT }}:${{ vars.API_SERVICE_PORT }} ${OLD_IMAGE}
+              fi
+              exit 1
+            fi
+
+            echo "✅ Deployment successful!"
             docker ps -f name=${CONTAINER_NAME}
             docker logs --tail 20 ${CONTAINER_NAME}
