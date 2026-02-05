@@ -2,12 +2,12 @@ name: Deploy Onix Service
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "api-service/**"
-    branches:
-      - "draft-*"
-      - "release-*"
+#   push:
+#     paths:
+#       - "api-service/**"
+#     branches:
+#       - "draft-*"
+#       - "release-*"
 
 env:
   REGISTRY: ghcr.io
@@ -368,7 +368,7 @@ jobs:
             RECORDER_SERVICE_GRPC_URL=${{ vars.RECORDER_SERVICE_GRPC_URL_STAGING }}
             RECORDER_SERVICE_HTTP_URL=${{ vars.RECORDER_SERVICE_HTTP_URL_STAGING }}
             EOF
-          fi
+            fi
 
             echo "✅ Environment file created"
 
