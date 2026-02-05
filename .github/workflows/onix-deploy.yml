@@ -53,20 +53,27 @@ jobs:
         run: |
           BUILD_TYPE="${{ steps.detect-env.outputs.build_type }}"
           TEMPLATE_FILE=".github/workflows/env-templates/${BUILD_TYPE}.env"
-          OUTPUT_FILE="./generator/.env"
-
           if [ ! -f "$TEMPLATE_FILE" ]; then
             echo "❌ Template file not found: $TEMPLATE_FILE"
             exit 1
           fi
+          cp "$TEMPLATE_FILE" ./generator/.env
 
-          # Copy template - GitHub Actions will expand expressions inline
-          # We use a heredoc with command substitution to force expansion
-          cat << 'EOF' > "$OUTPUT_FILE"
-          $(cat "$TEMPLATE_FILE")
-          EOF
+          echo "📝 Generated .env.processed (first 10 lines, values masked):"
+          head -10 .env.processed | sed 's/=.*/=***/'
 
-          echo "✅ Environment file generated from template: $TEMPLATE_FILE"
+          echo ""
+          echo "🔍 Checking if variables are interpolated:"
+          if grep -q '$''{{' .env.processed; then
+            echo "❌ Found uninterpolated variables!"
+            grep '$''{{' .env.processed
+            exit 1
+          else
+            echo "✅ All variables appear to be interpolated"
+          fi
+
+          echo "✅ Environment file generated from template"
+          echo "env_file_path=.env.processed" >> $GITHUB_OUTPUT
 
       - name: Build and generate output
         working-directory: generator
@@ -168,22 +175,19 @@ jobs:
         run: |
           BUILD_TYPE="${{ needs.build-and-push.outputs.build_type }}"
           TEMPLATE_FILE=".github/workflows/env-templates/${BUILD_TYPE}.env"
-          OUTPUT_FILE=".env.processed"
 
           if [ ! -f "$TEMPLATE_FILE" ]; then
             echo "❌ Template file not found: $TEMPLATE_FILE"
             exit 1
           fi
 
-          # Copy template - GitHub Actions will expand expressions inline
-          # We use a heredoc with command substitution to force expansion
-          cat << 'EOF' > "$OUTPUT_FILE"
-          $(cat "$TEMPLATE_FILE")
-          EOF
+          # Read and process the template
+          cp "$TEMPLATE_FILE" .env.processed
 
           echo "✅ Environment file generated from template"
           echo "env_file_path=.env.processed" >> $GITHUB_OUTPUT
 
+      # ✅ NEW: Transfer .env file to server
       - name: Transfer .env to server
         uses: appleboy/scp-action@v0.1.7
         with:
