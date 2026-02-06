@@ -204,7 +204,7 @@ jobs:
           PACKAGE_NAME="ondc-onix-${{ vars.CONTAINER_NAME }}"
           ENCODED_NAME=$(printf '%s' "$PACKAGE_NAME" | jq -sRr @uri)
 
-          echo "🔓 Making package public: ${PACKAGE_NAME}"
+          echo "Making package public: ${PACKAGE_NAME}"
 
           # Retry logic - package might not exist immediately after first push
           for i in {1..5}; do
@@ -216,17 +216,17 @@ jobs:
               -H "X-GitHub-Api-Version: 2022-11-28" \
               "/orgs/${{ env.REGISTRY_NAMESPACE }}/packages/container/${ENCODED_NAME}" \
               -f visibility='public' 2>/dev/null; then
-              echo "✅ Package is now public"
+              echo "Package is now public"
               exit 0
           fi
 
           if [[ $i -lt 5 ]]; then
-              echo "⏳ Waiting 10 seconds before retry..."
+              echo "Waiting 10 seconds before retry..."
               sleep 10
           fi
           done
 
-          echo "⚠️  Could not make package public after 5 attempts"
+          echo "Could not make package public after 5 attempts"
           echo "You may need to manually make it public at:"
           echo "https://github.com/orgs/${{ env.REGISTRY_NAMESPACE }}/packages/container/${PACKAGE_NAME}/settings"
         env:
