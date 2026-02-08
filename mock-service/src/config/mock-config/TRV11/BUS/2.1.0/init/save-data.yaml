@@ -3,3 +3,4 @@ save-data:
   billing: "$.message.order.billing"
   payments: "$.message.order.payments[*]"
   buyer_side_fulfillment_ids: "$.message.order.fulfillments[*]"
+  init_tags: "$.message.order.tags"

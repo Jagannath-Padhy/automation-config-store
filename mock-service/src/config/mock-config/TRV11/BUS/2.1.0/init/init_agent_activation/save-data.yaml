@@ -1,0 +1,6 @@
+save-data:
+  init_message_id: "$.context.message_id"
+  init_items: "$.message.order.items"
+  init_fulfillments: "$.message.order.fulfillments"
+  init_provider: "$.message.order.provider"
+  init_tags: "$.message.order.tags"

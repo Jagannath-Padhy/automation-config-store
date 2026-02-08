@@ -1,103 +1,21 @@
 import { SessionData } from "../../../../session-types";
-const filterItemsBySelectedIds = (
-  items: any[],
-  selectedIds: string | string[]
-): any[] => {
-  // Convert selectedIds to an array if it's a string
-  const idsToFilter = Array.isArray(selectedIds) ? selectedIds : [selectedIds];
-
-  // Filter the items array based on the presence of ids in selectedIds
-  return items.filter((item) => idsToFilter.includes(item.id));
-};
-
-const createQuoteFromItems = (items: any): any => {
-  let totalPrice = 0;
-  const currency = items[0]?.price?.currency || "INR";
-
-  const breakup = items.map((item: any) => {
-    const itemTotalPrice =
-      Number(item.price?.value || 35) * item.quantity.selected.count;
-    totalPrice += itemTotalPrice;
-
-    return {
-      title: "BASE_FARE",
-      item: {
-        id: item.id,
-        price: {
-          currency,
-          value: String(item.price?.value || 35),
-        },
-        quantity: {
-          selected: {
-            count: item.quantity.selected.count,
-          },
-        },
-      },
-      price: {
-        currency,
-        value: itemTotalPrice.toFixed(2),
-      },
-    };
-  });
-
-  // Add OFFER and TOLL to breakup
-  breakup.push(
-    {
-      title: "OFFER",
-      price: {
-        currency,
-        value: "0",
-      },
-    },
-    {
-      title: "TOLL",
-      price: {
-        currency,
-        value: "0",
-      },
-    }
-  );
-
-  return {
-    price: {
-      value: totalPrice.toFixed(2),
-      currency,
-    },
-    breakup,
-  };
-};
 
 export async function onSelectUnlimitedPassesGenerator(
   existingPayload: any,
-  sessionData: SessionData
+  sessionData: any,
 ) {
-  let items = filterItemsBySelectedIds(
-    sessionData.items,
-    sessionData.selected_item_ids
-  );
-  const ids_with_quantities = {
-    items: sessionData.selected_items.reduce((acc: any, item: any) => {
-      acc[item.id] = item.quantity.selected.count;
-      return acc;
-    }, {}),
-  };
-  const updatedItems = items
-    .map((item: any, index: number) => ({
-      ...item,
-      price:
-        existingPayload.message.order.items[index]?.price ||
-        existingPayload.message.order.items[0]?.price,
-      quantity: {
-        selected: {
-          count: ids_with_quantities["items"][item.id] ?? 0, // Default to 0 if not in the mapping
-        },
-      },
-    }))
-    .filter((item) => item.quantity.selected.count > 0);
-  existingPayload.message.order.items = updatedItems
-  existingPayload.message.order.fulfillments = sessionData.fulfillments.map(
-    (fulfillment) => ({
-      ...fulfillment,
+  const basePrice = 100;
+  const duration = "P7D";
+  const currentDate = new Date();
+  const validityEndDate = new Date();
+  existingPayload.context.message_id = sessionData?.message_id;
+  existingPayload.message.order.provider.id =
+    sessionData.select_provider_id ?? "";
+  existingPayload.message.order.fulfillments = [
+    {
+      id: sessionData?.select_fulfillments?.flat()[0]?.id ?? "",
+      type: sessionData?.select_fulfillments?.flat()[0]?.type ?? "",
+      customer: sessionData?.select_fulfillments?.flat()[0]?.customer ?? {},
       stops: [
         {
           type: "START",
@@ -114,11 +32,152 @@ export async function onSelectUnlimitedPassesGenerator(
         category: "BUS",
         variant: "AC",
       },
-    })
-  );
+    },
+  ];
 
-  const quote = createQuoteFromItems(existingPayload.message.order.items);
-  existingPayload.message.order.quote = quote;
+  existingPayload.message.order.items = [
+    {
+      id: sessionData?.selected_items?.flat()[0]?.id ?? "",
+      descriptor: {
+        name: "Weekly Pass",
+        code: "PASS",
+        images: [
+          {
+            url: "https://dtc.delhi.gov.in/sites/default/files/DTC/logo/dtc_logo_2.png",
+            size_type: "xs",
+          },
+        ],
+      },
+      fulfillment_ids: existingPayload?.message?.order?.fulfillments?.map(
+        (fulfillment: any) => fulfillment?.id,
+      ),
+      price: {
+        currency: "INR",
+        value: String(basePrice),
+      },
+      quantity: sessionData?.selected_items?.flat()[0]?.quantity ?? {},
+      time: (() => {
+        const daysMatch = duration.match(/P(?:T)?(\d+)D/);
+        if (daysMatch) {
+          const days = parseInt(daysMatch[1], 10);
+          validityEndDate.setDate(validityEndDate.getDate() + (days - 1));
+        }
 
+        return {
+          label: "Validity",
+          duration: duration,
+          timestamp: currentDate.toISOString(),
+          range: {
+            start: currentDate.toISOString(),
+            end: validityEndDate.toISOString(),
+          },
+        };
+      })(),
+    },
+  ];
+  const breakup = [
+    {
+      title: "BASE_FARE",
+      item: {
+        id: existingPayload?.message?.order?.items[0]?.id ?? "",
+        price: {
+          currency: "INR",
+          value: existingPayload?.message?.order?.items[0]?.price?.value ?? "",
+        },
+        quantity: existingPayload?.message?.order?.items[0]?.quantity ?? {},
+      },
+      price: {
+        currency: "INR",
+        value: String(
+          Number(existingPayload?.message?.order?.items[0]?.price?.value || 0) *
+            Number(
+              existingPayload?.message?.order?.items[0]?.quantity?.selected
+                ?.count || 1,
+            ),
+        ),
+      },
+    },
+    {
+      title: "OFFER",
+      price: {
+        currency: "INR",
+        value: "0",
+      },
+    },
+    {
+      title: "TOLL",
+      price: {
+        currency: "INR",
+        value: "0",
+      },
+    },
+    {
+      title: "TAX",
+      price: {
+        currency: "INR",
+        value: "0",
+      },
+      item: {
+        tags: [
+          {
+            descriptor: {
+              code: "TAX",
+            },
+            list: [
+              {
+                descriptor: {
+                  code: "CGST",
+                },
+                value: "0",
+              },
+              {
+                descriptor: {
+                  code: "SGST",
+                },
+                value: "0",
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      title: "OTHER_CHARGES",
+      price: {
+        currency: "INR",
+        value: "0",
+      },
+      item: {
+        tags: [
+          {
+            descriptor: {
+              code: "OTHER_CHARGES",
+            },
+            list: [
+              {
+                descriptor: {
+                  code: "SURCHARGE",
+                },
+                value: "0",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ];
+
+  let totalQuotePrice = 0;
+  breakup.forEach((item: any) => {
+    totalQuotePrice += Number(item?.price?.value || 0);
+  });
+
+  existingPayload.message.order.quote = {
+    price: {
+      value: String(totalQuotePrice),
+      currency: "INR",
+    },
+    breakup,
+  };
   return existingPayload;
 }

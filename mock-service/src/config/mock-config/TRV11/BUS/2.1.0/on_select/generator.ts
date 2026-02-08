@@ -45,7 +45,61 @@ const createQuoteFromItems = (items: any): any => {
         currency,
         value: "0",
       },
-    }
+    },
+    {
+      item: {
+        tags: [
+          {
+            descriptor: {
+              code: "TAX",
+            },
+            list: [
+              {
+                descriptor: {
+                  code: "CGST",
+                },
+                value: "0",
+              },
+              {
+                descriptor: {
+                  code: "SGST",
+                },
+                value: "0",
+              },
+            ],
+          },
+        ],
+      },
+      price: {
+        currency: "INR",
+        value: "0",
+      },
+      title: "TAX",
+    },
+    {
+      item: {
+        tags: [
+          {
+            descriptor: {
+              code: "OTHER_CHARGES",
+            },
+            list: [
+              {
+                descriptor: {
+                  code: "SURCHARGE",
+                },
+                value: "0",
+              },
+            ],
+          },
+        ],
+      },
+      price: {
+        currency: "INR",
+        value: "0",
+      },
+      title: "OTHER_CHARGES",
+    },
   );
 
   return {
@@ -57,7 +111,11 @@ const createQuoteFromItems = (items: any): any => {
   };
 };
 
-function createAndAppendFulfillments(items: any[], fulfillments: any[],sessionData: SessionData): any {
+function createAndAppendFulfillments(
+  items: any[],
+  fulfillments: any[],
+  sessionData: SessionData,
+): any {
   items.forEach((item) => {
     // Ensure item.fulfillment_ids exists
     if (!item.fulfillment_ids) {
@@ -101,7 +159,7 @@ function createAndAppendFulfillments(items: any[], fulfillments: any[],sessionDa
 
 function getUniqueFulfillmentIdsAndFilterFulfillments(
   items: any[],
-  fulfillments: any[]
+  fulfillments: any[],
 ): any[] {
   if (!Array.isArray(fulfillments)) {
     fulfillments = fulfillments ? [fulfillments] : [];
@@ -113,7 +171,7 @@ function getUniqueFulfillmentIdsAndFilterFulfillments(
 
   // Step 2: Filter the fulfillments based on the unique fulfillment IDs
   const filteredFulfillments = fulfillments.filter(
-    (fulfillment) => fulfillmentIds.includes(fulfillment.id) // Check if fulfillment.id is in the unique fulfillmentIds list
+    (fulfillment) => fulfillmentIds.includes(fulfillment.id), // Check if fulfillment.id is in the unique fulfillmentIds list
   );
 
   return filteredFulfillments;
@@ -121,7 +179,7 @@ function getUniqueFulfillmentIdsAndFilterFulfillments(
 
 const filterItemsBySelectedIds = (
   items: any[],
-  selectedIds: string | string[]
+  selectedIds: string | string[],
 ): any[] => {
   // Convert selectedIds to an array if it's a string
   const idsToFilter = Array.isArray(selectedIds) ? selectedIds : [selectedIds];
@@ -131,15 +189,15 @@ const filterItemsBySelectedIds = (
 };
 export async function onSelectGenerator(
   existingPayload: any,
-  sessionData: SessionData
+  sessionData: SessionData,
 ) {
   let items = filterItemsBySelectedIds(
     sessionData.items,
-    sessionData.selected_item_ids
+    sessionData.selected_item_ids,
   );
   let fulfillments = getUniqueFulfillmentIdsAndFilterFulfillments(
     items,
-    sessionData.fulfillments
+    sessionData.fulfillments,
   );
   const ids_with_quantities = {
     items: sessionData.selected_items.reduce((acc: any, item: any) => {
@@ -164,7 +222,7 @@ export async function onSelectGenerator(
   ({ items, fulfillments } = createAndAppendFulfillments(
     updatedItems,
     fulfillments,
-    sessionData
+    sessionData,
   ));
   const quote = createQuoteFromItems(items);
   existingPayload.message.order.items = items;
@@ -172,6 +230,19 @@ export async function onSelectGenerator(
   existingPayload.message.order.fulfillments.forEach((fulfillment: any) => {
     if (fulfillment.type === "ROUTE") {
       fulfillment.type = "TRIP";
+    }
+    if (fulfillment.tags) {
+      const routeInfoTag = fulfillment.tags.find(
+        (tag: any) => tag.descriptor?.code === "ROUTE_INFO",
+      );
+      if (routeInfoTag && routeInfoTag.list) {
+        routeInfoTag.list = routeInfoTag.list.filter((item: any) => {
+          const code = item.descriptor?.code;
+          return (
+            code !== "OPERATIONAL_START_TIME" && code !== "OPERATIONAL_END_TIME"
+          );
+        });
+      }
     }
   });
   existingPayload.message.order.quote = quote;

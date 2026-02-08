@@ -10,7 +10,7 @@ function enhancePayments(payments: any) {
     ...payment,
     params: {
       ...payment.params,
-      ...additionalParams,
+      // ...additionalParams,
     },
   }));
 }
@@ -37,6 +37,7 @@ function updateFulfillmentsWithParentInfo(
 
   fulfillments.forEach((fulfillment) => {
     if (fulfillment.type === "TRIP") {
+      fulfillment.stops.type = "START"
       fulfillment["state"] = {
         descriptor: {
           code: "INACTIVE",
@@ -65,8 +66,9 @@ function updateFulfillmentsWithParentInfo(
 
     // If a stop exists, modify the first stop; otherwise, create a new one
     if (fulfillment.stops.length > 0) {
+      fulfillment.stops[0].type ="START"
       fulfillment.stops[0].authorization = {
-        type: "VEHICLE_NUMBER",
+        type: "QR_AND_VEHICLE_NUMBER",
         status: authStatus,
         token: qrToken,
         valid_to: validTo,
@@ -75,7 +77,7 @@ function updateFulfillmentsWithParentInfo(
       fulfillment.stops.push({
         type: "START",
         authorization: {
-          type: "VEHICLE_NUMBER",
+          type: "QR_AND_VEHICLE_NUMBER",
           status: authStatus,
           token: qrToken,
           valid_to: validTo,
@@ -110,5 +112,6 @@ export async function onConfirmVehConfGenerator(
   }
   existingPayload.message.order.id = order_id;
   existingPayload = updateOrderTimestamps(existingPayload);
+  existingPayload.message.order.tags = sessionData.tags.flat()
   return existingPayload;
 }

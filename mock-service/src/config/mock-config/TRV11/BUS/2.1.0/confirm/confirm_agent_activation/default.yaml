@@ -1,0 +1,85 @@
+message:
+  order:
+    items:
+      - id: "I10"
+    fulfillments:
+      - id: "F1"
+        type: "ROUTE"
+      - id: "F11"
+        type: "AGENT_TICKETING"
+        vehicle:
+          category: "BUS"
+          registration: "DL 11A 123F"
+        agent:
+          person:
+            id: "emp:E52432"
+    provider:
+      id: "P1"
+    tags:
+      - descriptor:
+          code: "BAP_TERMS"
+          name: "BAP Terms of Engagement"
+        display: false
+        list:
+          - descriptor:
+              code: "BUYER_FINDER_FEES_PERCENTAGE"
+            value: "1"
+          - descriptor:
+              code: "SETTLEMENT_AMOUNT"
+            value: "12505"
+          - descriptor:
+              code: "SETTLEMENT_TYPE"
+            value: "NEFT"
+          - descriptor:
+              code: "DELAY_INTEREST"
+            value: "2.5"
+          - descriptor:
+              code: "STATIC_TERMS"
+            value: "https://api.example-bap.com/booking/terms"
+          - descriptor:
+              code: "MANDATORY_ARBITRATION"
+            value: "true"
+          - descriptor:
+              code: "COURT_JURISDICTION"
+            value: "New Delhi"
+          - descriptor:
+              code: "SETTLEMENT_BASIS"
+            value: "Delivery"
+      - descriptor:
+          code: "BPP_TERMS"
+          name: "BPP Terms of Engagement"
+        display: false
+        list:
+          - descriptor:
+              code: "BUYER_FINDER_FEES_PERCENTAGE"
+            value: "1"
+          - descriptor:
+              code: "SETTLEMENT_WINDOW"
+            value: "PT60M"
+          - descriptor:
+              code: "SETTLEMENT_BASIS"
+            value: "Delivery"
+          - descriptor:
+              code: "SETTLEMENT_TYPE"
+            value: "upi"
+          - descriptor:
+              code: "MANDATORY_ARBITRATION"
+            value: "true"
+          - descriptor:
+              code: "COURT_JURISDICTION"
+            value: "New Delhi"
+          - descriptor:
+              code: "DELAY_INTEREST"
+            value: "2.5"
+          - descriptor:
+              code: "STATIC_TERMS"
+            value: "https://www.abc.com/settlement-terms/"
+          - descriptor:
+              code: "SETTLEMENT_AMOUNT"
+            value: "12505"
+          - descriptor:
+              code: "SETTLEMENT_BANK_CODE"
+            value: "XXXXXXXX"
+          - descriptor:
+              code: "SETTLEMENT_BANK_ACCOUNT_NUMBER"
+            value: "xxxxxxxxxxxxxx"

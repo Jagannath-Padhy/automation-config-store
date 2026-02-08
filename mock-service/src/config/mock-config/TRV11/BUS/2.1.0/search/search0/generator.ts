@@ -6,5 +6,6 @@ export async function search0Generator(
 ) { 
   delete existingPayload.context.bpp_id
   delete existingPayload.context.bpp_uri
+  delete existingPayload.context.location.city.code
   return existingPayload;
 }

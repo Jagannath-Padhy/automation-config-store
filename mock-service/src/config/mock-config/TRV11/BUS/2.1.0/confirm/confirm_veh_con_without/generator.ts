@@ -5,11 +5,11 @@ const { v4: uuidv4 } = require("uuid");
 const transformPaymentsToPaid = (
   payments: any[],
   amount: any,
-  currency = "INR"
+  currency = "INR",
 ) => {
   return payments.map((p: any) => {
     // if the payment is wrapped like {0: {...}}, unwrap it
-    const payment = Array.isArray(p) ? p[0] : p[0] ?? p;
+    const payment = Array.isArray(p) ? p[0] : (p[0] ?? p);
 
     return {
       ...payment,
@@ -24,7 +24,7 @@ const transformPaymentsToPaid = (
 };
 export async function confirmVehConWithoutUpdateGenerator(
   existingPayload: any,
-  sessionData: SessionData
+  sessionData: SessionData,
 ) {
   if (sessionData.billing && Object.keys(sessionData.billing).length > 0) {
     existingPayload.message.order.billing = sessionData.billing;
@@ -36,14 +36,56 @@ export async function confirmVehConWithoutUpdateGenerator(
   if (sessionData.provider_id) {
     existingPayload.message.order.provider.id = sessionData.provider_id;
   }
-  
-  existingPayload.message.order.fulfillments = existingPayload.message.order.fulfillments
-  
+
+  existingPayload.message.order.fulfillments =
+    existingPayload.message.order.fulfillments;
+
   if (sessionData.payments) {
     existingPayload.message.order.payments = transformPaymentsToPaid(
       sessionData.payments,
-      sessionData.price
+      sessionData.price,
     );
   }
+  const mergedTags = [
+    ...sessionData?.init_tags.flat(),
+    ...sessionData?.on_init_tags.flat(),
+  ];
+
+  const bapTermsTag = mergedTags.find(
+    (tag: any) => tag?.descriptor?.code === "BAP_TERMS",
+  );
+
+  const bppTermsTag = mergedTags.find(
+    (tag: any) => tag?.descriptor?.code === "BPP_TERMS",
+  );
+
+  const settlement_wondow_tag = {
+    descriptor: {
+      code: "SETTLEMENT_WINDOW",
+    },
+    value: "PT60M",
+  };
+
+  if (bapTermsTag && bapTermsTag.list) {
+    const hasSettlementWindow = bapTermsTag.list.some(
+      (item: any) => item?.descriptor?.code === "SETTLEMENT_WINDOW",
+    );
+
+    if (!hasSettlementWindow) {
+      bapTermsTag.list.push(settlement_wondow_tag);
+    }
+  }
+
+  if (bppTermsTag && bppTermsTag.list) {
+    const hasSettlementWindow = bppTermsTag.list.some(
+      (item: any) => item?.descriptor?.code === "SETTLEMENT_WINDOW",
+    );
+
+    if (!hasSettlementWindow) {
+      bppTermsTag.list.push(settlement_wondow_tag);
+    }
+  }
+
+  existingPayload.message.order.tags = mergedTags;
   return existingPayload;
 }

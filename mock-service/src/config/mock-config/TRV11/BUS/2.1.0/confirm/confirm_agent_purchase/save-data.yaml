@@ -1,0 +1,9 @@
+save-data:
+  message_id: "$.context.message_id"
+  confirm_payments: "$.message.order.payments"
+  confirm_fulfillments: "$.message.order.fulfillments"
+  confirm_items: "$.message.order.items"
+  confirm_order_id: "$.message.order.id"
+  confirm_ref_order_ids: "$.message.order.ref_order_ids"
+  confirm_quote: "$.message.order.quote"
+  confirm_providerId: "$.message.order.provider.id"

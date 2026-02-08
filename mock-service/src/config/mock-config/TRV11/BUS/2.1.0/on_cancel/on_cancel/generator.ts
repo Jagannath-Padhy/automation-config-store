@@ -46,7 +46,8 @@ export function updateSettlementAmount(order: any, sessionData: SessionData) {
   if (Number.isNaN(quoteValue)) return order;
 
   const buyerFinderFee = parseFloat(sessionData.buyer_app_fee ?? "3");
-  const buyerFinderAmount = (quoteValue * (isNaN(buyerFinderFee) ? 3 : buyerFinderFee)) / 100;
+  const buyerFinderAmount =
+    (quoteValue * (isNaN(buyerFinderFee) ? 3 : buyerFinderFee)) / 100;
 
   // formatted strings to store in payload
   const buyerFinderAmountStr = buyerFinderAmount.toFixed(2);
@@ -57,13 +58,15 @@ export function updateSettlementAmount(order: any, sessionData: SessionData) {
   order.payments = order.payments.map((payment: any) => {
     if (!payment?.tags || !Array.isArray(payment.tags)) return payment;
 
-
     payment.tags = payment.tags.map((tag: any) => {
-      if (tag.descriptor?.code === "SETTLEMENT_TERMS" && Array.isArray(tag.list)) {
+      if (
+        tag.descriptor?.code === "SETTLEMENT_TERMS" &&
+        Array.isArray(tag.list)
+      ) {
         tag.list = tag.list.map((item: any) => {
           if (item.descriptor?.code === "SETTLEMENT_AMOUNT") {
             if (sessionCollector === "BPP") {
-                return { ...item, value: buyerFinderAmountStr };
+              return { ...item, value: buyerFinderAmountStr };
             }
             return { ...item, value: remainderAmountStr };
           }
@@ -74,24 +77,6 @@ export function updateSettlementAmount(order: any, sessionData: SessionData) {
     });
 
     return payment;
-  });
-
-  return order;
-}
-function stripTicketAuthorizations(order: any) {
-  if (!order.fulfillments) return order;
-
-  order.fulfillments = order.fulfillments.map((fulfillment: any) => {
-    if (fulfillment.type === "TICKET") {
-      return {
-        ...fulfillment,
-        stops: fulfillment.stops.map((stop: any) => {
-          const { authorization, ...rest } = stop;
-          return rest;
-        }),
-      };
-    }
-    return fulfillment;
   });
 
   return order;
@@ -145,8 +130,17 @@ function applyCancellation(quote: Quote, cancellationCharges: number): Quote {
 
 export async function onCancelGenerator(
   existingPayload: any,
-  sessionData: SessionData
+  sessionData: SessionData,
+  isSoft_oncancel?: boolean,
 ) {
+  existingPayload.message.order.cancellation.reason = {
+    descriptor: {
+      code: sessionData?.cancellation_reason_id ?? "000",
+    },
+  };
+  existingPayload.message.order.cancellation_terms =
+    sessionData?.cancellation_terms.flat();
+  delete existingPayload.message.order.provider.time;
   if (sessionData.updated_payments.length > 0) {
     existingPayload.message.order.payments = sessionData.updated_payments;
   }
@@ -156,28 +150,91 @@ export async function onCancelGenerator(
   }
 
   if (sessionData.fulfillments.length > 0) {
-    existingPayload.message.order.fulfillments = sessionData.fulfillments;
-    existingPayload.message.order = stripTicketAuthorizations(
-      existingPayload.message.order
+    existingPayload.message.order.fulfillments = sessionData.fulfillments?.map(
+      (fulfillment: any) => {
+        if (fulfillment.type === "TICKET") {
+          const { stops, ...rest } = fulfillment;
+          return rest;
+        } else return fulfillment;
+      },
     );
   }
   if (sessionData.order_id) {
     existingPayload.message.order.id = sessionData.order_id;
   }
-  existingPayload.message.order.status = "CANCELLED";
+  existingPayload.message.order.status = isSoft_oncancel
+    ? "SOFT_CANCEL"
+    : "CANCELLED";
   if (sessionData.quote != null) {
-    existingPayload.message.order.quote = applyCancellation(
-      sessionData.quote,
-      0
-    );
+    existingPayload.message.order.quote =
+      existingPayload.message.order.status === "CANCELLED"
+        ? sessionData?.quote
+        : applyCancellation(sessionData.quote, 0);
   }
   existingPayload.message.order = updateSettlementAmount(
     existingPayload.message.order,
-    sessionData
+    sessionData,
   );
   existingPayload = updateCancellationTimestamp(existingPayload);
   const now = new Date().toISOString();
   existingPayload.message.order.created_at = sessionData.created_at;
   existingPayload.message.order.updated_at = now;
+  existingPayload.message.order.tags = sessionData.tags.flat();
+
+  //______SETTLEMENT_AMOUNT____________
+  const tags = existingPayload?.message?.order?.tags;
+  if (!tags) return;
+
+  const collectedBy = existingPayload.message.order.payments[0]?.collected_by; // "BAP" | "BPP"
+  const price = Number(existingPayload?.message?.order?.quote?.price?.value);
+
+  const buyerFinderFeesTag = tags?.find(
+    (tag: any) => tag?.descriptor?.code === "BAP_TERMS",
+  );
+
+  const feePercentage = Number(
+    buyerFinderFeesTag?.list?.find(
+      (item: any) => item?.descriptor?.code === "BUYER_FINDER_FEES_PERCENTAGE",
+    )?.value ?? 0,
+  );
+
+  const feeAmount = (price * feePercentage) / 100;
+
+  let settlementAmount = 0;
+  if (collectedBy === "BAP") {
+    settlementAmount = price - feeAmount;
+  } else if (collectedBy === "BPP") {
+    settlementAmount = feeAmount;
+  } else {
+    settlementAmount = price;
+  }
+
+  const settlementTermsTag = tags?.find(
+    (tag: any) => tag?.descriptor?.code === "BAP_TERMS",
+  );
+
+  const settlementAmountItem = settlementTermsTag?.list?.find(
+    (item: any) => item?.descriptor?.code === "SETTLEMENT_AMOUNT",
+  );
+
+  if (settlementAmountItem) {
+    settlementAmountItem.value = settlementAmount.toString();
+  }
+
+  const bppTermsTag = existingPayload.message.order.tags?.find(
+    (item: any) => item.descriptor.code === "BPP_TERMS",
+  );
+
+  if (bppTermsTag) {
+    const bppSettlementAmountItem = bppTermsTag.list?.find(
+      (i: any) => i.descriptor.code === "SETTLEMENT_AMOUNT",
+    );
+
+    if (bppSettlementAmountItem) {
+      bppSettlementAmountItem.value = settlementAmount.toString();
+    }
+  }
+  delete existingPayload.message.order.cancellation.time;
+
   return existingPayload;
 }

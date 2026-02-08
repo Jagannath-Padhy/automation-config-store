@@ -1,0 +1,4 @@
+save-data:
+  on_select_fulfillments: "$.message.order.fulfillments"
+  on_select_items: "$.message.order.items"
+  on_select_provider: "$.message.order.provider"

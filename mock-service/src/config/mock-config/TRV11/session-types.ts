@@ -70,6 +70,8 @@ export interface SessionData {
   issue_actions:any
   issue_created_at: any
   on_issue_actions: any
+  on_select_tags: any
+  on_init_tags: any
 }
 
 export type BecknContext = {

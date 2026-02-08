@@ -1,0 +1,145 @@
+message:
+  order:
+    items:
+      - id: "I10"
+        descriptor:
+          name: "Agent Login"
+          code: "AGENT_TICKETING"
+          images:
+            - url: "https://dtc.delhi.gov.in/sites/default/files/DTC/logo/dtc_logo_2.png"
+              size_type: "xs"
+        category_ids:
+          - "C1"
+        fulfillment_ids:
+          - "F1"
+          - "F11"
+        price:
+          currency: "INR"
+          value: "0"
+        time:
+          label: "Validity"
+          duration: "PT2D"
+    provider:
+      id: "P1"
+      descriptor:
+        name: "Delhi Transport Corporation"
+        images:
+          - url: "https://dtc.delhi.gov.in/sites/default/files/DTC/logo/dtc_logo_2.png"
+            size_type: "xs"
+    fulfillments:
+      - id: "F1"
+        type: "ROUTE"
+        stops:
+          - type: "START"
+            location:
+              descriptor:
+                name: "kashmere gate"
+                code: "KASHMERE_GATE"
+              gps: "28.666576, 77.233332"
+            id: "1"
+          - type: "INTERMEDIATE_STOP"
+            location:
+              descriptor:
+                name: "Indira Gandhi Technical Unviversity"
+                code: "INDIRA_GANDHI_TECHNICAL_UNIV"
+              gps: "28.624097, 77.204991"
+            id: "2"
+            parent_stop_id: "1"
+          - type: "INTERMEDIATE_STOP"
+            location:
+              descriptor:
+                name: "Yamuna Bazar"
+                code: "YAMUNA_BAZAR"
+              gps: "28.625972,77.209917"
+            id: "3"
+            parent_stop_id: "2"
+          - type: "INTERMEDIATE_STOP"
+            location:
+              descriptor:
+                name: "dhaula kuan"
+                code: "DHAULA_KUAN"
+              gps: "28.610972,77.201717"
+            id: "4"
+            parent_stop_id: "3"
+          - type: "INTERMEDIATE_STOP"
+            location:
+              descriptor:
+                name: "gpo"
+                code: "GPO"
+              gps: "28.623097,77.209917"
+            id: "5"
+            parent_stop_id: "4"
+          - type: "END"
+            location:
+              descriptor:
+                name: "Greater Kailash"
+                code: "GREATER_KAILASH"
+              gps: "28.548230, 77.238039"
+            id: "6"
+            parent_stop_id: "5"
+        vehicle:
+          category: "BUS"
+        tags:
+          - descriptor:
+              code: "ROUTE_INFO"
+            list:
+              - descriptor:
+                  code: "ROUTE_ID"
+                value: "242"
+              - descriptor:
+                  code: "ROUTE_DIRECTION"
+                value: "UP"
+      - id: "F11"
+        type: "AGENT_TICKETING"
+        vehicle:
+          category: "BUS"
+          registration: "DL 11A 123F"
+        agent:
+          person:
+            id: "emp:E52432"
+        tags:
+          - descriptor:
+              code: "INFO"
+            list:
+              - descriptor:
+                  code: "PARENT_ID"
+                value: "F1"
+    tags:
+      - descriptor:
+          code: "BPP_TERMS"
+          name: "BPP Terms of Engagement"
+        display: false
+        list:
+          - descriptor:
+              code: "BUYER_FINDER_FEES_PERCENTAGE"
+            value: "1"
+          - descriptor:
+              code: "SETTLEMENT_WINDOW"
+            value: "PT60M"
+          - descriptor:
+              code: "SETTLEMENT_BASIS"
+            value: "Delivery"
+          - descriptor:
+              code: "SETTLEMENT_TYPE"
+            value: "upi"
+          - descriptor:
+              code: "MANDATORY_ARBITRATION"
+            value: "true"
+          - descriptor:
+              code: "COURT_JURISDICTION"
+            value: "New Delhi"
+          - descriptor:
+              code: "DELAY_INTEREST"
+            value: "2.5"
+          - descriptor:
+              code: "STATIC_TERMS"
+            value: "https://www.abc.com/settlement-terms/"
+          - descriptor:
+              code: "SETTLEMENT_AMOUNT"
+            value: "12505"
+          - descriptor:
+              code: "SETTLEMENT_BANK_CODE"
+            value: "XXXXXXXX"
+          - descriptor:
+              code: "SETTLEMENT_BANK_ACCOUNT_NUMBER"
+            value: "xxxxxxxxxxxxxx"
