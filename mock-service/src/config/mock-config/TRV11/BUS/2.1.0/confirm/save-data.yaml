@@ -3,3 +3,4 @@ save-data:
   updated_payments: "$.message.order.payments[*]"
   buyer_side_fulfillment_ids: "$.message.order.fulfillments[*]"
   ttl: "$.context.ttl"
+  tags: "$.message.order.tags"

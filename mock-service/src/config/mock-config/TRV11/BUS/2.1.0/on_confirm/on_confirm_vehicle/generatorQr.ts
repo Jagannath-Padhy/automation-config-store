@@ -10,7 +10,7 @@ function enhancePayments(payments: any) {
     ...payment,
     params: {
       ...payment.params,
-      ...additionalParams,
+      // ...additionalParams,
     },
   }));
 }
@@ -26,9 +26,10 @@ function updateOrderTimestamps(payload: any) {
   return payload;
 }
 
-function updateFulfillmentsWithParentInfo(fulfillments: any[], sessionData: SessionData): void {
-  const validTo = "2024-07-23T23:59:59.999Z";
-
+function updateFulfillmentsWithParentInfo(
+  fulfillments: any[],
+  sessionData: SessionData
+): void {
   // Build a Map from fulfillment ID → buyer side fulfillment object
   const buyerFulfillmentMap = new Map(
     (sessionData.buyer_side_fulfillment_ids || []).map((f: any) => [f.id, f])
@@ -36,11 +37,12 @@ function updateFulfillmentsWithParentInfo(fulfillments: any[], sessionData: Sess
 
   fulfillments.forEach((fulfillment) => {
     if (fulfillment.type === "TRIP") {
-      fulfillment["state"] = {
-        descriptor: {
-          code: "INACTIVE",
-        },
-      };
+      fulfillment.stops.type = "START"
+      // fulfillment["state"] = {
+      //   descriptor: {
+      //     code: "INACTIVE",
+      //   },
+      // };
       return;
     }
 
@@ -49,29 +51,62 @@ function updateFulfillmentsWithParentInfo(fulfillments: any[], sessionData: Sess
     // Ensure stops array exists
     fulfillment.stops = fulfillment.stops || [];
 
-    
+    // Check if this fulfillment exists in buyer-side list and has a vehicle
+    const buyerEntry = buyerFulfillmentMap.get(fulfillment.id);
+    const authStatus = buyerEntry?.vehicle ? "CLAIMED" : "UNCLAIMED";
+
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istNow = new Date(now.getTime() + istOffset);
+    const y = istNow.getFullYear();
+    const m = istNow.getMonth();
+    const d = istNow.getDate();
+    const endIST = new Date(Date.UTC(y, m, d + 1, 4 - 5, 30 - 30, 0));
+    const validTo = endIST.toISOString();
+
     // If a stop exists, modify the first stop; otherwise, create a new one
     if (fulfillment.stops.length > 0) {
+      fulfillment.stops[0].type ="START"
       fulfillment.stops[0].authorization = {
-        type: "USER_CONFIRMATION_AND_QR",
-        status: 'UNCLAIMED',
-        token: "aMOPw0KGgoAAAANSUhEUgAAAH0AAAB9AQAAAACn+1GINAAApklEQVR4Xu2UMQ4EMQgD/QP+/0vK6zjsvayUMmavWxQpMAUBkwS12wcveAAkgNSCD3rR5Lkgoai3GUCMgWqbAEYR3HxAkZlzU/0MyBisYRsgI1ERFfcpBpA+ze6k56Cj7KTdXNigFWZvSOpsgqLfd18i2aAukXh9TXBNmdWt5gzA/oqzWkkN8HtA7G8CNOwYAiZt3wZixUfkA32OHNQq7Bxs9oI/gC/9fV8AVCkPjQAAAABJRU5ErkJggg==",
-        valid_to: '2025-06-20T23:59:59.999Z'
+        type: "QR",
+        status: authStatus,
+        token: qrToken,
+        valid_to: validTo,
       };
     } else {
       fulfillment.stops.push({
         type: "START",
         authorization: {
-          type: "USER_CONFIRMATION_AND_QR",
-          status: 'UNCLAIMED',
-          token: "aMOPw0KGgoAAAANSUhEUgAAAH0AAAB9AQAAAACn+1GINAAApklEQVR4Xu2UMQ4EMQgD/QP+/0vK6zjsvayUMmavWxQpMAUBkwS12wcveAAkgNSCD3rR5Lkgoai3GUCMgWqbAEYR3HxAkZlzU/0MyBisYRsgI1ERFfcpBpA+ze6k56Cj7KTdXNigFWZvSOpsgqLfd18i2aAukXh9TXBNmdWt5gzA/oqzWkkN8HtA7G8CNOwYAiZt3wZixUfkA32OHNQq7Bxs9oI/gC/9fV8AVCkPjQAAAABJRU5ErkJggg==",
-          valid_to: '2025-06-20T23:59:59.999Z'
+          type: "QR",
+          status: authStatus,
+          token: qrToken,
+          valid_to: validTo,
         },
       });
     }
+
+    // Generate a random ticket number
+		const ticketNumber = Math.random().toString(36).substring(2, 10);
+
+		// Ensure tags array exists
+		fulfillment.tags = fulfillment.tags || [];
+
+		// Add the new TICKET_INFO tag
+		fulfillment.tags.push({
+			descriptor: {
+				code: "TICKET_INFO",
+			},
+			list: [
+				{
+					descriptor: {
+						code: "NUMBER",
+					},
+					value: ticketNumber,
+				},
+			],
+		});
   });
 }
-
 
 export async function onConfirmVehConfQrGenerator(
   existingPayload: any,
@@ -98,5 +133,6 @@ export async function onConfirmVehConfQrGenerator(
   }
   existingPayload.message.order.id = order_id;
   existingPayload = updateOrderTimestamps(existingPayload);
+  existingPayload.message.order.tags = sessionData.tags.flat()
   return existingPayload;
 }

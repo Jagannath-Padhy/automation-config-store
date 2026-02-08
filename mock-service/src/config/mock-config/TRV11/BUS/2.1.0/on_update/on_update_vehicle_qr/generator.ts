@@ -7,7 +7,7 @@ function transformFulfillments(fulfillments: any[], sessionData: any): any[] {
   };
 
   const buyerFulfillmentMap = new Map(
-    (sessionData.buyer_side_fulfillment_ids || []).map((f: any) => [f.id, f])
+    (sessionData.buyer_side_fulfillment_ids || []).map((f: any) => [f.id, f]),
   );
 
   return fulfillments.map((fulfillment) => {
@@ -16,15 +16,15 @@ function transformFulfillments(fulfillments: any[], sessionData: any): any[] {
         ...fulfillment,
         state: {
           descriptor: {
-            code: "ACTIVE"
-          }
-        }
+            code: "ACTIVE",
+          },
+        },
       };
     }
 
     if (fulfillment.type === "TICKET") {
       const matchedBuyerSide = buyerFulfillmentMap.get(fulfillment.id) as any;
-      const authStatus = matchedBuyerSide?.vehicle  ? "CLAIMED" : "UNCLAIMED";
+      const authStatus = matchedBuyerSide?.vehicle ? "CLAIMED" : "UNCLAIMED";
 
       const updatedStops = Array.isArray(fulfillment.stops)
         ? fulfillment.stops.map((stop: any) => {
@@ -33,8 +33,9 @@ function transformFulfillments(fulfillments: any[], sessionData: any): any[] {
                 ...stop,
                 authorization: {
                   ...stop.authorization,
+                  type: "USER_CONFIRMATION_AND_QR",
                   status: "CLAIMED",
-                }
+                },
               };
             }
             return stop;
@@ -43,67 +44,74 @@ function transformFulfillments(fulfillments: any[], sessionData: any): any[] {
 
       const ticketNumber = generateTicketNumber();
 
-      const updatedTags = Array.isArray(fulfillment.tags) ? [...fulfillment.tags] : [];
+      const updatedTags = Array.isArray(fulfillment.tags)
+        ? [...fulfillment.tags]
+        : [];
 
-      const ticketInfoTagIndex = updatedTags.findIndex(
-        (tag) => tag.descriptor?.code === "TICKET_INFO"
-      );
+      // const ticketInfoTagIndex = updatedTags.findIndex(
+      //   (tag) => tag.descriptor?.code === "TICKET_INFO"
+      // );
 
-      const ticketInfoEntry = {
-        descriptor: {
-          code: "NUMBER"
-        },
-        value: ticketNumber
-      };
+      // const ticketInfoEntry = {
+      //   descriptor: {
+      //     code: "NUMBER"
+      //   },
+      //   value: ticketNumber
+      // };
 
-      if (ticketInfoTagIndex !== -1) {
-        updatedTags[ticketInfoTagIndex].list = [
-          ...(updatedTags[ticketInfoTagIndex].list || []),
-          ticketInfoEntry
-        ];
-      } else {
-        updatedTags.push({
-          descriptor: {
-            code: "TICKET_INFO"
-          },
-          list: [ticketInfoEntry]
-        });
-      }
+      // if (ticketInfoTagIndex !== -1) {
+      //   updatedTags[ticketInfoTagIndex].list = [
+      //     ...(updatedTags[ticketInfoTagIndex].list || []),
+      //     ticketInfoEntry
+      //   ];
+      // } else {
+      //   updatedTags.push({
+      //     descriptor: {
+      //       code: "TICKET_INFO"
+      //     },
+      //     list: [ticketInfoEntry]
+      //   });
+      // }
 
       return {
         ...fulfillment,
         stops: updatedStops,
-        tags: updatedTags
+        tags: updatedTags,
       };
     }
 
     return fulfillment;
   });
 }
-  
-  
-  
-export async function onUpdateVehQrGenerator(existingPayload: any,sessionData: SessionData){
-  if (sessionData.updated_payments.length > 0) {
-        existingPayload.message.order.payments = sessionData.updated_payments;
-      }
-    
-    if (sessionData.items.length > 0) {
-    existingPayload.message.order.items = sessionData.items;
-    }
 
-    if (sessionData.fulfillments.length > 0) {
+export async function onUpdateVehQrGenerator(
+  existingPayload: any,
+  sessionData: SessionData,
+) {
+  if (sessionData.updated_payments.length > 0) {
+    existingPayload.message.order.payments = sessionData.updated_payments;
+  }
+
+  if (sessionData.items.length > 0) {
+    existingPayload.message.order.items = sessionData.items;
+  }
+
+  if (sessionData.fulfillments.length > 0) {
     existingPayload.message.order.fulfillments = sessionData.fulfillments;
-    existingPayload.message.order.fulfillments = transformFulfillments(existingPayload.message.order.fulfillments,sessionData)
-    }
-    if (sessionData.order_id) {
+    existingPayload.message.order.fulfillments = transformFulfillments(
+      existingPayload.message.order.fulfillments,
+      sessionData,
+    );
+  }
+  if (sessionData.order_id) {
     existingPayload.message.order.id = sessionData.order_id;
-    }
-    if (sessionData.quote != null) {
-      existingPayload.message.order.quote = sessionData.quote
-    }
-    const now = new Date().toISOString();
-    existingPayload.message.order.created_at = sessionData.created_at
-    existingPayload.message.order.updated_at = now
-    return existingPayload;
+  }
+  if (sessionData.quote != null) {
+    existingPayload.message.order.quote = sessionData.quote;
+  }
+  const now = new Date().toISOString();
+  existingPayload.message.order.created_at = sessionData.created_at;
+  existingPayload.message.order.updated_at = now;
+  existingPayload.message.order.tags = sessionData.tags.flat();
+  return existingPayload;
 }

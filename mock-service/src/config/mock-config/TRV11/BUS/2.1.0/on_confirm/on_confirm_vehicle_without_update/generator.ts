@@ -11,7 +11,7 @@ function enhancePayments(payments: any) {
     ...payment,
     params: {
       ...payment.params,
-      ...additionalParams,
+      // ...additionalParams,
     },
   }));
 }
@@ -55,8 +55,9 @@ function updateFulfillmentsWithParentInfo(fulfillments: any[], sessionData: Sess
     // fulfillment.vehicle= buyerEntry?.vehicle
     // If a stop exists, modify the first stop; otherwise, create a new one
     if (fulfillment.stops.length > 0) {
+      fulfillment.stops[0].type ="START"
       fulfillment.stops[0].authorization = {
-        type: "VEHICLE_NUMBER",
+        type: "QR_AND_VEHICLE_NUMBER",
         status: "CLAIMED",
         token:"bPOPw0KGgoAAAANSUhEUgAAAH0AAAB9AQAAAACn",
         valid_to: new Date(Date.now()+3*60*60*30).toISOString()
@@ -65,7 +66,7 @@ function updateFulfillmentsWithParentInfo(fulfillments: any[], sessionData: Sess
       fulfillment.stops.push({
         type: "START",
         authorization: {
-          type: "VEHICLE_NUMBER",
+          type: "QR_AND_VEHICLE_NUMBER",
           status: "CLAIMED",
           token:"bPOPw0KGgoAAAANSUhEUgAAAH0AAAB9AQAAAACn",
           valid_to: new Date(Date.now()+3*60*60*30).toISOString()
@@ -94,7 +95,19 @@ export async function onConfirmVehConfGenerator(
 
   // Check if fulfillments is a non-empty array
   if (sessionData.fulfillments.length > 0) {
-    existingPayload.message.order.fulfillments = sessionData.fulfillments;
+    existingPayload.message.order.fulfillments = sessionData.fulfillments.map(
+      (fulfillment) => {
+        if (fulfillment.type === "TICKET") {
+          return {
+            ...fulfillment,
+            vehicle: {
+              registration: "GL90",
+            },
+          };
+        }
+        return fulfillment
+      },
+    )
   }
   updateFulfillmentsWithParentInfo(sessionData.fulfillments, sessionData);
 
@@ -103,5 +116,6 @@ export async function onConfirmVehConfGenerator(
   }
   existingPayload.message.order.id = order_id;
   existingPayload = updateOrderTimestamps(existingPayload);
+  existingPayload.message.order.tags = sessionData.tags.flat()
   return existingPayload;
 }

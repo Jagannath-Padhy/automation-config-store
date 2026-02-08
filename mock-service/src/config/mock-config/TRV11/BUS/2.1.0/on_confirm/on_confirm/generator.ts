@@ -10,7 +10,7 @@ function enhancePayments(payments:any) {
 	  ...payment,
 	  params: {
 		...payment.params,
-		...additionalParams
+		// ...additionalParams
 	  }
 	}));
   }
@@ -41,6 +41,7 @@ function updateFulfillmentsWithParentInfo(fulfillments: any[],sessionData:Sessio
 
 		// If a stop exists, modify the first stop; otherwise, create a new one
 		if (fulfillment.stops.length > 0) {
+			fulfillment.stops[0].type ="START"
 			fulfillment.stops[0].authorization = {
 				type: "QR",
 				token: qrToken,
@@ -106,6 +107,7 @@ export async function onConfirmGenerator(
 	}
 	existingPayload.message.order.id = order_id;
 	existingPayload = updateOrderTimestamps(existingPayload)
+	existingPayload.message.order.tags = sessionData.tags.flat()
 	return existingPayload;
 }
 

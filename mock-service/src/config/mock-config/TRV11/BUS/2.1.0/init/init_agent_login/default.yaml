@@ -1,0 +1,41 @@
+message:
+  order:
+    items:
+      - id: "I10"
+    fulfillments:
+      - type: "AGENT_TICKETING"
+        agent:
+          person:
+            id: "emp:E52432"
+    provider:
+      id: "P1"
+    tags:
+      - descriptor:
+          code: "BAP_TERMS"
+          name: "BAP Terms of Engagement"
+        display: false
+        list:
+          - descriptor:
+              code: "BUYER_FINDER_FEES_PERCENTAGE"
+            value: "1"
+          - descriptor:
+              code: "SETTLEMENT_AMOUNT"
+            value: "5"
+          - descriptor:
+              code: "SETTLEMENT_TYPE"
+            value: "NEFT"
+          - descriptor:
+              code: "DELAY_INTEREST"
+            value: "2.5"
+          - descriptor:
+              code: "STATIC_TERMS"
+            value: "https://api.example-bap.com/booking/terms"
+          - descriptor:
+              code: "MANDATORY_ARBITRATION"
+            value: "true"
+          - descriptor:
+              code: "COURT_JURISDICTION"
+            value: "New Delhi"
+          - descriptor:
+              code: "SETTLEMENT_BASIS"
+            value: "Delivery"

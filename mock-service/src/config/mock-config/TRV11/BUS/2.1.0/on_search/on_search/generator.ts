@@ -13,13 +13,13 @@ function updatePaymentDetails(payload: any, sessionData: SessionData) {
 
       // Update BUYER_FINDER_FEES_PERCENTAGE in tags
       const buyerFinderTag = payment.tags?.find(
-        (tag: any) => tag.descriptor?.code === "BUYER_FINDER_FEES"
+        (tag: any) => tag.descriptor?.code === "BUYER_FINDER_FEES",
       );
 
       if (buyerFinderTag?.list) {
         const feeEntry = buyerFinderTag.list.find(
           (item: any) =>
-            item.descriptor?.code === "BUYER_FINDER_FEES_PERCENTAGE"
+            item.descriptor?.code === "BUYER_FINDER_FEES_PERCENTAGE",
         );
 
         if (feeEntry) {
@@ -40,17 +40,17 @@ function updatePaymentDetails(payload: any, sessionData: SessionData) {
 const createCustomRoute = (
   routeData: any[],
   startStationCode: string,
-  endStationCode: string
+  endStationCode: string,
 ): any[] => {
   return routeData.map((route) => {
     const stops = route.stops;
 
     // Find the start and end indices based on the input station codes
     const startIndex = stops.findIndex(
-      (stop: any) => stop.location.descriptor.code === startStationCode
+      (stop: any) => stop.location.descriptor.code === startStationCode,
     );
     const endIndex = stops.findIndex(
-      (stop: any) => stop.location.descriptor.code === endStationCode
+      (stop: any) => stop.location.descriptor.code === endStationCode,
     );
 
     // Check if both stations exist in the stops list
@@ -98,32 +98,71 @@ const createCustomRoute = (
 };
 export async function onSearchGenerator(
   existingPayload: any,
-  sessionData: SessionData
+  sessionData: SessionData,
 ) {
+  existingPayload.message.catalog.providers =
+    existingPayload?.message?.catalog?.providers?.map((item: any) => {
+      return {
+        ...item,
+        payments: item.payments.map((payment: any) => {
+          return {
+            ...payment,
+            collected_by: sessionData?.collected_by ?? "BAP",
+          };
+        }),
+      };
+    });
   existingPayload = updatePaymentDetails(existingPayload, sessionData);
   try {
     const route = createFullfillment(
-      sessionData.city_code ?? "std:011"
+      sessionData.city_code ?? "std:011",
     ).fulfillments;
     const { start_code, end_code } = sessionData;
     if (!start_code || !end_code) {
       throw new Error("Start and End station codes are required");
     }
     const fulfillments = createCustomRoute(route, start_code, end_code);
+
+    // Create dynamic operational times based on current date
+    const currentDate = new Date();
+    const operationalStartTime = new Date(currentDate);
+    operationalStartTime.setUTCHours(5, 30, 0, 0); // 5:30 AM UTC
+
+    const operationalEndTime = new Date(currentDate);
+    operationalEndTime.setUTCHours(20, 30, 0, 0); // 8:30 PM UTC
+
     const updatedFulfillments = fulfillments.map((f) => ({
       ...f,
       type: "TRIP",
       tags: [
         {
-          descriptor: { code: "ROUTE_INFO" },
+          descriptor: {
+            code: "ROUTE_INFO",
+          },
           list: [
             {
-              descriptor: { code: "ROUTE_ID" },
-              value: "242",
+              descriptor: {
+                code: "ROUTE_ID",
+              },
+              value: crypto.randomUUID().slice(0, 4),
             },
             {
-              descriptor: { code: "ROUTE_DIRECTION" },
+              descriptor: {
+                code: "ROUTE_DIRECTION",
+              },
               value: "UP",
+            },
+            {
+              descriptor: {
+                code: "OPERATIONAL_START_TIME",
+              },
+              value: operationalStartTime.toISOString(),
+            },
+            {
+              descriptor: {
+                code: "OPERATIONAL_END_TIME",
+              },
+              value: operationalEndTime.toISOString(),
             },
           ],
         },
@@ -131,7 +170,118 @@ export async function onSearchGenerator(
     }));
     existingPayload.message.catalog.providers[0].fulfillments =
       updatedFulfillments;
+    existingPayload.message.catalog.providers[0].items =
+      existingPayload.message.catalog.providers[0].items?.map((item: any) => {
+        if (item.time) {
+          const twoDaysFromNow = new Date();
+          twoDaysFromNow.setDate(twoDaysFromNow.getDate() + 2);
 
+          return {
+            ...item,
+            time: {
+              duration: "PT2D",
+              label: "Validity",
+              timestamp: twoDaysFromNow.toISOString(),
+            },
+          };
+        }
+        return item;
+      });
+    existingPayload.message.catalog.providers[0].fulfillments = [
+      ...existingPayload.message.catalog.providers[0].fulfillments?.map(
+        (fulfillment: any) => {
+          return {
+            ...fulfillment,
+            stops: fulfillment.stops.map((stop: any) => {
+              if (stop.type === "START" || stop.type === "END") {
+                const { instructions, ...rest } = stop;
+                return rest;
+              } else return stop;
+            }),
+          };
+        },
+      ),
+      {
+        id: "F3",
+        type: "TRIP",
+        stops: [
+          {
+            type: "START",
+            location: {
+              descriptor: {
+                name: "kashmere gate",
+                code: "KASHMERE_GATE",
+              },
+              gps: "28.666576, 77.233332",
+            },
+            id: "1",
+          },
+          {
+            type: "INTERMEDIATE_STOP",
+            instructions: {
+              name: "Stop 1",
+            },
+            location: {
+              descriptor: {
+                name: "Indira Gandhi Technical Unviversity",
+                code: "INDIRA_GANDHI_TECHNICAL_UNIV",
+              },
+              gps: "28.624097, 77.204991",
+            },
+            id: "2",
+            parent_stop_id: "1",
+          },
+          {
+            type: "END",
+            location: {
+              descriptor: {
+                name: "Greater Kailash",
+                code: "GREATER_KAILASH",
+              },
+              gps: "28.548230, 77.238039",
+            },
+            id: "3",
+            parent_stop_id: "2",
+          },
+        ],
+        vehicle: {
+          category: "BUS",
+        },
+        tags: [
+          {
+            descriptor: {
+              code: "ROUTE_INFO",
+            },
+            list: [
+              {
+                descriptor: {
+                  code: "ROUTE_ID",
+                },
+                value: crypto.randomUUID().slice(0, 4),
+              },
+              {
+                descriptor: {
+                  code: "ROUTE_DIRECTION",
+                },
+                value: "UP",
+              },
+              {
+                descriptor: {
+                  code: "OPERATIONAL_START_TIME",
+                },
+                value: operationalStartTime.toISOString(),
+              },
+              {
+                descriptor: {
+                  code: "OPERATIONAL_END_TIME",
+                },
+                value: operationalEndTime.toISOString(),
+              },
+            ],
+          },
+        ],
+      },
+    ];
     return existingPayload;
   } catch (err) {
     console.error(err);

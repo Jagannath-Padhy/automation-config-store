@@ -1,0 +1,3 @@
+save-data:
+  update_fulfillment: "$.message.order.fulfillments[*]"
+  updated_billing: "$.message.order.billing"

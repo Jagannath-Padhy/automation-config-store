@@ -1,12 +1,12 @@
 // 210
 import { MockCancelHardBus210Class } from "./BUS/2.1.0/cancel/cancel_hard/class";
 import { MockCancelSoftBus210Class } from "./BUS/2.1.0/cancel/cancel_soft/class";
-import { MockCancelTechBus210Class } from "./BUS/2.1.0/cancel/cancel_tech/class";
+import { MockCancelTechBus210Class, MockCancelTechSoftBus210Class } from "./BUS/2.1.0/cancel/cancel_tech/class";
 import { MockConfirmBus210Class } from "./BUS/2.1.0/confirm/confirm/class";
 import { MockConfirmVehConBus210Class } from "./BUS/2.1.0/confirm/confirm_veh_con/class";
 import { MockConfirmVehConWithoutBus210Class } from "./BUS/2.1.0/confirm/confirm_veh_con_without/class";
 import { MockInitBus210Class } from "./BUS/2.1.0/init/class";
-import { MockOnCancelBus210Class } from "./BUS/2.1.0/on_cancel/on_cancel/class";
+import { MockOnCancelBus210Class, MockOnCancelBusTech_Soft210Class } from "./BUS/2.1.0/on_cancel/on_cancel/class";
 import { MockOnCancelHardBus210Class } from "./BUS/2.1.0/on_cancel/on_cancel_hard/class";
 import { MockOnCancelInitBus210Class } from "./BUS/2.1.0/on_cancel/on_cancel_init/class";
 import { MockOnCancelSoftBus210Class } from "./BUS/2.1.0/on_cancel/on_cancel_soft/class";
@@ -127,6 +127,26 @@ import { MockOnSelectMetroRecharge210Class } from "./METRO/2.1.0/on_select/on_se
 import { MockOnStatusTechnicalMetro210Class } from "./METRO/2.1.0/on_status/on_status_technical/class";
 import { OnCancelSoftTechnicalMetro210Class } from "./METRO/2.1.0/on_cancel/on_cancel_soft_technical/class";
 import { OnCancelHardTechnicalMetro210Class } from "./METRO/2.1.0/on_cancel/on_cancel_hard_technical/class";
+import { MockUpdatePurchaseHourneyBus210Class } from "./BUS/2.1.0/update/update_purchase_journey/class";
+import { MockOnUpdatePurchaseJourneyBus210Class } from "./BUS/2.1.0/on_update/on_update_purchase_journey/class";
+import { MockSelectAgentActivationBus210Class } from "./BUS/2.1.0/select/select_agent_activation/class";
+import { MockOnSelectAgentActivationBus210Class } from "./BUS/2.1.0/on_select/on_select_agent_activation/class";
+import { MockInitAgentActivationBus210Class } from "./BUS/2.1.0/init/init_agent_activation/class";
+import { MockOnInitAgentActivationBus210Class } from "./BUS/2.1.0/on_init/on_init_agent_activation/class";
+import { MockConfirmAgentActivationBus210Class } from "./BUS/2.1.0/confirm/confirm_agent_activation/class";
+import { MockOnConfirmAgentActivationBus210Class } from "./BUS/2.1.0/on_confirm/on_confirm_agent_activation/class";
+import { MockInitAgentLoginBus210Class } from "./BUS/2.1.0/init/init_agent_login/class";
+import { MockOnInitAgentLoginBus210Class } from "./BUS/2.1.0/on_init/on_init_agent_login/class";
+import { MockConfirmAgentLoginBus210Class } from "./BUS/2.1.0/confirm/confirm_agent_login/class";
+import { MockOnConfirmAgentLoginBus210Class } from "./BUS/2.1.0/on_confirm/on_confirm_agent_login/class";
+import { MockConfirmAgentPurchaseBus210Class } from "./BUS/2.1.0/confirm/confirm_agent_purchase/class";
+import { MockOnConfirmAgentPurchaseBus210Class } from "./BUS/2.1.0/on_confirm/on_confirm_agent_purchase/class";
+import { MockUpdateBaseOrderUpdateBus210Class } from "./BUS/2.1.0/update/update_base_order_update/class";
+import { MockOnUpdateBaseOrderUpdateBus210Class } from "./BUS/2.1.0/on_update/on_update_base_order_update/class";
+import { MockInitUnlimitedPassBus210Class } from "./BUS/2.1.0/init/init_unlimited_pass/class";
+import { MockOnInitUnlimitedPassBus210Class } from "./BUS/2.1.0/on_init/on_init_unlimited_pass/class";
+import { MockConfirmUnlimitedPassBus210Class } from "./BUS/2.1.0/confirm/confirm_unlimited_pass/class";
+import { MockOnConfirmUnlimitedPassBus210Class } from "./BUS/2.1.0/on_confirm/on_confirm_unlimited_pass/class";
 
 // helpers
 type Ctor<T> = new () => T;
@@ -148,7 +168,40 @@ const registry = {
   on_confirm_BUS_Without_update: MockOnConfirmVehConWithoutUpdateBus210Class,
   on_confirm_delayed_BUS_210: MockOnConfirmDelayedBus210Class,
   on_confirm_veh_con_BUS_210: MockOnConfirmVehConBus210Class,
-  on_confirm_BUS_QR_210 :MockOnConfirmVehConBusQr210Class,
+  on_confirm_BUS_QR_210: MockOnConfirmVehConBusQr210Class,
+  cancel_tech_soft_BUS_210: MockCancelTechSoftBus210Class,
+  on_cancel_tech_soft_BUS_210: MockOnCancelBusTech_Soft210Class,
+
+  //________________INTRACITY_AGENT_ACTIVATION___________________
+  select_BUS_Agent_Activation_210: MockSelectAgentActivationBus210Class,
+  on_select_BUS_Agent_Activation_210: MockOnSelectAgentActivationBus210Class,
+  init_BUS_Agent_Activation_210: MockInitAgentActivationBus210Class,
+  on_init_BUS_Agent_Activation_210: MockOnInitAgentActivationBus210Class,
+  confirm_BUS_Agent_Activation_210: MockConfirmAgentActivationBus210Class,
+  on_confirm_BUS_Agent_Activation_210: MockOnConfirmAgentActivationBus210Class,
+
+  //______________Intracity_AGENT_LOGIN___________________
+  init_BUS_Agent_login_210: MockInitAgentLoginBus210Class,
+  on_init_BUS_Agent_login_210: MockOnInitAgentLoginBus210Class,
+  confirm_BUS_Agent_login_210: MockConfirmAgentLoginBus210Class,
+  on_confirm_BUS_Agent_login_210: MockOnConfirmAgentLoginBus210Class,
+
+  //________________Intacity_purchase_journey_agent_based__________________
+  confirm_BUS_Agent_Purchase_210: MockConfirmAgentPurchaseBus210Class,
+  on_confirm_BUS_Agent_Purchase_210: MockOnConfirmAgentPurchaseBus210Class,
+
+  //________________Intacity_base_order_update_journey__________________
+  update_BUS_Base_Order_Update_210: MockUpdateBaseOrderUpdateBus210Class,
+  on_update_BUS_Base_Order_Update_210: MockOnUpdateBaseOrderUpdateBus210Class,
+
+  //________________Intacity_unlimited_pass__________________
+  select_BUS_Unlimited_Passes_210: MockSelectUnlimitedPassBus210Class,
+  on_select_BUS_Unlimited_Passes_210: MockOnSelectBusUnlimitedPass210Class,
+  init_BUS_Unlimited_Passes_210: MockInitUnlimitedPassBus210Class,
+  on_init_BUS_Unlimited_Passes_210: MockOnInitUnlimitedPassBus210Class,
+  confirm_BUS_Unlimited_Passes_210: MockConfirmUnlimitedPassBus210Class,
+  on_confirm_BUS_Unlimited_Passes_210: MockOnConfirmUnlimitedPassBus210Class,
+
   // on_confirm_user_confirmation :MockOnConfirmUserConfirmationBusClass,
   on_init_BUS_210: MockOnInitBus210Class,
   on_search_BUS_210: MockOnSearch1Bus210Class,
@@ -164,6 +217,8 @@ const registry = {
   on_update_accepted_BUS_210: MockOnUpdateAcceptedBus210Class,
   on_update_veh_con_BUS_210: MockOnUpdateVehicleBus210Class,
   on_update_veh_QR_BUS_210: MockOnUpdateVehicleQrBus210Class,
+  update_purchase_flow_BUS_210: MockUpdatePurchaseHourneyBus210Class,
+  on_update_purchase_flow_BUS_210: MockOnUpdatePurchaseJourneyBus210Class,
   search0_BUS_210: MockSearch0Bus210Class,
   search_BUS_210: MockSearch1Bus210Class,
   select_BUS_210: MockSelectBus210Class,

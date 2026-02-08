@@ -4,7 +4,7 @@ save-data:
   start_code: "$.message.intent.fulfillment.stops[?(@.type=='START')].location.descriptor.code"
   end_code: "$.message.intent.fulfillment.stops[?(@.type=='END')].location.descriptor.code"
   vehicle_type: "$.message.intent.fulfillment.vehicle.category"
-  buyer_app_fee: "$.message.intent.payment.tags[?(@.descriptor.code=='BUYER_FINDER_FEES')].list[?(@.descriptor.code=='BUYER_FINDER_FEES_PERCENTAGE')].value"
+  buyer_app_fee: "$.message.intent.tags[?(@.descriptor.code=='BAP_TERMS')].list[?(@.descriptor.code=='BUYER_FINDER_FEES_PERCENTAGE')].value"
   city_code: "$.context.location.city.code"
   bap_id: "$.context.bap_id"
   bap_uri: "$.context.bap_uri"

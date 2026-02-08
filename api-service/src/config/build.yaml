@@ -45915,11 +45915,11 @@ x-validations:
         enumList:
           - IND
         useCasePath: "$.message.intent.fulfillment.vehicle.category"
-      - _NAME_: VALIDATE_CITY_CODE_FORMAT
-        _SCOPE_: "$.context.location.city"
-        subTags: "$.code"
-        match1: ["^std:0\\d+$"]
-        _RETURN_: subTags follow regex match1
+      # - _NAME_: VALIDATE_CITY_CODE_FORMAT
+      #   _SCOPE_: "$.context.location.city"
+      #   subTags: "$.code"
+      #   match1: ["^std:0\\d+$"]
+      #   _RETURN_: subTags follow regex match1
       - _NAME_: REQUIRED_CONTEXT_DOMAIN_3
         attr: "$.context.domain"
         _RETURN_: attr are present && attr all in enumList
@@ -46218,6 +46218,7 @@ x-validations:
           - TICKET
           - PASS
           - ONLINE
+          - AGENT_TICKETING
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46225,10 +46226,12 @@ x-validations:
         enumList:
           - START
           - END
+          - ROUTE
           - INTERMEDIATE_STOP
           - TRANSIT_STOP
           - PASS
           - ONLINE
+          - AGENT_TICKETING
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46348,13 +46351,25 @@ x-validations:
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_COLLECTED_BY_17
         attr: "$.message.order.payments[*].collected_by"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_STATUS_18
         attr: "$.message.order.payments[*].status"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_19
         attr: "$.message.order.payments[*].type"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_CONTEXT_CODE_20
         attr: "$.context.location.country.code"
         _RETURN_: attr are present
@@ -46403,12 +46418,24 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_COLLECTED_BY_36
         attr: "$.message.order.payments[*].collected_by"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_STATUS_37
         attr: "$.message.order.payments[*].status"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_38
         attr: "$.message.order.payments[*].type"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: VALID_ENUM_MESSAGE_CODE_1
         enumList:
           - SJT
@@ -46432,6 +46459,7 @@ x-validations:
           - TICKET
           - PASS
           - ONLINE
+          - AGENT_TICKETING
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46439,10 +46467,12 @@ x-validations:
         enumList:
           - START
           - END
+          - ROUTE
           - INTERMEDIATE_STOP
           - TRANSIT_STOP
           - PASS
           - ONLINE
+          - AGENT_TICKETING
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46562,21 +46592,37 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_ID_18
         attr: "$.message.order.payments[*].id"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_COLLECTED_BY_19
         attr: "$.message.order.payments[*].collected_by"
         _RETURN_: attr are present && attr all in enumList
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
         enumList:
           - BPP
           - BAP
       - _NAME_: REQUIRED_MESSAGE_STATUS_20
         attr: "$.message.order.payments[*].status"
         _RETURN_: attr are present && attr all in enumList
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
         enumList:
           - NOT-PAID
           - PAID
       - _NAME_: REQUIRED_MESSAGE_TYPE_21
         attr: "$.message.order.payments[*].type"
         _RETURN_: attr are present && attr all in enumList
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
         enumList:
           - PRE-ORDER
           - ON-FULFILLMENT
@@ -46584,12 +46630,24 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_TRANSACTION_ID_22
         attr: "$.message.order.payments[*].params.transaction_id"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_23
         attr: "$.message.order.payments[*].params.currency"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_AMOUNT_24
         attr: "$.message.order.payments[*].params.amount"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_CONTEXT_CODE_25
         attr: "$.context.location.country.code"
         _RETURN_: attr are present
@@ -46641,24 +46699,52 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_ID_41
         attr: "$.message.order.payments[*].id"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_COLLECTED_BY_42
         attr: "$.message.order.payments[*].collected_by"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_STATUS_43
         attr: "$.message.order.payments[*].status"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_44
         attr: "$.message.order.payments[*].type"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TRANSACTION_ID_45
         attr: "$.message.order.payments[*].params.transaction_id"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_46
         attr: "$.message.order.payments[*].params.currency"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_AMOUNT_47
         attr: "$.message.order.payments[*].params.amount"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: VALID_ENUM_MESSAGE_CODE_1
         enumList:
           - SJT
@@ -46682,6 +46768,7 @@ x-validations:
           - TICKET
           - PASS
           - ONLINE
+          - AGENT_TICKETING
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46689,10 +46776,14 @@ x-validations:
         enumList:
           - START
           - END
+          - ROUTE
           - INTERMEDIATE_STOP
           - TRANSIT_STOP
           - PASS
           - ONLINE
+          - TRIP
+          - TICKET
+          - AGENT_TICKETING
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46717,6 +46808,8 @@ x-validations:
           - CANCELLATION_CHARGES
           - OFFER
           - TOLL
+          - TAX
+          - OTHER_CHARGES
         enumPath: "$.message.order.quote.breakup[*].title"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46932,6 +47025,7 @@ x-validations:
           - TICKET
           - PASS
           - ONLINE
+          - AGENT_TICKETING
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46939,10 +47033,12 @@ x-validations:
         enumList:
           - START
           - END
+          - ROUTE
           - INTERMEDIATE_STOP
           - TRANSIT_STOP
           - PASS
           - ONLINE
+          - AGENT_TICKETING
         enumPath: "$.message.order.fulfillments[*].type"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -46989,6 +47085,8 @@ x-validations:
           - CANCELLATION_CHARGES
           - OFFER
           - TOLL
+          - TAX
+          - OTHER_CHARGES
         enumPath: "$.message.order.quote.breakup[*].title"
         _CONTINUE_: "!(enumPath are present)"
         _RETURN_: enumPath all in enumList
@@ -47276,6 +47374,8 @@ x-validations:
           - ROUTE_ID
           - ROUTE_DIRECTION
           - ROUTE_NAME
+          - OPERATIONAL_START_TIME
+          - OPERATIONAL_END_TIME
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_1_TICKET_INFO
         _SCOPE_: "$.message.catalog.providers[*].fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -47392,6 +47492,7 @@ x-validations:
           - SFSJT
           - PURCHASE
           - RECHARGE
+          - AGENT_TICKETING
         _RETURN_: subTags all in validValues
       - _NAME_: VALID_CATEGORY_DESCRIPTOR_CODE
         _SCOPE_: "$.message.catalog.providers[*].categories[*]"
@@ -47403,6 +47504,7 @@ x-validations:
           - WALLET
           - TICKET
           - PASS
+          - AGENT
         _RETURN_: subTags all in validValues
 
     on_select:
@@ -47752,14 +47854,20 @@ x-validations:
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING  
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_FULFILLMENT_IDS_56
         attr: "$.message.order.items[*].fulfillment_ids[*]"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING  
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_60
         attr: "$.message.order.provider.id"
         _RETURN_: attr are present
@@ -47816,49 +47924,67 @@ x-validations:
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING  
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_71
         attr: "$.message.order.quote.price.currency"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING  
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TITLE_72
         attr: "$.message.order.quote.breakup[*].title"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_ID_73
-        attr: "$.message.order.quote.breakup[*].item.id"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING  
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
+      # - _NAME_: REQUIRED_MESSAGE_ID_73
+      #   attr: "$.message.order.quote.breakup[*].item.id"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_74
         attr: "$.message.order.quote.breakup[*].item.price.currency"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING  
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_VALUE_75
         attr: "$.message.order.quote.breakup[*].item.price.value"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING  
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_COUNT_76
         attr: "$.message.order.quote.breakup[*].item.quantity.selected.count"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING  
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_1
         enumList:
           - QR
@@ -47898,6 +48024,8 @@ x-validations:
           - ROUTE_ID
           - ROUTE_DIRECTION
           - ROUTE_NAME
+          - OPERATIONAL_START_TIME
+          - OPERATIONAL_END_TIME
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_TICKET_INFO
         _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -48319,14 +48447,20 @@ x-validations:
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_FULFILLMENT_IDS_63
         attr: "$.message.order.items[*].fulfillment_ids[*]"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_64
         attr: "$.message.order.provider.id"
         _RETURN_: attr are present
@@ -48382,91 +48516,122 @@ x-validations:
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_75
         attr: "$.message.order.quote.price.currency"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TITLE_76
         attr: "$.message.order.quote.breakup[*].title"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_ID_77
-        attr: "$.message.order.quote.breakup[*].item.id"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
+      # - _NAME_: REQUIRED_MESSAGE_ID_77
+      #   attr: "$.message.order.quote.breakup[*].item.id"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_COUNT_78
         attr: "$.message.order.quote.breakup[*].item.quantity.selected.count"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_VALUE_79
         attr: "$.message.order.quote.breakup[*].item.price.value"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_80
         attr: "$.message.order.quote.breakup[*].item.price.currency"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_81
         attr: "$.message.order.payments[*].id"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
+
       - _NAME_: REQUIRED_MESSAGE_COLLECTED_BY_82
         attr: "$.message.order.payments[*].collected_by"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_STATUS_83
         attr: "$.message.order.payments[*].status"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_84
         attr: "$.message.order.payments[*].type"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_BANK_CODE_85
-        attr: "$.message.order.payments[*].params.bank_code"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_86
-        attr: "$.message.order.payments[*].params.bank_account_number"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
+      # - _NAME_: REQUIRED_MESSAGE_BANK_CODE_85
+      #   attr: "$.message.order.payments[*].params.bank_code"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
+      # - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_86
+      #   attr: "$.message.order.payments[*].params.bank_account_number"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: VALID_ENUM_MESSAGE_TYPE_1
         enumList:
           - QR
@@ -48496,6 +48661,8 @@ x-validations:
           - ROUTE_ID
           - ROUTE_DIRECTION
           - ROUTE_NAME
+          - OPERATIONAL_START_TIME
+          - OPERATIONAL_END_TIME
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_TICKET_INFO
         _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -48640,6 +48807,7 @@ x-validations:
           - SFSJT
           - RJT
           - PASS
+          - AGENT_TICKETING
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - METRO
@@ -48923,14 +49091,20 @@ x-validations:
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_FULFILLMENT_IDS_71
         attr: "$.message.order.items[*].fulfillment_ids[*]"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_75
         attr: "$.message.order.provider.id"
         _RETURN_: attr are present
@@ -48986,112 +49160,151 @@ x-validations:
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_86
         attr: "$.message.order.quote.price.currency"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TITLE_87
         attr: "$.message.order.quote.breakup[*].title"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_ID_88
-        attr: "$.message.order.quote.breakup[*].item.id"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
+      # - _NAME_: REQUIRED_MESSAGE_ID_88
+      #   attr: "$.message.order.quote.breakup[*].item.id"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_VALUE_89
         attr: "$.message.order.quote.breakup[*].item.price.value"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_90
         attr: "$.message.order.quote.breakup[*].item.price.currency"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_COUNT_91
         attr: "$.message.order.quote.breakup[*].item.quantity.selected.count"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_92
         attr: "$.message.order.payments[*].id"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_COLLECTED_BY_93
         attr: "$.message.order.payments[*].collected_by"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_STATUS_94
         attr: "$.message.order.payments[*].status"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TYPE_95
         attr: "$.message.order.payments[*].type"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TRANSACTION_ID_96
         attr: "$.message.order.payments[*].params.transaction_id"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_97
         attr: "$.message.order.payments[*].params.currency"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_AMOUNT_98
         attr: "$.message.order.payments[*].params.amount"
         _RETURN_: attr are present
         useCasePath: "$.message.order.fulfillments[*].vehicle.category"
         useCode:
           - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_BANK_CODE_99
-        attr: "$.message.order.payments[*].params.bank_code"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_100
-        attr: "$.message.order.payments[*].params.bank_account_number"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(useCasePath all in useCode) || (skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
+      # - _NAME_: REQUIRED_MESSAGE_BANK_CODE_99
+      #   attr: "$.message.order.payments[*].params.bank_code"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
+      # - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_100
+      #   attr: "$.message.order.payments[*].params.bank_account_number"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_CREATED_AT_103
         attr: "$.message.order.created_at"
         _RETURN_: attr are present
@@ -49130,6 +49343,8 @@ x-validations:
           - ROUTE_ID
           - ROUTE_DIRECTION
           - ROUTE_NAME
+          - OPERATIONAL_START_TIME
+          - OPERATIONAL_END_TIME
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_TICKET_INFO
         _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -49472,20 +49687,20 @@ x-validations:
         useCode:
           - BUS
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_BANK_CODE_44
-        attr: "$.message.order.payments[*].params.bank_code"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_45
-        attr: "$.message.order.payments[*].params.bank_account_number"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+      # - _NAME_: REQUIRED_MESSAGE_BANK_CODE_44
+      #   attr: "$.message.order.payments[*].params.bank_code"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
+      # - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_45
+      #   attr: "$.message.order.payments[*].params.bank_account_number"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_CANCELLED_BY_48
         attr: "$.message.order.cancellation.cancelled_by"
         _RETURN_: attr are present
@@ -49522,6 +49737,8 @@ x-validations:
           - ROUTE_ID
           - ROUTE_DIRECTION
           - ROUTE_NAME
+          - OPERATIONAL_START_TIME
+          - OPERATIONAL_END_TIME
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_TICKET_INFO
         _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -49642,14 +49859,12 @@ x-validations:
           - SFSJT
           - RJT
           - PASS
+          - AGENT_TICKETING
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_18
         attr: "$.message.order.items[*].price.currency"
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_VALUE_19
         attr: "$.message.order.items[*].price.value"
-        _RETURN_: attr are present
-      - _NAME_: REQUIRED_MESSAGE_COUNT_20
-        attr: "$.message.order.items[*].quantity.selected.count"
         _RETURN_: attr are present
       - _NAME_: REQUIRED_MESSAGE_FULFILLMENT_IDS_21
         attr: "$.message.order.items[*].fulfillment_ids[*]"
@@ -49670,9 +49885,7 @@ x-validations:
           - ROUTE
           - TRIP
           - TICKET
-      - _NAME_: REQUIRED_MESSAGE_NAME_28
-        attr: "$.message.order.fulfillments[*].stops[*].instructions.name"
-        _RETURN_: attr are present
+          - AGENT_TICKETING
       - _NAME_: REQUIRED_MESSAGE_CATEGORY_36
         attr: "$.message.order.fulfillments[*].vehicle.category"
         _RETURN_: attr are present && attr all in enumList
@@ -49682,12 +49895,24 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_VALUE_37
         attr: "$.message.order.quote.price.value"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_38
         attr: "$.message.order.quote.price.currency"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_TITLE_39
         attr: "$.message.order.quote.breakup[*].title"
         _RETURN_: attr are present && attr all in enumList
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
         enumList:
           - BASE_FARE
           - REFUND
@@ -49702,24 +49927,44 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_41
         attr: "$.message.order.quote.breakup[*].price.currency"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_VALUE_42
         attr: "$.message.order.quote.breakup[*].price.value"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "!(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_ID_43
         attr: "$.message.order.payments[*].id"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_COLLECTED_BY_44
         attr: "$.message.order.payments[*].collected_by"
         _RETURN_: attr are present && attr all in enumList
         enumList:
           - BPP
           - BAP
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"  
       - _NAME_: REQUIRED_MESSAGE_STATUS_45
         attr: "$.message.order.payments[*].status"
         _RETURN_: attr are present && attr all in enumList
         enumList:
           - NOT-PAID
           - PAID
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"  
       - _NAME_: REQUIRED_MESSAGE_TYPE_46
         attr: "$.message.order.payments[*].type"
         _RETURN_: attr are present && attr all in enumList
@@ -49727,6 +49972,10 @@ x-validations:
           - PRE-ORDER
           - ON-FULFILLMENT
           - POST-FULFILLMENT
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"  
       - _NAME_: REQUIRED_MESSAGE_TRANSACTION_ID_47
         attr: "$.message.order.payments[*].params.transaction_id"
         _CONTINUE_: "!(attr are present)"
@@ -49734,9 +49983,17 @@ x-validations:
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_48
         attr: "$.message.order.payments[*].params.currency"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: REQUIRED_MESSAGE_AMOUNT_49
         attr: "$.message.order.payments[*].params.amount"
         _RETURN_: attr are present
+        skipQuoteIfItemCodePath: "$.message.order.items[*].descriptor.code"
+        skipQuoteIfItemCode:
+          - AGENT_TICKETING
+        _CONTINUE_: "(skipQuoteIfItemCodePath any in skipQuoteIfItemCode)"
       - _NAME_: VALID_ENUM_MESSAGE_STATUS_1
         enumList:
           - UNCLAIMED
@@ -49751,6 +50008,8 @@ x-validations:
           - ROUTE_INFO
           - TICKET_INFO
           - INFO
+          - AGENT_TICKETING
+          - REF_ORDER_IDS
         tagPath: "$.message.order.fulfillments[*].tags[*].descriptor.code"
         _CONTINUE_: "!(tagPath are present)"
         _RETURN_: tagPath all in validTags
@@ -49761,6 +50020,8 @@ x-validations:
           - ROUTE_ID
           - ROUTE_DIRECTION
           - ROUTE_NAME
+          - OPERATIONAL_START_TIME
+          - OPERATIONAL_END_TIME
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_TICKET_INFO
         _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"
@@ -50374,13 +50635,13 @@ x-validations:
         useCode:
           - BUS
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_ID_87
-        attr: "$.message.order.quote.breakup[*].item.id"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+      # - _NAME_: REQUIRED_MESSAGE_ID_87
+      #   attr: "$.message.order.quote.breakup[*].item.id"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_CURRENCY_88
         attr: "$.message.order.quote.breakup[*].item.price.currency"
         _RETURN_: attr are present
@@ -50451,20 +50712,20 @@ x-validations:
         useCode:
           - BUS
         _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_BANK_CODE_98
-        attr: "$.message.order.payments[*].params.bank_code"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
-      - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_99
-        attr: "$.message.order.payments[*].params.bank_account_number"
-        _RETURN_: attr are present
-        useCasePath: "$.message.order.fulfillments[*].vehicle.category"
-        useCode:
-          - BUS
-        _CONTINUE_: "!(useCasePath all in useCode)"
+      # - _NAME_: REQUIRED_MESSAGE_BANK_CODE_98
+      #   attr: "$.message.order.payments[*].params.bank_code"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
+      # - _NAME_: REQUIRED_MESSAGE_BANK_ACCOUNT_NUMBER_99
+      #   attr: "$.message.order.payments[*].params.bank_account_number"
+      #   _RETURN_: attr are present
+      #   useCasePath: "$.message.order.fulfillments[*].vehicle.category"
+      #   useCode:
+      #     - BUS
+      #   _CONTINUE_: "!(useCasePath all in useCode)"
       - _NAME_: REQUIRED_MESSAGE_CREATED_AT_102
         attr: "$.message.order.created_at"
         _RETURN_: attr are present
@@ -50508,6 +50769,8 @@ x-validations:
           - ROUTE_ID
           - ROUTE_DIRECTION
           - ROUTE_NAME
+          - OPERATIONAL_START_TIME
+          - OPERATIONAL_END_TIME
         _RETURN_: subTags all in validValues
       - _NAME_: validate_tag_0_TICKET_INFO
         _SCOPE_: "$.message.order.fulfillments[*].tags[?(@.descriptor.code=='TICKET_INFO')]"

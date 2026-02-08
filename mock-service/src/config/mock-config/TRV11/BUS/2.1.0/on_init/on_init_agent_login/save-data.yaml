@@ -1,0 +1,5 @@
+save-data:
+  on_init_fulfillments: "$.message.order.fulfillments"
+  on_init_provider: "$.message.order.provider"
+  on_init_items: "$.message.order.items"
+  on_init_tags: "$.message.order.tags"

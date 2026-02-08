@@ -24,7 +24,7 @@ function enhancePayments(payments:any) {
     ...payment,
     params: {
     ...payment.params,
-    ...additionalParams
+    // ...additionalParams
     }
   }));
   }
@@ -41,7 +41,7 @@ function updateOrderTimestamps(payload: any) {
   }
 
 function updateFulfillmentsWithParentInfo(fulfillments: any[]): void {
-  const validTo = "2024-07-23T23:59:59.999Z";
+  const validTo = new Date(Date.now()+ 6*60*60*60).toISOString();
 
   fulfillments.forEach((fulfillment) => {
     // Generate a random QR token
@@ -55,6 +55,7 @@ function updateFulfillmentsWithParentInfo(fulfillments: any[]): void {
 
     // If a stop exists, modify the first stop; otherwise, create a new one
     if (fulfillment.stops.length > 0) {
+      fulfillment.stops[0].type ="START"
       fulfillment.stops[0].authorization = {
         type: "QR",
         token: qrToken,
@@ -119,6 +120,7 @@ export async function onConfirmDelayedGenerator(
   existingPayload.message.order.quote = sessionData.quote
   }
   existingPayload.message.order.id = order_id;
+  existingPayload.message.order.tags = sessionData.tags.flat()
   const delay_duration = isoDurationToSeconds(sessionData.ttl) + 2
   console.log("the delay duration is", delay_duration)
   const now = new Date().toISOString();

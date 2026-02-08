@@ -2,3 +2,4 @@ save-data:
   payments: "$.message.order.payments"
   cancellation_terms: "$.message.order.cancellation_terms"
   fulfillments: "$.message.order.fulfillments[*]"
+  on_init_tags: "$.message.order.tags"

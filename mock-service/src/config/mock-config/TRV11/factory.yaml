@@ -294,6 +294,11 @@ codes:
     action: on_cancel
     default: BUS/2.1.0/on_cancel/default.yaml
     message_id: false
+  - code: 186
+    action_id: on_cancel_tech_soft_BUS_210
+    action: on_cancel
+    default: BUS/2.1.0/on_cancel/default.yaml
+    message_id: false  
   - code: 187
     action_id: on_confirm_delayed_BUS_210
     action: on_confirm
@@ -304,6 +309,11 @@ codes:
     action: cancel
     default: BUS/2.1.0/cancel/cancel_tech/default.yaml
     message_id: true
+  - code: 188
+    action_id: cancel_tech_soft_BUS_210
+    action: cancel
+    default: BUS/2.1.0/cancel/cancel_tech/default.yaml
+    message_id: true  
   - code: 186
     action_id: on_cancel_init_BUS_210
     action: on_cancel
@@ -414,6 +424,16 @@ codes:
     action: on_update
     default: BUS/2.1.0/on_update/on_update_vehicle_qr/default.yaml
     message_id: false
+  - code: 209
+    action_id: update_purchase_flow_BUS_210
+    action: update
+    default: BUS/2.1.0/update/update_purchase_journey/default.yaml
+    message_id: true
+  - code: 210
+    action_id: on_update_purchase_flow_BUS_210
+    action: on_update
+    default: BUS/2.1.0/on_update/on_update_purchase_journey/default.yaml
+    message_id: false
   - code: 211
     action_id: select_unlimited_pass_BUS_210
     action: select
@@ -488,6 +508,118 @@ codes:
     action_id: on_confirm_monthly_pass_BUS_210
     action: on_confirm
     default: BUS/2.1.0/on_confirm/on_confirm_monthly_passes/default.yaml
+    message_id: false
+
+# _______________INTRACITY_AGENT_ACTIVATION__________________
+  - code: 152
+    action_id: select_BUS_Agent_Activation_210
+    action: select
+    default: BUS/2.1.0/select/select_agent_activation/default.yaml
+    message_id: true
+  - code: 153
+    action_id: on_select_BUS_Agent_Activation_210
+    action: on_select
+    default: BUS/2.1.0/on_select/on_select_agent_activation/default.yaml
+    message_id: false 
+  - code: 176
+    action_id: init_BUS_Agent_Activation_210
+    action: init
+    default: BUS/2.1.0/init/init_agent_activation/default.yaml
+    message_id: true
+  - code: 177
+    action_id: on_init_BUS_Agent_Activation_210
+    action: on_init
+    default: BUS/2.1.0/on_init/on_init_agent_activation/default.yaml
+    message_id: false
+  - code: 178
+    action_id: confirm_BUS_Agent_Activation_210
+    action: confirm
+    default: BUS/2.1.0/confirm/confirm_agent_activation/default.yaml
+    message_id: true
+  - code: 179
+    action_id: on_confirm_BUS_Agent_Activation_210
+    action: on_confirm
+    default: BUS/2.1.0/on_confirm/on_confirm_agent_activation/default.yaml
+    message_id: false   
+
+
+    # ______________Intracity_AGENT_LOGIN___________________
+
+  - code: 176
+    action_id: init_BUS_Agent_login_210
+    action: init
+    default: BUS/2.1.0/init/init_agent_login/default.yaml
+    message_id: true
+  - code: 177
+    action_id: on_init_BUS_Agent_login_210
+    action: on_init
+    default: BUS/2.1.0/on_init/on_init_agent_login/default.yaml
+    message_id: false
+  - code: 178
+    action_id: confirm_BUS_Agent_login_210
+    action: confirm
+    default: BUS/2.1.0/confirm/confirm_agent_login/default.yaml
+    message_id: true
+  - code: 179
+    action_id: on_confirm_BUS_Agent_login_210
+    action: on_confirm
+    default: BUS/2.1.0/on_confirm/on_confirm_agent_login/default.yaml
+    message_id: false
+
+  # ________________Intacity_purchase_journey_agent_based__________________
+  - code: 178
+    action_id: confirm_BUS_Agent_Purchase_210
+    action: confirm
+    default: BUS/2.1.0/confirm/confirm_agent_purchase/default.yaml
+    message_id: true
+  - code: 179
+    action_id: on_confirm_BUS_Agent_Purchase_210
+    action: on_confirm
+    default: BUS/2.1.0/on_confirm/on_confirm_agent_purchase/default.yaml
+    message_id: false
+
+  # ________________Intacity_base_order_update_journey__________________
+  - code: 178
+    action_id: update_BUS_Base_Order_Update_210
+    action: update
+    default: BUS/2.1.0/update/update_base_order_update/default.yaml
+    message_id: true
+  - code: 179
+    action_id: on_update_BUS_Base_Order_Update_210
+    action: on_update 
+    default: BUS/2.1.0/on_update/on_update_base_order_update/default.yaml
+    message_id: false
+
+    # ________________Intacity_unlimited_pass__________________
+  - code: 152
+    action_id: select_BUS_Unlimited_Passes_210
+    action: select
+    default: BUS/2.1.0/select/select_unlimited_pass/default.yaml
+    message_id: true
+  - code: 153
+    action_id: on_select_BUS_Unlimited_Passes_210
+    action: on_select
+    default: BUS/2.1.0/on_select/on_select_unlimited_pass/default.yaml
+    message_id: false 
+  - code: 176
+    action_id: init_BUS_Unlimited_Passes_210
+    action: init
+    default: BUS/2.1.0/init/init_unlimited_pass/default.yaml
+    message_id: true
+  - code: 177
+    action_id: on_init_BUS_Unlimited_Passes_210
+    action: on_init
+    default: BUS/2.1.0/on_init/on_init_unlimited_pass/default.yaml
+    message_id: false
+  - code: 178
+    action_id: confirm_BUS_Unlimited_Passes_210
+    action: confirm
+    default: BUS/2.1.0/confirm/confirm_unlimited_pass/default.yaml
+    message_id: true
+  - code: 179
+    action_id: on_confirm_BUS_Unlimited_Passes_210
+    action: on_confirm
+    default: BUS/2.1.0/on_confirm/on_confirm_unlimited_pass/default.yaml
     message_id: false
 
     # ___________________IMG FLOW BUS 201_____________________

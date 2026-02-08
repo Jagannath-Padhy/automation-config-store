@@ -1,0 +1,10 @@
+message:
+  order:
+    items:
+      - id: "I10"
+    fulfillments:
+      - agent:
+          person:
+            id: "emp:E52432"
+    provider:
+      id: "P1"

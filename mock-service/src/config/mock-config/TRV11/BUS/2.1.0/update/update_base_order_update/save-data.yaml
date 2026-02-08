@@ -1,0 +1,5 @@
+save-data:
+  message_id: "$.context.message_id"
+  update_fulfillments: "$.message.order.fulfillments"
+  update_quote: "$.message.order.quote"
+  update_order_id: "$.message.order.id"
