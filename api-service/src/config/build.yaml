@@ -5,6 +5,7 @@ info:
     ONDC Protocol Core API specification. This is an adaptation of Beckn Core
     version 0.9.3
   version: 1.2.5
+  domain: ONDC:LOG10
 security:
   - SubscriberAuth: []
   - GatewaySubscriberAuth: []
