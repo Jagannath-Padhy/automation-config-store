@@ -1568,7 +1568,7 @@ components:
             - application/xml
         resubmit:
           type: boolean
-        multiple_sumbissions:
+        multiple_submissions:
           type: boolean
     Fulfillment:
       description: Describes how a an order will be rendered/fulfilled to the end-customer
@@ -6054,7 +6054,7 @@ x-flows:
                         url: >-
                           https://api.unreserved-entry-pass.com/xinput/additonal-details/F01
                         resubmit: false
-                        multiple_sumbissions: false
+                        multiple_submissions: false
                       required: true
                   - id: I2
                     descriptor:
@@ -6108,7 +6108,7 @@ x-flows:
                         url: >-
                           https://api.unreserved-entry-pass.com/xinput/additonal-details/F01
                         resubmit: false
-                        multiple_sumbissions: false
+                        multiple_submissions: false
                       required: true
                     tags:
                       - descriptor:
@@ -19662,8 +19662,8 @@ x-validations:
               - _NAME_: REQUIRED_MESSAGE_ITEMS_XINPUT_RESUBMIT
                 attr: $.message.order.items[*].xinput.form.resubmit
                 _RETURN_: attr are present
-              - _NAME_: REQUIRED_MESSAGE_ITEMS_XINPUT_MULTIPLE_SUMBISSIONS
-                attr: $.message.order.items[*].xinput.form.multiple_sumbissions
+              - _NAME_: REQUIRED_MESSAGE_ITEMS_XINPUT_multiple_submissions
+                attr: $.message.order.items[*].xinput.form.multiple_submissions
                 _RETURN_: attr are present
           - _NAME_: ENUM_ITEMS
             _RETURN_:
