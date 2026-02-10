@@ -70,7 +70,7 @@ export async function onCancelSoftGenerator(
           sessionData?.flow_id === "Technical_cancellation_flow" ||
           sessionData?.flow_id === "OnDemand_Ride_cancellation_by_driver"
             ? "0"
-            : "10",
+            : "50",
       },
     },
     {
