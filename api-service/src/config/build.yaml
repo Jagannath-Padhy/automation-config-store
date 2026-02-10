@@ -3246,11 +3246,11 @@ x-enum:
       location: *ref_0
       domain: *ref_1
 
-    message: &ref_10
+    message: *ref_10
       # merged message references from both Airline (*ref_8) and Intercity Bus (*ref_6)
       # ensures flexibility and coverage for both data structures
-      <<: *ref_8     # Airline structure (items, fulfillments, payments)
-      <<: *ref_6     # Intercity structure (if contains extended fields like billing, quote, etc.)
+      # <<: *ref_8     # Airline structure (items, fulfillments, payments)
+      # <<: *ref_6     # Intercity structure (if contains extended fields like billing, quote, etc.)
 
   on_confirm:
     context:
@@ -33092,5 +33092,3 @@ x-validations:
   
   _SESSION_DATA_:
     trans: {}
-
-
