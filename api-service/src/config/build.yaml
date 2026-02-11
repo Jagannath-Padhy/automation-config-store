@@ -11008,8 +11008,10 @@ x-validations:
                   - SOFT_CANCEL
                   - CONFIRM_CANCEL
                   - ACTIVE
-                  - COMPLETE
+                  - SOFT-UPDATE
+                  - CONFIRM-UPDATE
                   - CANCELLED
+                  - COMPLETED
                 _RETURN_: attr any in enumList
               - _NAME_: REGEX_ON_STATUS_UPDATED_AT
                 attr: $.message.order.updated_at
