@@ -1740,6 +1740,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TagGroup'
+    Customer:
+      description: Describes a customer buying/availing a product or a service
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the customer.
+        person:
+          $ref: '#/components/schemas/Person'
+        organization:
+          $ref: '#/components/schemas/Organization'
+        contact:
+          $ref: '#/components/schemas/Contact'
     DecimalValue:
       description: Describes a decimal value
       type: string
@@ -1894,6 +1907,10 @@ components:
       additionalProperties: false
       type: object
       properties:
+        customer:
+          description: The person that will ultimately receive the order
+          allOf:
+            - $ref: '#/components/schemas/Customer'
         type:
           type: string
           description: >-
@@ -2034,6 +2051,10 @@ components:
       properties:
         fulfillment:
           $ref: '#/components/schemas/IntentFulfillment'
+        provider:
+          description: The provider from which the customer wants to place to the order from
+          allOf:
+            - $ref: '#/components/schemas/Provider/properties/id'
         payment:
           $ref: '#/components/schemas/IntentPayment'
         category:
@@ -102745,7 +102766,7 @@ x-validations:
                 _RETURN_:
                 - _NAME_: TAGS_BENEFIT_VALUE_TYPE
                   attr: "$.message.catalog['bpp/providers'][*].offers[*].tags[?(@.code=='benefit')].list[?(@.code=='value_type')].value"
-                  var_enum: ["percent", "amount"]
+                  var_enum: ["percent", "amount","freebie"]
                   _CONTINUE_: "!(attr are present)"
                   _RETURN_: attr all in var_enum
 
