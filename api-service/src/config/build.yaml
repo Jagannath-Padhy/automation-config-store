@@ -102031,9 +102031,11 @@ x-validations:
           _RETURN_:
           - _NAME_: PAYMENT_REQUIRED_TYPE
             attr: "$.message.intent.payment['@ondc/org/buyer_app_finder_fee_type']"
+            _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_REQUIRED_AMOUNT
             attr: "$.message.intent.payment['@ondc/org/buyer_app_finder_fee_amount']"
+            _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
         # Checkpoint: Validate payment enum values
         - _NAME_: PAYMENT_ENUM
@@ -102041,9 +102043,11 @@ x-validations:
           - _NAME_: PAYMENT_ENUM_TYPE
             attr: "$.message.intent.payment['@ondc/org/buyer_app_finder_fee_type']"
             var_fee_type: ["percent", "amount"]
+            _CONTINUE_: "!(attr are present)"
             _RETURN_: attr all in var_fee_type
           - _NAME_: PAYMENT_REGEX_AMOUNT
             attr: "$.message.intent.payment['@ondc/org/buyer_app_finder_fee_amount']"
+            _CONTINUE_: "!(attr are present)"
             reg: ['^(\\d*.?\\d{1,2})$']
             _RETURN_: attr follow regex reg
       # ===== FULFILLMENT VALIDATION =====
