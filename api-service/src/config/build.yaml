@@ -1723,6 +1723,23 @@ components:
         code:
           type: string
           description: State code as per ISO 3166 Alpha-2 code format
+    Creds:
+      description: Credential information for the organization
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: Unique credential identifier (e.g., GST, PAN, etc.)
+        type:
+          type: string
+          description: Type of credential
+          enum:
+            - tax_number
+            - provider_tax_number
+      required:
+        - id
+        - type
     Credential:
       description: Describes a credential of an entity - Person or Organization
       additionalProperties: false
@@ -1749,10 +1766,7 @@ components:
           description: ID of the customer.
         person:
           $ref: '#/components/schemas/Person'
-        organization:
-          $ref: '#/components/schemas/Organization'
-        contact:
-          $ref: '#/components/schemas/Contact'
+        
     DecimalValue:
       description: Describes a decimal value
       type: string
@@ -2591,34 +2605,45 @@ components:
             $ref: '#/components/schemas/TagGroup'
     Organization:
       description: Describes an organization
-      additionalProperties: false
       type: object
+      additionalProperties: false
       properties:
-        name:
-          type: string
-        cred:
-          type: string
-        org:
+        descriptor:
           type: object
           additionalProperties: false
           properties:
             name:
               type: string
-        contact:
+          required:
+            - name
+
+        address:
+          type: string
+
+        city:
           type: object
           additionalProperties: false
           properties:
-            phone:
+            code:
               type: string
-            email:
-              type: string
-              format: email
-        person:
+          required:
+            - code
+
+        state:
           type: object
           additionalProperties: false
           properties:
-            name:
-              type: string  
+            code:
+              type: string
+          required:
+            - code
+
+      required:
+        - descriptor
+        - address
+        - city
+        - state
+
     Payment:
       description: Describes a payment
       additionalProperties: false
@@ -2784,8 +2809,13 @@ components:
       additionalProperties: false
       type: object
       properties:
-        name:
-          $ref: '#/components/schemas/Name'
+        creds:
+          $ref: '#/components/schemas/Creds'
+        organization:
+          $ref: '#/components/schemas/Organization'
+        contact:
+          $ref: '#/components/schemas/Contact'
+        
     Price:
       description: Describes the price of an item. Allows for domain extension.
       additionalProperties: false
