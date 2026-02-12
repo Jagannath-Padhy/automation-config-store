@@ -2054,7 +2054,7 @@ components:
         provider:
           description: The provider from which the customer wants to place to the order from
           allOf:
-            - $ref: '#/components/schemas/Provider/properties/id'
+            - $ref: '#/components/schemas/ProviderIntent'
         payment:
           $ref: '#/components/schemas/IntentPayment'
         category:
@@ -2956,8 +2956,17 @@ components:
           type: string
           description: >-
             Validity of quote in ISO8601 durations format after which it has to
-            be refreshed e.g. 'P7D' indicates validity of 7 days; value of 0
-            indicates quote is not cacheable
+            be refreshed e.g. 'P7D' indicates validity of 7 days value of 0 indicates quote is not cacheable
+    ProviderIntent:
+      description: >-
+        Describes a service provider. This can be a restaurant, a hospital, a
+        Store etc
+      additionalProperties: false
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the provider
     Rateable:
       description: If the entity can be rated or not
       type: boolean
