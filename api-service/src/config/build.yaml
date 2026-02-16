@@ -104421,20 +104421,49 @@ x-validations:
           _RETURN_: *INIT_BILLING
         - _NAME_: ORDER_FULFILLMENTS
           _RETURN_: *INIT_FULFILLMENTS    
+
         - _NAME_: ORDER_FULFILLMENTS_ADDITIONAL_PROPERTIES
           _RETURN_:
+
+          - _NAME_: FULFILLMENTS_ID
+            attr: "$.message.order.fulfillments[*].id"
+            _RETURN_: attr are present
+
+          - _NAME_: FULFILLMENTS_TYPE
+            attr: "$.message.order.fulfillments[*].type"
+            _RETURN_: attr are present
+
           - _NAME_: FULFILLMENTS_TRACKING
             attr: "$.message.order.fulfillments[*].tracking"
             _RETURN_: attr are present
+
+          - _NAME_: FULFILLMENTS_CUSTOMER_ID
+            attr: "$.message.order.fulfillments[*].customer.id"
+            _RETURN_: attr are present
+
+          - _NAME_: FULFILLMENTS_END_GPS
+            attr: "$.message.order.fulfillments[*].end.location.gps"
+            _RETURN_: attr are present
+
+          - _NAME_: FULFILLMENTS_END_CONTACT_PHONE
+            attr: "$.message.order.fulfillments[*].end.contact.phone"
+            _RETURN_: attr are present
+
         - _NAME_: ORDER_FULFILLMENTS_ADDITIONAL_TAGS
           _RETURN_:
+
           - _NAME_: FULFILLMENTS_TAGS_ORDER_DETAILS
+            _CONTINUE_: "!(attr are present)"
+            attr: "$.message.order.fulfillments[*].tags[*].code"
+            var_enum: ["order_details"]
             _RETURN_: *TAGS_ORDER_DETAILS
+
           - _NAME_: FULFILLMENTS_TAGS_RTO_ACTION
             _CONTINUE_: "!(attr are present)"
             attr: "$.message.order.fulfillments[*].tags[?(@.code=='rto_action')].list[?(@.code=='return_to_origin')].value"
             var_enum: ["yes", "no"]
             _RETURN_: attr all in var_enum
+
         - _NAME_: ORDER_QUOTE
           _RETURN_: *ON_SELECT_QUOTE
         - _NAME_: ORDER_QUOTE_ADDITIONAL_PROPERTIES
