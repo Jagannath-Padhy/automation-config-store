@@ -104877,15 +104877,74 @@ x-validations:
         _RETURN_: *CONFIRM_ORDER
       - _NAME_: ON_CONFIRM_ORDER_ADDITIONAL_PROPERTIES
         _RETURN_:
+
+        - _NAME_: ORDER_STATE
+          attr: "$.message.order.state"
+          var_enum: ["Accepted"]
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_CREATED_AT
+          attr: "$.message.order.created_at"
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_UPDATED_AT
+          attr: "$.message.order.updated_at"
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_QUOTE_PRICE_VALUE
+          attr: "$.message.order.quote.price.value"
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_QUOTE_PRICE_CURRENCY
+          attr: "$.message.order.quote.price.currency"
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_PAYMENT_STATUS
+          attr: "$.message.order.payment.status"
+          var_enum: ["NOT-PAID", "PAID"]
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_PAYMENT_TYPE
+          attr: "$.message.order.payment.type"
+          var_enum: ["ON-FULFILLMENT", "PRE-FULFILLMENT",ON-ORDER]
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_PAYMENT_COLLECTED_BY
+          attr: "$.message.order.payment.collected_by"
+          var_enum: ["BPP", "BAP"]
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_PAYMENT_PARAMS_AMOUNT
+          attr: "$.message.order.payment.params.amount"
+          _RETURN_: attr are present
+
+        - _NAME_: ORDER_PAYMENT_PARAMS_CURRENCY
+          attr: "$.message.order.payment.params.currency"
+          _RETURN_: attr are present
+
         - _NAME_: ORDER_FULFILLMENTS_ADDITIONAL_PROPERTIES
           _RETURN_:
+          - _NAME_: FULFILLMENTS_ID
+            attr: "$.message.order.fulfillments[*].id"
+            _RETURN_: attr are present
+
+          - _NAME_: FULFILLMENTS_TYPE
+            attr: "$.message.order.fulfillments[*].type"
+            _RETURN_: attr are present
+
+          - _NAME_: FULFILLMENTS_CUSTOMER_ID
+            attr: "$.message.order.fulfillments[*].customer.id"
+            _RETURN_: attr are present
+
           - _NAME_: FULFILLMENTS_ONDC_ORG_PROVIDER_NAME
             attr: "$.message.order.fulfillments[*]['@ondc/org/provider_name']"
             _RETURN_: attr are present
+
           - _NAME_: FULFILLMENTS_STATE_DESCRIPTOR_CODE
             attr: "$.message.order.fulfillments[*].state.descriptor.code"
             var_enum: ["Pending"]
             _RETURN_: attr are present  
+
           - _NAME_: FULFILLMENTS_END_TIME
             _RETURN_:
             - _NAME_: FULFILLMENTS_END_TIME_RANGE_START
@@ -104896,6 +104955,7 @@ x-validations:
               attr: "$.message.order.fulfillments[*].end.time.range.end"
               _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
+
           - _NAME_: FULFILLMENTS_START
             _RETURN_:
               - _NAME_: FULFILLMENTS_START_LOCATION
@@ -104959,6 +105019,7 @@ x-validations:
                 - _NAME_: FULFILLMENTS_START_CONTACT_EMAIL
                   attr: "$.message.order.fulfillments[*].start.contact.email"
                   _RETURN_: attr are present
+
     status:
       # ===== CONTEXT VALIDATION =====
       - _NAME_: STATUS_CONTEXT
