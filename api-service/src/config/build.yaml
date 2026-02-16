@@ -104695,6 +104695,10 @@ x-validations:
           _RETURN_: *INIT_FULFILLMENTS    
         - _NAME_: ORDER_FULFILLMENTS_ADDITIONAL_PROPERTIES
           _RETURN_:
+          - _NAME_: FULFILLMENTS_CUSTOMER_ID
+            attr: "$.message.order.fulfillments[*].customer.id"
+            _RETURN_: attr are present
+
           - _NAME_: FULFILLMENTS_TRACKING
             attr: "$.message.order.fulfillments[*].tracking"
             _RETURN_: attr are present
