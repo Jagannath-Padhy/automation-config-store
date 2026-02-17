@@ -1416,6 +1416,10 @@ components:
             $ref: '#/components/schemas/TagGroup'
       required:
         - status
+    P2PAddress:
+      description: Describes a postal address.
+      type: string
+    
     Address:
       description: Describes an address
       type: object
@@ -2639,11 +2643,11 @@ components:
         address:
           description: The postal address of the organization
           allOf:
-            - $ref: '#/components/schemas/Address'
+            - $ref: '#/components/schemas/P2PAddress'
         state:
           description: The state where the organization's address is registered
           allOf:
-            - $ref: '#/components/schemas/State'
+            - $ref: '#/components/schemas/CountryState'
         city:
           description: The city where the the organization's address is registered
           allOf:
@@ -102020,7 +102024,164 @@ x-errorcodes:
 x-validations:
   _TESTS_:
     search:
-      # ===== CONTEXT VALIDATION =====
+      # ===== P2P VALIDATION =====
+      - _NAME_: P2P_SEARCH_CONTEXT
+        _DESCRIPTION_: Validate P2P search context
+        action: ["search"]
+        _SCOPE_: $.context[?(@.bpp_id)]
+        _RETURN_:
+          - _NAME_: CONTEXT_REQUIRED
+            _RETURN_:
+            - _NAME_: CONTEXT_REQUIRED_DOMAIN
+              attr: "$.context.domain"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_ACTION
+              attr: "$.context.action"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_COUNTRY
+              attr: "$.context.country"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_CITY
+              attr: "$.context.city"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_VERSION
+              attr: "$.context.core_version"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_BAP_ID
+              attr: "$.context.bap_id"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_BAP_URI
+              attr: "$.context.bap_uri"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_BPP_ID
+              attr: "$.context.bpp_id"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_BPP_URI
+              attr: "$.context.bpp_uri"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_TRANSACTION_ID
+              attr: "$.context.transaction_id"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_MESSAGE_ID
+              attr: "$.context.message_id"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_TIMESTAMP
+              attr: "$.context.timestamp"
+              _RETURN_: attr are present
+            - _NAME_: CONTEXT_REQUIRED_TTL
+              attr: "$.context.ttl"
+              optional_vars: ["on_search","on_select","on_confirm","on_init","on_cancel","on_track","on_update","on_status"]
+              _CONTINUE_: "(action all in optional_vars)"
+              _RETURN_: attr are present
+          - _NAME_: CONTEXT_ENUM
+            _RETURN_:
+              - _NAME_: CONTEXT_ENUM_DOMAIN
+                domain: ["ONDC:RETeB2B"]
+                attr: "$.context.domain"
+                _RETURN_: attr equal to domain
+              - _NAME_: CONTEXT_ENUM_ACTION
+                attr: "$.context.action"
+                _RETURN_: attr equal to action
+              - _NAME_: CONTEXT_ENUM_VERSION
+                version: ["1.2.5"]
+                attr: "$.context.core_version"
+                _RETURN_: attr all in version
+              - _NAME_: CONTEXT_REG_BAP_URI
+                attr: "$.context.bap_uri"
+                reg: ['^https?\:\/\/']
+                _RETURN_: attr follow regex reg
+              - _NAME_: CONTEXT_REG_BPP_URI
+                attr: "$.context.bpp_uri"
+                reg: ['^https?\:\/\/']
+                _RETURN_: attr follow regex reg
+              - _NAME_: CONTEXT_REG_TTL
+                attr: "$.context.ttl"
+                reg: ['^P(?=\\d|T)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+S)?)?$']
+                optional_vars: ["on_search","on_select","on_confirm","on_init","on_cancel","on_track","on_update"]
+                _CONTINUE_: "(action all in optional_vars)"
+                _RETURN_: attr follow regex reg
+          - _NAME_: P2P_SEARCH_FULFILLMENT
+            _DESCRIPTION_: Validate fulfillment object for P2P search
+            _RETURN_:
+
+
+            - _NAME_: INTENT_PROVIDER
+              _RETURN_:
+                - _NAME_: PROVIDER_ID_REQUIRED
+                  attr: "$.message.intent.provider.id"
+                  _RETURN_: attr are present
+
+
+        
+            - _NAME_: FULFILLMENT_REQUIRED
+              _RETURN_:
+                - _NAME_: FULFILLMENT_TYPE_REQUIRED
+                  attr: "$.message.intent.fulfillment.type"
+                  _RETURN_: attr are present
+
+
+
+            - _NAME_: FULFILLMENT_TYPE_ENUM
+              _RETURN_:
+                - _NAME_: FULFILLMENT_TYPE_ALLOWED
+                  attr: "$.message.intent.fulfillment.type"
+                  var_types: ["Delivery", "Self-Pickup", "Buyer-Delivery"]
+                  _RETURN_: attr all in var_types
+
+
+
+            - _NAME_: FULFILLMENT_CUSTOMER
+              _RETURN_:
+                - _NAME_: CUSTOMER_CREDS_TYPE
+                  attr: "$.message.intent.fulfillment.customer.person.creds[*].type"
+                  var_enum: ["tax_number", "provider_tax_number"]
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr all in var_enum
+                
+                - _NAME_: CUSTOMER_ID
+                  attr: "$.message.intent.fulfillment.customer.id"
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr are present
+
+                - _NAME_: CUSTOMER_CREDS_ID
+                  attr: "$.message.intent.fulfillment.customer.person.creds[*].id"
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr are present
+                
+                - _NAME_: CUSTOMER_CONTACT_PHONE
+                  attr: "$.message.intent.fulfillment.customer.contact.phone"
+                  reg: ['^[0-9]{10}$']
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr follow regex reg
+
+                - _NAME_: CUSTOMER_CONTACT_EMAIL
+                  attr: "$.message.intent.fulfillment.customer.contact.email"
+                  reg: ['^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$']
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr follow regex reg
+                
+                - _NAME_: CUSTOMER_ORG_NAME
+                  attr: "$.message.intent.fulfillment.customer.organization.descriptor.name"
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr are present
+
+                - _NAME_: CUSTOMER_ORG_ADDRESS
+                  attr: "$.message.intent.fulfillment.customer.organization.address"
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr are present
+
+                - _NAME_: CUSTOMER_ORG_CITY
+                  attr: "$.message.intent.fulfillment.customer.organization.city.code"
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr are present
+
+                - _NAME_: CUSTOMER_ORG_STATE
+                  attr: "$.message.intent.fulfillment.customer.organization.state.code"
+                  _CONTINUE_: attr are present
+                  _RETURN_: attr are present
+
+
+      # ===== SEARCH CONTEXT =====
       - _NAME_: SEARCH_CONTEXT
         _DESCRIPTION_: Validate search context
         action: ["search"] 
@@ -102085,7 +102246,7 @@ x-validations:
             attr: "$.context.action"
             _RETURN_: attr equal to action
           - _NAME_: CONTEXT_ENUM_VERSION
-            version: ["1.2.0", "1.2.5"]
+            version: ["1.2.5"]
             attr: "$.context.core_version"
             _RETURN_: attr all in version
           - _NAME_: CONTEXT_REG_BAP_URI
