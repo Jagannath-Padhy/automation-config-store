@@ -102362,10 +102362,7 @@ x-validations:
               attr: "$.message.catalog['bpp/providers'][*].descriptor.images[*]"
               _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
-          - _NAME_: PROVIDERS_FSSAI_LICENSE_NO
-            attr: "$.message.catalog['bpp/providers'][*]['@ondc/org/fssai_license_no']"
-            _CONTINUE_: "!(attr are present)"
-            _RETURN_: attr are present
+
           - _NAME_: PROVIDERS_TTL
             attr: "$.message.catalog['bpp/providers'][*].ttl"
             _CONTINUE_: "!(attr are present)"
@@ -102538,13 +102535,7 @@ x-validations:
               attr: "$.message.catalog['bpp/providers'][*].items[*].id"
               _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
-            - _NAME_: ITEMS_RATING
-              _SCOPE_: "$.message.catalog['bpp/providers'][*].items[*]"
-              attr: "$.rating"
-              value: "$.tags[?(@.code=='type')].list[*].value"
-              customization: ["customization"]
-              _CONTINUE_: value all in customization || !(value are present)
-              _RETURN_: attr are present
+            
             - _NAME_: ITEMS_TIME_LABEL
               attr: "$.message.catalog['bpp/providers'][*].items[*].time.label"
               var_enum: ["enable", "disable"]
@@ -103225,9 +103216,7 @@ x-validations:
             - _NAME_: PROVIDERS_DESCRIPTOR_IMAGES
               attr: "$.message.catalog['bpp/providers'][*].descriptor.images[*]"
               _RETURN_: attr are present
-          - _NAME_: PROVIDERS_FSSAI_LICENSE_NO
-            attr: "$.message.catalog['bpp/providers'][*]['@ondc/org/fssai_license_no']"
-            _RETURN_: attr are present
+          
           - _NAME_: PROVIDERS_TTL
             attr: "$.message.catalog['bpp/providers'][*].ttl"
             _RETURN_: attr are present
@@ -103242,9 +103231,6 @@ x-validations:
               _RETURN_: attr all in var_enum
             - _NAME_: LOCATIONS_TIME_TIMESTAMP
               attr: "$.message.catalog['bpp/providers'][*].locations[*].time.timestamp"
-              _RETURN_: attr are present
-            - _NAME_: LOCATIONS_TIME_DAYS
-              attr: "$.message.catalog['bpp/providers'][*].locations[*].time.days"
               _RETURN_: attr are present
             - _NAME_: LOCATIONS_TIME_SCHEDULE_HOLIDAYS
               attr: "$.message.catalog['bpp/providers'][*].locations[*].time.schedule.holidays[*]"
@@ -103267,16 +103253,6 @@ x-validations:
               _RETURN_: attr are present
             - _NAME_: LOCATIONS_ADDRESS_STATE
               attr: "$.message.catalog['bpp/providers'][*].locations[*].address.state"
-              _RETURN_: attr are present
-            - _NAME_: LOCATIONS_CIRCLE_GPS
-              attr: "$.message.catalog['bpp/providers'][*].locations[*].circle.gps"
-              _RETURN_: attr are present
-            - _NAME_: LOCATIONS_CIRCLE_RADIUS_UNIT
-              attr: "$.message.catalog['bpp/providers'][*].locations[*].circle.radius.unit"
-              var_enum: ["km"]
-              _RETURN_: attr all in var_enum
-            - _NAME_: LOCATIONS_CIRCLE_RADIUS_VALUE
-              attr: "$.message.catalog['bpp/providers'][*].locations[*].circle.radius.value"
               _RETURN_: attr are present
           - _NAME_: PROVIDERS_CATEGORIES
             _RETURN_:
@@ -103477,6 +103453,7 @@ x-validations:
               _RETURN_: attr are present
             - _NAME_: ITEMS_CATEGORY_IDS
               attr: "$.message.catalog['bpp/providers'][*].items[*].category_ids[*]"
+              _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
             - _NAME_: ITEMS_FULFILLMENT_ID
               _SCOPE_: "$.message.catalog['bpp/providers'][*].items[*]"
@@ -103491,12 +103468,6 @@ x-validations:
               value: "$.tags[?(@.code=='type')].list[*].value"
               customization: ["customization"]
               _CONTINUE_: value all in customization
-              _RETURN_: attr are present
-            - _NAME_: ITEMS_RELATED
-              attr: "$.message.catalog['bpp/providers'][*].items[*].related"
-              _RETURN_: attr are present
-            - _NAME_: ITEMS_RECOMMENDED
-              attr: "$.message.catalog['bpp/providers'][*].items[*].recommended"
               _RETURN_: attr are present
             - _NAME_: ITEMS_RETURNABLE
               attr: "$.message.catalog['bpp/providers'][*].items[*]['@ondc/org/returnable']"
