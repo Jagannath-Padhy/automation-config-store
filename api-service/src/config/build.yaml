@@ -103444,8 +103444,10 @@ x-validations:
       - _NAME_: ON_SEARCH_CATALOG
         attr_city: "$.context.city"
         star_value: ["*"]
-        _CONTINUE_: "(attr_city all in star_value)"
+        poc_present: "$.message.catalog['bpp/providers'][*].tags[?(@.code=='poc')].code"
+        _CONTINUE_: "(poc_present are present) || (attr_city all in star_value)"
         _RETURN_:
+
         - _NAME_: CATALOG_BPP_DESCRIPTOR
           _RETURN_:
           - _NAME_: BPP_DESCRIPTOR_NAME
@@ -104364,30 +104366,13 @@ x-validations:
           - _NAME_: ITEMS_ID
             attr: "$.message.order.items[*].id"
             _RETURN_: attr are present
-          - _NAME_: ITEMS_DESCRIPTOR_TAGS
-            _CONTINUE_: "!(attr are present)"
-            attr: "$.message.order.items[*].descriptor.tags[?(@.code=='customization')].list[?(@.code=='input_text')].value"
-            _RETURN_: attr are present
-          - _NAME_: ITEMS_PARENT_ITEM_ID
-            attr: "$.message.order.items[*].parent_item_id"
-            _CONTINUE_: "!(attr are present)"
-            _RETURN_: attr are present
+          
           - _NAME_: ITEMS_LOCATION_ID
             attr: "$.message.order.items[*].location_id"
             _RETURN_: attr are present
           - _NAME_: ITEMS_QUANTITY_COUNT
             attr: "$.message.order.items[*].quantity.count"
             _RETURN_: attr are present
-          - _NAME_: ITEMS_TAGS
-            _RETURN_: &SELECT_ITEMS_TAGS
-            - _NAME_: ITEMS_TAGS_TYPE
-              attr: "$.message.order.items[*].tags[?(@.code=='type')].list[?(@.code=='type')].value"
-              var_enum: ["item", "customization"]
-              _RETURN_: attr all in var_enum
-            - _NAME_: ITEMS_TAGS_PARENT_ID
-              attr: "$.message.order.items[*].tags[?(@.code=='parent')].list[?(@.code=='id')].value"
-              _CONTINUE_: "!(attr are present)"
-              _RETURN_: attr are present
         - _NAME_: ORDER_OFFERS
           _RETURN_:
           - _NAME_: OFFERS_ID
@@ -104461,14 +104446,10 @@ x-validations:
             attr1: "$.message.order.items[*].fulfillment_ids[*]"
             attr2: "$.message.order.items[*].fulfillment_id"
             _RETURN_: (attr1 are present) || (attr2 are present)
-          - _NAME_: ITEMS_PARENT_ITEM_ID
-            attr: "$.message.order.items[*].parent_item_id"
-            _RETURN_: attr are present
           # - _NAME_: ITEMS_QUANTITY_COUNT
           #   attr: "$.message.order.items[*].quantity.count"
           #   _RETURN_: attr are present
-          - _NAME_: ITEMS_TAGS
-            _RETURN_: *SELECT_ITEMS_TAGS
+        
         - _NAME_: ORDER_FULFILLMENTS
           _RETURN_:
           - _NAME_: FULFILLMENTS_ID
