@@ -102462,10 +102462,10 @@ x-validations:
       - _NAME_: P2P_ON_SEARCH_CONTEXT
         _DESCRIPTION_: Validate P2P on_search when city is specific and bpp_id is present
         action: ["on_search"]
-        bpp_id: "$.context.bpp_id"
+        poc_present: "$.message.catalog['bpp/providers'][*].tags[?(@.code=='poc')].code"
         city: "$.context.city"
         wildcard: ["*"]
-        _CONTINUE_: "!(bpp_id are present) || (city all in wildcard)"
+        _CONTINUE_: "!(poc_present are present) || (city all in wildcard)"
         _RETURN_:
           - _NAME_: CONTEXT_REQUIRED
             _RETURN_:
