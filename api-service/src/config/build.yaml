@@ -104437,8 +104437,7 @@ x-validations:
       - _NAME_: ON_SELECT_ORDER
         _RETURN_:
         - _NAME_: ORDER_PROVIDER
-          attr: "$.message.order.provider.id"
-          _RETURN_: attr are present
+          _RETURN_: *SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
           _RETURN_:
           - _NAME_: ITEMS_ID
@@ -104457,6 +104456,9 @@ x-validations:
           - _NAME_: FULFILLMENTS_ID
             attr: "$.message.order.fulfillments[*].id"
             _RETURN_: attr are present
+          - _NAME_: FULFILLMENTS_TYPE
+            attr: "$.message.order.fulfillments[*].type"
+            _RETURN_: attr are present
           - _NAME_: FULFILLMENTS_PROVIDER_NAME
             attr: "$.message.order.fulfillments[*]['@ondc/org/provider_name']"
             _RETURN_: attr are present
@@ -104473,11 +104475,9 @@ x-validations:
             attr: "$.message.order.fulfillments[*].state.descriptor.code"
             var_enum: ["Serviceable", "Non-serviceable"]
             _RETURN_: attr all in var_enum
-          - _NAME_: FULFILLMENTS_CUSTOMER
-            _RETURN_:
-            - _NAME_: FULFILLMENTS_CUSTOMER_ID
-              attr: "$.message.order.fulfillments[*].customer.id"
-              _RETURN_: attr are present
+          - _NAME_: FULFILLMENTS_CUSTOMER_ID
+            attr: "$.message.order.fulfillments[*].customer.id"
+            _RETURN_: attr are present
           
           - _NAME_: FULFILLMENTS_TAGS_ORDER_DETAILS
             _RETURN_: &TAGS_ORDER_DETAILS
@@ -104512,6 +104512,9 @@ x-validations:
             _RETURN_: attr are present
           - _NAME_: QUOTE_PRICE_VALUE
             attr: "$.message.order.quote.price.value"
+            _RETURN_: attr are present
+          - _NAME_: QUOTE_TTL
+            attr: "$.message.order.quote.ttl"
             _RETURN_: attr are present
           - _NAME_: QUOTE_BREAKUP
             _RETURN_:
@@ -104555,12 +104558,15 @@ x-validations:
                 - _NAME_: BREAKUP_ITEM_ITEM_QUANTITY_MAXIMUM_COUNT
                   _CONTINUE_: "!(attr are present)"
                   attr: "$.message.order.quote.breakup[*].item.quantity.maximum.count"
-                  _RETURN_: attr are present
+                  reg: ['^[0-9]+$']
+                  _RETURN_: attr follow regex reg
+
                 - _NAME_: BREAKUP_ITEM_ITEM_QUANTITY_MINIMUM_COUNT
                   _CONTINUE_: "!(attr are present)"
                   attr: "$.message.order.quote.breakup[*].item.quantity.minimum.count"
-                  _RETURN_: attr are present
-
+                  reg: ['^[0-9]+$']
+                  _RETURN_: attr follow regex reg
+              
                 - _NAME_: BREAKUP_ITEM_ITEM_PRICE_CURRENCY
                   attr: "$.message.order.quote.breakup[*].item.price.currency"
                   _RETURN_: attr are present
@@ -104762,11 +104768,9 @@ x-validations:
           - _NAME_: FULFILLMENTS_END_LOCATION_GPS
             attr: "$.message.order.fulfillments[*].end.location.gps"
             _RETURN_: attr are present
-          - _NAME_: FULFILLMENTS_CUSTOMER
-            _RETURN_:
-            - _NAME_: FULFILLMENTS_CUSTOMER_ID
-              attr: "$.message.order.fulfillments[*].customer.id"
-              _RETURN_: attr are present
+          - _NAME_: FULFILLMENTS_CUSTOMER_ID
+            attr: "$.message.order.fulfillments[*].customer.id"
+            _RETURN_: attr are present
 
           # - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS
           #   _RETURN_:
