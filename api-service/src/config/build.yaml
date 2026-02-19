@@ -3023,6 +3023,8 @@ components:
                         $ref: '#/components/schemas/ItemQuantity/properties/available'
                       maximum:
                         $ref: '#/components/schemas/ItemQuantity/properties/maximum'
+                      minimum:
+                        $ref: '#/components/schemas/ItemQuantity/properties/minimum'
                   parent_item_id:
                     $ref: '#/components/schemas/Item/properties/parent_item_id'
                   price:
@@ -104554,6 +104556,11 @@ x-validations:
                   _CONTINUE_: "!(attr are present)"
                   attr: "$.message.order.quote.breakup[*].item.quantity.maximum.count"
                   _RETURN_: attr are present
+                - _NAME_: BREAKUP_ITEM_ITEM_QUANTITY_MINIMUM_COUNT
+                  _CONTINUE_: "!(attr are present)"
+                  attr: "$.message.order.quote.breakup[*].item.quantity.minimum.count"
+                  _RETURN_: attr are present
+
                 - _NAME_: BREAKUP_ITEM_ITEM_PRICE_CURRENCY
                   attr: "$.message.order.quote.breakup[*].item.price.currency"
                   _RETURN_: attr are present
