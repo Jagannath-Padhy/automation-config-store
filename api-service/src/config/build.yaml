@@ -104684,21 +104684,7 @@ x-validations:
             _RETURN_: attr are present
           - _NAME_: ITEMS_QUANTITY_COUNT
             attr: "$.message.order.items[*].quantity.count"
-            _RETURN_: attr are present
-          - _NAME_: ITEMS_TAGS
-            _RETURN_:
-            - _NAME_: ITEMS_TAGS_TYPE
-              attr: "$.message.order.items[*].tags[?(@.code=='type')].list[?(@.code=='type')].value"
-              var_enum: ["item", "customization"]
-              _RETURN_: attr all in var_enum
-            - _NAME_: ITEMS_TAGS_PARENT_ID
-              _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.items[*].tags[?(@.code=='parent')].list[?(@.code=='id')].value"
-              _RETURN_: attr are present
-          - _NAME_: ITEMS_TAGS_NP_FEES
-            _CONTINUE_: "!(attr are present)"
-            attr: "$.message.order.items[*].tags[?(@.code=='np_fees')].list[?(@.code=='id')].value"
-            _RETURN_: attr are present    
+            _RETURN_: attr are present 
         - _NAME_: ORDER_OFFERS
           _RETURN_:
           - _NAME_: OFFERS_ID
@@ -104753,10 +104739,10 @@ x-validations:
           - _NAME_: BILLING_UPDATED_AT
             attr: "$.message.order.billing.updated_at"
             _RETURN_: attr are present
-        - _NAME_: BILLING_TAX_NUMBER
-          attr: "$.message.order.billing.tax_number"
-          _CONTINUE_: "!(attr are present)"
-          _RETURN_: attr are present
+          - _NAME_: BILLING_TAX_NUMBER
+            attr: "$.message.order.billing.tax_number"
+            _CONTINUE_: "!(attr are present)"
+            _RETURN_: attr are present
         - _NAME_: ORDER_FULFILLMENTS
           _RETURN_: &INIT_FULFILLMENTS
           - _NAME_: FULFILLMENTS_ID
@@ -104772,32 +104758,43 @@ x-validations:
             attr: "$.message.order.fulfillments[*].customer.id"
             _RETURN_: attr are present
 
-          # - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS
-          #   _RETURN_:
-          #   - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_NAME
-          #     attr: "$.message.order.fulfillments[*].end.location.address.name"
-          #     _RETURN_: attr are present
-          #   - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_BUILDING
-          #     attr: "$.message.order.fulfillments[*].end.location.address.building"
-          #     _RETURN_: attr are present
-          #   - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_LOCALITY
-          #     attr: "$.message.order.fulfillments[*].end.location.address.locality"
-          #     _RETURN_: attr are present
-          #   - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_CITY
-          #     attr: "$.message.order.fulfillments[*].end.location.address.city"
-          #     _RETURN_: attr are present
-          #   - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_STATE
-          #     attr: "$.message.order.fulfillments[*].end.location.address.state"
-          #     _RETURN_: attr are present
-          #   - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_COUNTRY
-          #     attr: "$.message.order.fulfillments[*].end.location.address.country"
-          #     _RETURN_: attr are present
-          #   - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_AREA_CODE
-          #     attr: "$.message.order.fulfillments[*].end.location.address.area_code"
-          #     _RETURN_: attr are present
+          - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS
+            _RETURN_:
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_NAME
+              attr: "$.message.order.fulfillments[*].end.location.address.name"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_BUILDING
+              attr: "$.message.order.fulfillments[*].end.location.address.building"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_LOCALITY
+              attr: "$.message.order.fulfillments[*].end.location.address.locality"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_CITY
+              attr: "$.message.order.fulfillments[*].end.location.address.city"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_STATE
+              attr: "$.message.order.fulfillments[*].end.location.address.state"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_COUNTRY
+              attr: "$.message.order.fulfillments[*].end.location.address.country"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_AREA_CODE
+              attr: "$.message.order.fulfillments[*].end.location.address.area_code"
+              _RETURN_: attr are present
           - _NAME_: FULFILLMENTS_END_CONTACT_PHONE
             attr: "$.message.order.fulfillments[*].end.contact.phone"
             _RETURN_: attr are present
+        - _NAME_: ORDER_PAYMENT
+          _RETURN_:
+          - _NAME_: PAYMENT_TYPE
+            attr: "$.message.order.payment.type"
+            var_enum: ["ON-ORDER", "ON-FULFILLMENT"]
+            _RETURN_: attr all in var_enum
+          - _NAME_: PAYMENT_COLLECTED_BY
+            attr: "$.message.order.payment.collected_by"
+            var_enum: ["BPP", "BAP"]
+            _RETURN_: attr all in var_enum
+        
         - _NAME_: ORDER_TAGS
           _RETURN_:
           - _NAME_: ORDER_TAGS_BAP_TERMS
