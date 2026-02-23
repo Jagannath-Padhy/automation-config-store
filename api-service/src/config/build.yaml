@@ -105,12 +105,6 @@ paths:
                                   service item. An example of an Item ID could
                                   be the SKU of a product.
                                 type: string
-                              parent_item_id:
-                                description: >-
-                                  This is the most unique identifier of a
-                                  service item. An example of an Item ID could
-                                  be the SKU of a product.
-                                type: string
                               descriptor:
                                 description: >-
                                   Describes the description of a real-world
@@ -137,6 +131,12 @@ paths:
                                 type: array
                                 items:
                                   $ref: '#/components/schemas/TagGroup'
+                              fulfillment_id:
+                                description: Modes through which this item can be fulfilled
+                                type: array
+                                items:
+                                    allOf:
+                                    - $ref: '#/components/schemas/Fulfillment/properties/id'
                         offers:
                           type: array
                           items:
@@ -104375,6 +104375,9 @@ x-validations:
           - _NAME_: ITEMS_QUANTITY_COUNT
             attr: "$.message.order.items[*].quantity.count"
             _RETURN_: attr are present
+          - _NAME_: ITEMS_FULFILLMENT_ID
+            attr: "$.message.order.items[*].fulfillment_id"
+            _RETURN_: attr are present
         - _NAME_: ORDER_OFFERS
           _RETURN_:
           - _NAME_: OFFERS_ID
@@ -104443,10 +104446,16 @@ x-validations:
           - _NAME_: ITEMS_ID
             attr: "$.message.order.items[*].id"
             _RETURN_: attr are present
+          
+          - _NAME_: ITEMS_LOCATION_ID
+            attr: "$.message.order.items[*].location_id"
+            _RETURN_: attr are present
+          - _NAME_: ITEMS_QUANTITY_COUNT
+            attr: "$.message.order.items[*].quantity.count"
+            _RETURN_: attr are present
           - _NAME_: ITEMS_FULFILLMENT_ID
-            attr1: "$.message.order.items[*].fulfillment_ids[*]"
-            attr2: "$.message.order.items[*].fulfillment_id"
-            _RETURN_: (attr1 are present) || (attr2 are present)
+            attr: "$.message.order.items[*].fulfillment_id"
+            _RETURN_: attr are present
           # - _NAME_: ITEMS_QUANTITY_COUNT
           #   attr: "$.message.order.items[*].quantity.count"
           #   _RETURN_: attr are present
@@ -104675,16 +104684,17 @@ x-validations:
           - _NAME_: ITEMS_ID
             attr: "$.message.order.items[*].id"
             _RETURN_: attr are present
-          - _NAME_: ITEMS_PARENT_ITEM_ID
-            attr: "$.message.order.items[*].parent_item_id"
-            _CONTINUE_: "!(attr are present)"
+          
+          - _NAME_: ITEMS_LOCATION_ID
+            attr: "$.message.order.items[*].location_id"
+            _RETURN_: attr are present
+          - _NAME_: ITEMS_QUANTITY_COUNT
+            attr: "$.message.order.items[*].quantity.count"
             _RETURN_: attr are present
           - _NAME_: ITEMS_FULFILLMENT_ID
             attr: "$.message.order.items[*].fulfillment_id"
             _RETURN_: attr are present
-          - _NAME_: ITEMS_QUANTITY_COUNT
-            attr: "$.message.order.items[*].quantity.count"
-            _RETURN_: attr are present 
+            
         - _NAME_: ORDER_OFFERS
           _RETURN_:
           - _NAME_: OFFERS_ID
@@ -104821,6 +104831,8 @@ x-validations:
           _RETURN_: *SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
           _RETURN_: *INIT_ITEMS
+        
+        
         - _NAME_: ORDER_ITEMS_ADDITIONAL_TAGS
           _RETURN_:
           - _NAME_: ITEMS_TAGS_NP_FEES
