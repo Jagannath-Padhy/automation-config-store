@@ -6,7 +6,7 @@ info:
     packaged commodities and pre-packaged food This is an adaptation of Beckn
     Core version 0.9.3
   version: 1.2.5
-  domain: ONDC:RETeB2b
+  domain: ONDC:RETeB2B
 security:
   - SubscriberAuth: []
   - GatewaySubscriberAuth: []
