@@ -132,11 +132,8 @@ paths:
                                 items:
                                   $ref: '#/components/schemas/TagGroup'
                               fulfillment_id:
+                                type: string
                                 description: Modes through which this item can be fulfilled
-                                type: array
-                                items:
-                                    allOf:
-                                    - $ref: '#/components/schemas/Fulfillment/properties/id'
                         offers:
                           type: array
                           items:
@@ -741,6 +738,9 @@ paths:
                                   service item. An example of an Item ID could
                                   be the SKU of a product.
                                 type: string
+                              location_id:
+                                type: string
+                                description: Unique identifier for location
                               quantity:
                                 description: quantity
                                 type: object
