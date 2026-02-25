@@ -1992,6 +1992,11 @@ components:
         id:
           type: string
           description: Unique reference ID to the fulfillment of an order
+        documents:
+          description: The Documents associated to the fullfilment
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
         type:
           type: string
           description: >-
