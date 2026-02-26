@@ -104574,6 +104574,7 @@ x-validations:
                 _RETURN_: attr are present
               - _NAME_: BREAKUP_ITEM_TITLE
                 attr: "$.message.order.quote.breakup[*].title"
+                _CONTINUE_: "!(attr are present)"
                 _RETURN_: attr are present
               - _NAME_: BREAKUP_ITEM_TITLE_TYPE
                 attr: "$.message.order.quote.breakup[*]['@ondc/org/title_type']"
