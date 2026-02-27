@@ -104479,23 +104479,23 @@ x-validations:
         - _NAME_: ORDER_PROVIDER
           _RETURN_: *SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
-          _RETURN_:
-          - _NAME_: ITEMS_ID
-            attr: "$.message.order.items[*].id"
-            _RETURN_: attr are present
+          _RETURN_: *SELECT_ITEMS
+          # - _NAME_: ITEMS_ID
+          #   attr: "$.message.order.items[*].id"
+          #   _RETURN_: attr are present
           
-          - _NAME_: ITEMS_LOCATION_ID
-            attr: "$.message.order.items[*].location_id"
-            _RETURN_: attr are present
-          - _NAME_: ITEMS_QUANTITY_COUNT
-            attr: "$.message.order.items[*].quantity.count"
-            _RETURN_: attr are present
-          - _NAME_: ITEMS_FULFILLMENT_ID
-            attr: "$.message.order.items[*].fulfillment_id"
-            _RETURN_: attr are present
+          # - _NAME_: ITEMS_LOCATION_ID
+          #   attr: "$.message.order.items[*].location_id"
+          #   _RETURN_: attr are present
           # - _NAME_: ITEMS_QUANTITY_COUNT
           #   attr: "$.message.order.items[*].quantity.count"
           #   _RETURN_: attr are present
+          # - _NAME_: ITEMS_FULFILLMENT_ID
+          #   attr: "$.message.order.items[*].fulfillment_id"
+          #   _RETURN_: attr are present
+          # # - _NAME_: ITEMS_QUANTITY_COUNT
+          # #   attr: "$.message.order.items[*].quantity.count"
+          # #   _RETURN_: attr are present
         
         - _NAME_: ORDER_FULFILLMENTS
           _RETURN_:
@@ -104717,20 +104717,20 @@ x-validations:
         - _NAME_: ORDER_PROVIDER
           _RETURN_: *SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
-          _RETURN_: &INIT_ITEMS
-          - _NAME_: ITEMS_ID
-            attr: "$.message.order.items[*].id"
-            _RETURN_: attr are present
+          _RETURN_: *SELECT_ITEMS
+          # - _NAME_: ITEMS_ID
+          #   attr: "$.message.order.items[*].id"
+          #   _RETURN_: attr are present
           
-          - _NAME_: ITEMS_LOCATION_ID
-            attr: "$.message.order.items[*].location_id"
-            _RETURN_: attr are present
-          - _NAME_: ITEMS_QUANTITY_COUNT
-            attr: "$.message.order.items[*].quantity.count"
-            _RETURN_: attr are present
-          - _NAME_: ITEMS_FULFILLMENT_ID
-            attr: "$.message.order.items[*].fulfillment_id"
-            _RETURN_: attr are present
+          # - _NAME_: ITEMS_LOCATION_ID
+          #   attr: "$.message.order.items[*].location_id"
+          #   _RETURN_: attr are present
+          # - _NAME_: ITEMS_QUANTITY_COUNT
+          #   attr: "$.message.order.items[*].quantity.count"
+          #   _RETURN_: attr are present
+          # - _NAME_: ITEMS_FULFILLMENT_ID
+          #   attr: "$.message.order.items[*].fulfillment_id"
+          #   _RETURN_: attr are present
             
         - _NAME_: ORDER_OFFERS
           _RETURN_:
@@ -104866,7 +104866,7 @@ x-validations:
         - _NAME_: ORDER_PROVIDER
           _RETURN_: *SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
-          _RETURN_: *INIT_ITEMS
+          _RETURN_: *SELECT_ITEMS
         
         
         - _NAME_: ORDER_ITEMS_ADDITIONAL_TAGS
@@ -105144,7 +105144,7 @@ x-validations:
         - _NAME_: ORDER_PROVIDER
           _RETURN_: *SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
-          _RETURN_: *INIT_ITEMS
+          _RETURN_: *SELECT_ITEMS
         - _NAME_: ORDER_ITEMS_ADDITIONAL_TAGS
           _RETURN_:
           - _NAME_: ITEMS_TAGS_NP_FEES
@@ -105534,7 +105534,7 @@ x-validations:
               attr: "$.message.order.cancellation.reason.state"
               _RETURN_: attr are present
         - _NAME_: ORDER_ITEMS
-          _RETURN_: *INIT_ITEMS
+          _RETURN_: *SELECT_ITEMS
         - _NAME_: ORDER_BILLING
           _RETURN_: *INIT_BILLING
         - _NAME_: ORDER_FULFILLMENTS
