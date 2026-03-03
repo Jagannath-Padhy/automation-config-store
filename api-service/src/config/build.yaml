@@ -2055,6 +2055,8 @@ components:
           additionalProperties: false
           type: object
           properties:
+            agent:
+               $ref: '#/components/schemas/Agent'
             location:
               $ref: '#/components/schemas/FulfillmentLocation'
             time:
@@ -2071,6 +2073,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TagGroup'
+        time:
+          $ref: '#/components/schemas/Time'
       required:
         - id
         - type
@@ -106764,6 +106768,9 @@ x-validations:
           - _NAME_: FULFILLMENTS_ID
             attr: "$.message.order.fulfillments[*].id"
             _RETURN_: attr are present
+          - _NAME_: FULFILLMENTS_TIME_TIMESTAMP
+            attr: "$.message.order.fulfillments[*].time.timestamp"
+            _RETURN_: attr are present
           - _NAME_: FULFILLMENTS_TYPE
             attr: "$.message.order.fulfillments[*].type"
             _RETURN_: attr are present
@@ -106774,6 +106781,15 @@ x-validations:
               var_enum: ["text/plain", "text/html"]
               _CONTINUE_: "!(attr are present)"  
               _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_AGENT_NAME
+              attr: "$.message.order.fulfillments[*].end.agent.name"
+              _CONTINUE_: "!(attr are present)"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_AGENT_EMAIL
+              attr: "$.message.order.fulfillments[*].end.agent.email"
+              _CONTINUE_: "!(attr are present)"
+              _RETURN_: attr are present
+
           - _NAME_: FULFILLMENTS_TAGS
             _RETURN_:
             - _NAME_: TAGS_RETURN_REQUEST
