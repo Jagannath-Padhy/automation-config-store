@@ -102438,9 +102438,9 @@ x-validations:
               _RETURN_: attr are present
             - _NAME_: ITEMS_QUANTITY_AVAILABLE_COUNT
               attr: "$.message.catalog['bpp/providers'][*].items[*].quantity.available.count"
-              var_enum: ["99", "0"]
+              reg: ["^(0|[1-9]\\d*)$"]
               _CONTINUE_: "!(attr are present)"
-              _RETURN_: attr all in var_enum
+              _RETURN_: attr are present && attr follow regex reg
             - _NAME_: ITEMS_QUANTITY_MAXIMUM_COUNT
               attr: "$.message.catalog['bpp/providers'][*].items[*].quantity.maximum.count"
               _CONTINUE_: "!(attr are present)"
@@ -103211,8 +103211,8 @@ x-validations:
               _RETURN_: attr are present
             - _NAME_: ITEMS_QUANTITY_AVAILABLE_COUNT
               attr: "$.message.catalog['bpp/providers'][*].items[*].quantity.available.count"
-              var_enum: ["99", "0"]
-              _RETURN_: attr all in var_enum
+              reg:  ["^(0|[1-9]\\d*)$"]
+              _RETURN_: attr are present && attr follow regex reg
             - _NAME_: ITEMS_QUANTITY_MAXIMUM_COUNT
               attr: "$.message.catalog['bpp/providers'][*].items[*].quantity.maximum.count"
               _RETURN_: attr are present
