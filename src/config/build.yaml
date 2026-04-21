@@ -103278,6 +103278,7 @@ x-validations:
               _RETURN_: attr are present
             - _NAME_: ITEMS_RECOMMENDED
               attr: "$.message.catalog['bpp/providers'][*].items[*].recommended"
+              _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
             - _NAME_: ITEMS_RETURNABLE
               attr: "$.message.catalog['bpp/providers'][*].items[*]['@ondc/org/returnable']"
