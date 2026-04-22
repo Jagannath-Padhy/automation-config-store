@@ -103084,6 +103084,7 @@ x-validations:
               _RETURN_: attr are present
             - _NAME_: CATEGORIES_DESCRIPTOR_IMAGES
               attr: "$.message.catalog['bpp/providers'][*].categories[*].descriptor.images[*]"
+              _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
             - _NAME_: BPP_PROVIDER_CATEGORIES_TAGS
               _RETURN_:
