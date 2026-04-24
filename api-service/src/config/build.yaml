@@ -101882,7 +101882,7 @@ x-validations:
         - _NAME_: CONTEXT_ENUM
           _RETURN_:
           - _NAME_: CONTEXT_ENUM_DOMAIN
-            domain: ["ONDC:RET10"]
+            domain: ["ONDC:RETeB2B"]
             attr: "$.context.domain"
             _RETURN_: attr equal to domain
           - _NAME_: CONTEXT_ENUM_ACTION
