@@ -18,18 +18,18 @@ export function performL1CustomValidations(
   console.log("Performing custom L1 validations for action: " + action);
 
   switch (action) {
-    case "search":
-      return search(payload);
-    case "on_search":
-      return onSearch(payload);
-    case "select":
-      return select(payload);
-    case "on_select":
-      return onSelect(payload);
-    case "init":
-      return init(payload);
-    case "on_init":
-      return onInit(payload);
+    // case "search":
+    //   return search(payload);
+    // case "on_search":
+    //   return onSearch(payload);
+    // case "select":
+    //   return select(payload);
+    // case "on_select":
+    //   return onSelect(payload);
+    // case "init":
+    //   return init(payload);
+    // case "on_init":
+    //   return onInit(payload);
     // case "confirm":
     //   return confirm(payload);
     // case "on_confirm":
