@@ -2636,6 +2636,10 @@ components:
         updated_at:
           type: string
           format: date-time
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
         tags:
           type: array
           items:
