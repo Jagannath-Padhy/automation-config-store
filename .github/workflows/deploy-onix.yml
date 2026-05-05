@@ -8,7 +8,6 @@ on:
       - "mock-service/**"
     branches:
       - "draft-*"
-      - "release-*"
 
 env:
   REGISTRY: ghcr.io
