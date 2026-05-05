@@ -104838,11 +104838,11 @@ x-validations:
         - _NAME_: ORDER_PAYMENT
           _RETURN_:
           - _NAME_: PAYMENT_TYPE
-            attr: "$.message.order.payment.type"
+            attr: "$.message.order.payment[*].type"
             var_enum: ["ON-ORDER", "ON-FULFILLMENT"]
             _RETURN_: attr all in var_enum
           - _NAME_: PAYMENT_COLLECTED_BY
-            attr: "$.message.order.payment.collected_by"
+            attr: "$.message.order.payment[*].collected_by"
             var_enum: ["BPP", "BAP"]
             _RETURN_: attr all in var_enum
         
@@ -105034,59 +105034,59 @@ x-validations:
             _RETURN_: &TAGS_BPP_TERMS
             - _NAME_: TAGS_BPP_TERMS_MAX_LIABILITY_CAP
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='max_liability_cap')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='max_liability_cap')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BPP_TERMS_MAX_LIABILITY
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='max_liability')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='max_liability')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BPP_TERMS_MANDATORY_ARBITRATION
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='mandatory_arbitration')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='mandatory_arbitration')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BPP_TERMS_COURT_JURISDICTION
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='court_jurisdiction')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='court_jurisdiction')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BPP_TERMS_DELAY_INTEREST
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='delay_interest')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='delay_interest')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BPP_TERMS_NP_TYPE
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='np_type')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='np_type')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BPP_TERMS_TAX_NUMBER
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='tax_number')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='tax_number')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BPP_TERMS_PROVIDER_TAX_NUMBER
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='provider_tax_number')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='provider_tax_number')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BPP_TERMS_ACCEPT_BAP_TERMS
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_terms')].list[?(@.code=='accept_bap_terms')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_terms')].list[?(@.code=='accept_bap_terms')].value"
               _RETURN_: attr are present
 
           - _NAME_: TAGS_BPP_COLLECT
             _RETURN_:
             - _NAME_: TAGS_BPP_COLLECT_SUCCESS
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_collect')].list[?(@.code=='success')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_collect')].list[?(@.code=='success')].value"
               var_enum: ["Y", "N"]
               _RETURN_: attr all in var_enum
             - _NAME_: TAGS_BPP_COLLECT_ERROR
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bpp_collect')].list[?(@.code=='error')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bpp_collect')].list[?(@.code=='error')].value"
               var_enum: ["Y", "N"]
               _RETURN_: attr all in var_enum
         - _NAME_: ORDER_OFFERS
@@ -105239,34 +105239,34 @@ x-validations:
         - _NAME_: ORDER_PAYMENT_ADDITIONAL_PROPERTIES
           _RETURN_:
           - _NAME_: PAYMENT_URI
-            attr: "$.message.order.payment.uri"
+            attr: "$.message.order.payment[*].uri"
             _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_TL_METHOD
-            attr: "$.message.order.payment.tl_method"
+            attr: "$.message.order.payment[*].tl_method"
             _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_PARAMS
             _RETURN_:
             - _NAME_: PAYMENT_CURRENCY
-              attr: "$.message.order.payment.params.currency"
+              attr: "$.message.order.payment[*].params.currency"
               _RETURN_: attr are present
             - _NAME_: PAYMENT_TRANSACTION_ID
-              attr: "$.message.order.payment.params.transaction_id"
+              attr: "$.message.order.payment[*].params.transaction_id"
               _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
 
             - _NAME_: PAYMENT_AMOUNT
-              attr: "$.message.order.payment.params.amount"
+              attr: "$.message.order.payment[*].params.amount"
               _RETURN_: attr are present
           - _NAME_: PAYMENT_STATUS
-            attr: "$.message.order.payment.status"
+            attr: "$.message.order.payment[*].status"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_TYPE
-            attr: "$.message.order.payment.type"
+            attr: "$.message.order.payment[*].type"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_COLLECTED_BY
-            attr: "$.message.order.payment.collected_by"
+            attr: "$.message.order.payment[*].collected_by"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_ONDC_ORG_SETTLEMENT_WINDOW
             _CONTINUE_: "!(attr are present)"
@@ -105288,12 +105288,12 @@ x-validations:
             _RETURN_:
             - _NAME_: TAGS_BAP_TERMS_STATIC_TERMS
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bap_terms')].list[?(@.code=='static_terms')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bap_terms')].list[?(@.code=='static_terms')].value"
               _RETURN_: attr are present
 
             - _NAME_: TAGS_BAP_TERMS_TAX_NUMBER
               _CONTINUE_: "!(attr are present)"
-              attr: "$.message.order.payment.tags[?(@.code=='bap_terms')].list[?(@.code=='tax_number')].value"
+              attr: "$.message.order.payment[*].tags[?(@.code=='bap_terms')].list[?(@.code=='tax_number')].value"
               _RETURN_: attr are present
         - _NAME_: ORDER_CREATED_AT
           attr: "$.message.order.created_at"
@@ -105369,26 +105369,26 @@ x-validations:
           _RETURN_: attr are present
 
         - _NAME_: ORDER_PAYMENT_STATUS
-          attr: "$.message.order.payment.status"
+          attr: "$.message.order.payment[*].status"
           var_enum: ["NOT-PAID", "PAID"]
           _RETURN_: attr are present
 
         - _NAME_: ORDER_PAYMENT_TYPE
-          attr: "$.message.order.payment.type"
+          attr: "$.message.order.payment[*].type"
           var_enum: ["ON-FULFILLMENT", "PRE-FULFILLMENT",ON-ORDER]
           _RETURN_: attr are present
 
         - _NAME_: ORDER_PAYMENT_COLLECTED_BY
-          attr: "$.message.order.payment.collected_by"
+          attr: "$.message.order.payment[*].collected_by"
           var_enum: ["BPP", "BAP"]
           _RETURN_: attr are present
 
         - _NAME_: ORDER_PAYMENT_PARAMS_AMOUNT
-          attr: "$.message.order.payment.params.amount"
+          attr: "$.message.order.payment[*].params.amount"
           _RETURN_: attr are present
 
         - _NAME_: ORDER_PAYMENT_PARAMS_CURRENCY
-          attr: "$.message.order.payment.params.currency"
+          attr: "$.message.order.payment[*].params.currency"
           _RETURN_: attr are present
 
         - _NAME_: ORDER_FULFILLMENTS_ADDITIONAL_PROPERTIES
@@ -105850,36 +105850,36 @@ x-validations:
         - _NAME_: ORDER_PAYMENT_ADDITIONAL_PROPERTIES
           _RETURN_:
           - _NAME_: PAYMENT_URI
-            attr: "$.message.order.payment.uri"
+            attr: "$.message.order.payment[*].uri"
             _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_TL_METHOD
-            attr: "$.message.order.payment.tl_method"
+            attr: "$.message.order.payment[*].tl_method"
             _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_PARAMS
             _RETURN_:
             - _NAME_: PAYMENT_CURRENCY
-              attr: "$.message.order.payment.params.currency"
+              attr: "$.message.order.payment[*].params.currency"
               _RETURN_: attr are present
             - _NAME_: PAYMENT_TRANSACTION_ID
-              attr: "$.message.order.payment.params.transaction_id"
+              attr: "$.message.order.payment[*].params.transaction_id"
               _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
             - _NAME_: PAYMENT_AMOUNT
-              attr: "$.message.order.payment.params.amount"
+              attr: "$.message.order.payment[*].params.amount"
               _RETURN_: attr are present
           - _NAME_: PAYMENT_STATUS
             var_enum: ["NOT-PAID", "PAID"]
-            attr: "$.message.order.payment.status"
+            attr: "$.message.order.payment[*].status"
             _RETURN_: attr are present && attr all in var_enum
           - _NAME_: PAYMENT_TYPE
-            attr: "$.message.order.payment.type"
+            attr: "$.message.order.payment[*].type"
             var_enum: ["ON-ORDER", "ON-FULFILLMENT"]
             _RETURN_: attr are present && attr all in var_enum
           - _NAME_: PAYMENT_COLLECTED_BY
             var_enum: ["BAP", "BPP"]
-            attr: "$.message.order.payment.collected_by"
+            attr: "$.message.order.payment[*].collected_by"
             _RETURN_: attr are present && attr all in var_enum
           - _NAME_: PAYMENT_ONDC_ORG_SETTLEMENT_WINDOW
             _CONTINUE_: "!(attr are present)"
@@ -106712,36 +106712,36 @@ x-validations:
         - _NAME_: ORDER_PAYMENT_ADDITIONAL_PROPERTIES
           _RETURN_:
           - _NAME_: PAYMENT_URI
-            attr: "$.message.order.payment.uri"
+            attr: "$.message.order.payment[*].uri"
             _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_TL_METHOD
-            attr: "$.message.order.payment.tl_method"
+            attr: "$.message.order.payment[*].tl_method"
             _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: PAYMENT_PARAMS
             _RETURN_:
             - _NAME_: PAYMENT_CURRENCY
-              attr: "$.message.order.payment.params.currency"
+              attr: "$.message.order.payment[*].params.currency"
               _RETURN_: attr are present
             - _NAME_: PAYMENT_TRANSACTION_ID
-              attr: "$.message.order.payment.params.transaction_id"
+              attr: "$.message.order.payment[*].params.transaction_id"
               _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
             - _NAME_: PAYMENT_AMOUNT
-              attr: "$.message.order.payment.params.amount"
+              attr: "$.message.order.payment[*].params.amount"
               _RETURN_: attr are present
           - _NAME_: PAYMENT_STATUS
             var_enum: ["NOT-PAID", "PAID"]
-            attr: "$.message.order.payment.status"
+            attr: "$.message.order.payment[*].status"
             _RETURN_: attr are present && attr all in var_enum
           - _NAME_: PAYMENT_TYPE
-            attr: "$.message.order.payment.type"
+            attr: "$.message.order.payment[*].type"
             var_enum: ["ON-ORDER", "ON-FULFILLMENT"]
             _RETURN_: attr are present && attr all in var_enum
           - _NAME_: PAYMENT_COLLECTED_BY
             var_enum: ["BAP", "BPP"]
-            attr: "$.message.order.payment.collected_by"
+            attr: "$.message.order.payment[*].collected_by"
             _RETURN_: attr are present && attr all in var_enum
         - _NAME_: ORDER_CREATED_AT
           attr: "$.message.order.created_at"
