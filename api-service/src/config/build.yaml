@@ -562,56 +562,7 @@ paths:
                                 items:
                                   $ref: '#/components/schemas/TagGroup'
                         payments:
-                          description: Describes a payments
-                          type: array
-                          items: 
-                            properties:
-                              collected_by:
-                                type: string
-                                enum:
-                                  - BAP
-                                  - BPP
-                              status:
-                                type: string
-                                enum:
-                                  - PAID
-                                  - NOT-PAID
-                              time:
-                                type: object
-                                properties:
-                                  timestamp:
-                                    type: string
-                                    format: date-time
-                              '@ondc/org/settlement_details':
-                                type: array
-                                items:
-                                  type: object
-                                  properties:
-                                    settlement_counterparty:
-                                      type: string
-                                      enum:
-                                        - buyer
-                                        - buyer-app
-                                        - seller-app
-                                        - logistics-provider
-                                    settlement_phase:
-                                      type: string
-                                      enum:
-                                        - sale-amount
-                                        - withholding-amount
-                                        - refund
-                                    settlement_amount:
-                                      type: string
-                                    settlement_type:
-                                      type: string
-                                      enum:
-                                        - neft
-                                        - rtgs
-                                        - upi
-                                    settlement_timestamp:
-                                      description: Settlement transaction timestamp
-                                      type: string
-                                      format: date-time
+                          $ref: '#/components/schemas/Payments'
                   required:
                     - update_target
                     - order
@@ -2629,7 +2580,11 @@ components:
         updated_at:
           type: string
           format: date-time
-        
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagGroup'
+    
         payment:
           type: object
           items:
@@ -5051,7 +5006,7 @@ x-enum:
           type: *ref_3
         quote:
           breakup: *ref_4
-        payments: &ref_7
+        payment: &ref_7
           payment_confirm: null
           type:
             - code: ON-ORDER
@@ -5141,20 +5096,20 @@ x-enum:
           breakup: *ref_4
         cancellation_terms:
           fulfillment_state: *ref_6
-        payments: *ref_7
+        payment: *ref_7
         state: *ref_8
   update:
     context: *ref_1
     message:
       update_target:
-        - code: payments
+        - code: payment
           description: about the enum
           reference: <PR/Issue/Discussion Links md format text>
         - code: item
           description: about the enum
           reference: <PR/Issue/Discussion Links md format text>
       order:
-        payments: *ref_7
+        payment: *ref_7
       fulfillments:
         type: &ref_9
           - code: Cancel
@@ -104892,16 +104847,16 @@ x-validations:
           - _NAME_: FULFILLMENT_END_LOCATION_ADDRESS_AREA_CODE
             attr: "$.message.order.fulfillments[*].end.location.address.area_code"
             _RETURN_: attr are present
-        # - _NAME_: ORDER_TAGS
-          # _RETURN_:
-          # - _NAME_: ORDER_TAGS_TYPE
-          #   attr: "$.message.order.tags[?(@.code=='bnp_demand_signal')].list[?(@.code=='source')].value"
-          #   _CONTINUE_: "!(attr are present)"
-          #   _RETURN_: attr are present
-          # - _NAME_: ORDER_TAGS_PARENT_ID
-          #   attr: "$.message.order.tags[?(@.code=='bnp_demand_signal')].list[?(@.code=='campaign')].value"
-          #   _CONTINUE_: "!(attr are present)"
-          #   _RETURN_: attr are present
+        - _NAME_: ORDER_TAGS
+          _RETURN_:
+          - _NAME_: ORDER_TAGS_TYPE
+            attr: "$.message.order.tags[?(@.code=='bnp_demand_signal')].list[?(@.code=='source')].value"
+            _CONTINUE_: "!(attr are present)"
+            _RETURN_: attr are present
+          - _NAME_: ORDER_TAGS_PARENT_ID
+            attr: "$.message.order.tags[?(@.code=='bnp_demand_signal')].list[?(@.code=='campaign')].value"
+            _CONTINUE_: "!(attr are present)"
+            _RETURN_: attr are present
     on_select:
       # ===== CONTEXT VALIDATION =====
       - _NAME_: ON_SELECT_CONTEXT
@@ -105275,6 +105230,19 @@ x-validations:
             var_enum: ["BPP", "BAP"]
             _RETURN_: attr all in var_enum
         
+        - _NAME_: ORDER_TAGS
+          _RETURN_:
+          - _NAME_: ORDER_TAGS_BAP_TERMS
+            _RETURN_: &TAGS_BAP_TERMS
+            - _NAME_: ORDER_TAGS_BAP_TERMS_FINANCE_COST_TYPE
+              _CONTINUE_: "!(attr are present)"
+              attr: "$.message.order.tags[?(@.code=='bap_terms')].list[?(@.code=='finance_const_type')].value"
+              var_enum: ["percent", "amount"]
+              _RETURN_: attr all in var_enum
+            - _NAME_: ORDER_TAGS_BAP_TERMS_FINANCE_COST_VALUE
+              _CONTINUE_: "!(attr are present)"
+              attr: "$.message.order.tags[?(@.code=='bap_terms')].list[?(@.code=='finance_const_value')].value"
+              _RETURN_: attr are present
     on_init:
       # ===== CONTEXT VALIDATION =====
       - _NAME_: ON_INIT_CONTEXT
@@ -105403,7 +105371,7 @@ x-validations:
           - _NAME_: PAYMENT_ONDC_ORG_BUYER_APP_FINDER_FEE_TYPE
             attr: "$.message.order.payments[*]['@ondc/org/buyer_app_finder_fee_type']"
             var_enum: ["percent", "amount"]
-            _RETURN_: attr are present
+            _RETURN_: attr all in var_enum
           - _NAME_: PAYMENT_ONDC_ORG_BUYER_APP_FINDER_FEE_AMOUNT
             attr: "$.message.order.payments[*]['@ondc/org/buyer_app_finder_fee_amount']"
             reg: ['^(\\d*.?\\d{1,2})$']
@@ -105540,19 +105508,19 @@ x-validations:
             _CONTINUE_: "!(attr are present)"
             attr: "$.message.order.offers[*].time.range.end"
             _RETURN_: attr are present
-          # - _NAME_: ORDER_TAGS
-          #   _RETURN_:
-          #   - _NAME_: ORDER_TAGS_BAP_TERMS
-          #     _RETURN_: &TAGS_BAP_TERMS
-          #     - _NAME_: ORDER_TAGS_BAP_TERMS_FINANCE_COST_TYPE
-          #       _CONTINUE_: "!(attr are present)"
-          #       attr: "$.message.order.tags[?(@.code=='bap_terms')].list[?(@.code=='finance_const_type')].value"
-          #       var_enum: ["percent", "amount"]
-          #       _RETURN_: attr all in var_enum
-          #     - _NAME_: ORDER_TAGS_BAP_TERMS_FINANCE_COST_VALUE
-          #       _CONTINUE_: "!(attr are present)"
-          #       attr: "$.message.order.tags[?(@.code=='bap_terms')].list[?(@.code=='finance_const_value')].value"
-          #       _RETURN_: attr are present
+          - _NAME_: ORDER_TAGS
+            _RETURN_:
+            - _NAME_: ORDER_TAGS_BAP_TERMS
+              _RETURN_: &TAGS_BAP_TERMS
+              - _NAME_: ORDER_TAGS_BAP_TERMS_FINANCE_COST_TYPE
+                _CONTINUE_: "!(attr are present)"
+                attr: "$.message.order.tags[?(@.code=='bap_terms')].list[?(@.code=='finance_const_type')].value"
+                var_enum: ["percent", "amount"]
+                _RETURN_: attr all in var_enum
+              - _NAME_: ORDER_TAGS_BAP_TERMS_FINANCE_COST_VALUE
+                _CONTINUE_: "!(attr are present)"
+                attr: "$.message.order.tags[?(@.code=='bap_terms')].list[?(@.code=='finance_const_value')].value"
+                _RETURN_: attr are present
      
         # - _NAME_: ORDER_TAGS
         #   _RETURN_:
@@ -107582,12 +107550,14 @@ x-validations:
               attr: "$.message.order.payments[*]['@ondc/org/settlement_details'][*].settlement_type"
               var_enum: ['upi', 'neft', 'rtgs', 'wallet', 'netbanking', 'paylater', 'card']
               _RETURN_: attr all in var_enum
-            # - _NAME_: PAYMENT_ONDC_ORG_SETTLEMENT_DETAILS_SETTLEMENT_AMOUNT
-            #   attr: "$.message.order.payments[*]['@ondc/org/settlement_details'][*].settlement_amount"
-            #   _RETURN_: attr are present
-            # - _NAME_: PAYMENT_ONDC_ORG_SETTLEMENT_DETAILS_SETTLEMENT_TIMESTAMP
-            #   attr: "$.message.order.payments[*]['@ondc/org/settlement_details'][*].settlement_timestamp"
-            #   _RETURN_: attr are present
+            - _NAME_: PAYMENT_ONDC_ORG_SETTLEMENT_DETAILS_SETTLEMENT_AMOUNT
+              attr: "$.message.order.payments[*]['@ondc/org/settlement_details'][*].settlement_amount"
+              _CONTINUE_: "!(attr are present)"
+              _RETURN_: attr are present
+            - _NAME_: PAYMENT_ONDC_ORG_SETTLEMENT_DETAILS_SETTLEMENT_TIMESTAMP
+              attr: "$.message.order.payments[*]['@ondc/org/settlement_details'][*].settlement_timestamp"
+              _CONTINUE_: "!(attr are present)"
+              _RETURN_: attr are present
 
       - _NAME_: REQUIRED_CONTEXT_FIELDS
         _RETURN_:
