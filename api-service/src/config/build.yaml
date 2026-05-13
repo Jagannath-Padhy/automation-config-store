@@ -102600,7 +102600,8 @@ x-validations:
             _RETURN_: attr are present
           - _NAME_: CONTEXT_REQUIRED_CITY
             attr: "$.context.city"
-            _RETURN_: attr are present
+            reg: ['^(\\*|std:.*)$']
+            _RETURN_: attr are present && attr follow regex reg
           - _NAME_: CONTEXT_REQUIRED_VERSION
             attr: "$.context.core_version"
             _RETURN_: attr are present
@@ -105206,10 +105207,12 @@ x-validations:
               _RETURN_: attr are present
             - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_CITY
               attr: "$.message.order.fulfillments[*].end.location.address.city"
-              _RETURN_: attr are present
+              reg: ['^[A-Za-z ]{2,100}$']
+              _RETURN_: attr are present && attr follow regex reg
             - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_STATE
               attr: "$.message.order.fulfillments[*].end.location.address.state"
-              _RETURN_: attr are present
+              reg: ['^[A-Za-z ]{2,100}$']
+              _RETURN_: attr are present && attr follow regex reg
             - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_COUNTRY
               attr: "$.message.order.fulfillments[*].end.location.address.country"
               _RETURN_: attr are present
@@ -105566,6 +105569,14 @@ x-validations:
           - _NAME_: FULFILLMENTS_TRACKING
             attr: "$.message.order.fulfillments[*].tracking"
             _RETURN_: attr are present
+          - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_CITY
+            attr: "$.message.order.fulfillments[*].end.location.address.city"
+            reg: ['^[A-Za-z ]{2,100}$']
+            _RETURN_: attr are present && attr follow regex reg
+          - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_STATE
+            attr: "$.message.order.fulfillments[*].end.location.address.state"
+            reg: ['^[A-Za-z ]{2,100}$']
+            _RETURN_: attr are present && attr follow regex reg
           - _NAME_: FULFILLMENTS_END_PERSON_NAME
             attr: "$.message.order.fulfillments[*].end.person.name"
             _CONTINUE_: "!(attr are present)"
@@ -105821,6 +105832,34 @@ x-validations:
               attr: "$.message.order.fulfillments[*].end.time.range.end"
               _CONTINUE_: "!(attr are present)"
               _RETURN_: attr are present
+          - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS
+            _RETURN_:
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_NAME
+              attr: "$.message.order.fulfillments[*].end.location.address.name"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_BUILDING
+              attr: "$.message.order.fulfillments[*].end.location.address.building"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_LOCALITY
+              attr: "$.message.order.fulfillments[*].end.location.address.locality"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_CITY
+              attr: "$.message.order.fulfillments[*].end.location.address.city"
+              reg: ['^[A-Za-z ]{2,100}$']
+              _RETURN_: attr are present && attr follow regex reg
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_STATE
+              attr: "$.message.order.fulfillments[*].end.location.address.state"
+              reg: ['^[A-Za-z ]{2,100}$']
+              _RETURN_: attr are present && attr follow regex reg
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_COUNTRY
+              attr: "$.message.order.fulfillments[*].end.location.address.country"
+              _RETURN_: attr are present
+            - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_AREA_CODE
+              attr: "$.message.order.fulfillments[*].end.location.address.area_code"
+              _RETURN_: attr are present
+          - _NAME_: FULFILLMENTS_END_CONTACT_PHONE
+            attr: "$.message.order.fulfillments[*].end.contact.phone"
+            _RETURN_: attr are present
 
           - _NAME_: FULFILLMENTS_START
             _RETURN_:
@@ -106072,7 +106111,8 @@ x-validations:
                 - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_CITY
                   _CONTINUE_: "!(attr are present)"
                   attr: "$.message.order.fulfillments[*].end.location.address.city"
-                  _RETURN_: attr are present
+                  reg: ['^[A-Za-z ]{2,100}$']
+                  _RETURN_: attr are present && attr follow regex reg
                 - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_AREA_CODE
                   _CONTINUE_: "!(attr are present)"
                   attr: "$.message.order.fulfillments[*].end.location.address.area_code"
@@ -106080,7 +106120,8 @@ x-validations:
                 - _NAME_: FULFILLMENTS_END_LOCATION_ADDRESS_STATE
                   _CONTINUE_: "!(attr are present)"
                   attr: "$.message.order.fulfillments[*].end.location.address.state"
-                  _RETURN_: attr are present
+                  reg: ['^[A-Za-z ]{2,100}$']
+                  _RETURN_: attr are present && attr follow regex reg
             - _NAME_: FULFILLMENTS_END_TIME
               _RETURN_:
               - _NAME_: FULFILLMENTS_END_TIME_RANGE_START
