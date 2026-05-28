@@ -104521,7 +104521,7 @@ x-validations:
                 _RETURN_:
                 - _NAME_: TAGS_BENEFIT_VALUE_TYPE
                   attr: "$.message.catalog['bpp/providers'][*].offers[*].tags[?(@.code=='benefit')].list[?(@.code=='value_type')].value"
-                  var_enum: ["percent", "amount"]
+                  var_enum: ["percent", "amount", "freebie"]
                   _CONTINUE_: "!(attr are present)"
                   _RETURN_: attr all in var_enum
 
