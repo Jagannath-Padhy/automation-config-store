@@ -82,6 +82,8 @@ paths:
                           properties:
                             id:
                               $ref: '#/components/schemas/Provider/properties/id'
+                            descriptor:
+                              $ref: '#/components/schemas/ProviderDescriptor'
                             locations:
                               type: array
                               maxItems: 1
@@ -263,6 +265,8 @@ paths:
                           properties:
                             id:
                               $ref: '#/components/schemas/Provider/properties/id'
+                            descriptor:
+                              $ref: '#/components/schemas/ProviderDescriptor'
                             locations:
                               type: array
                               maxItems: 1
@@ -657,6 +661,8 @@ paths:
                           properties:
                             id:
                               $ref: '#/components/schemas/Provider/properties/id'
+                            descriptor:
+                              $ref: '#/components/schemas/ProviderDescriptor'
                             locations:
                               type: array
                               maxItems: 1
@@ -2502,6 +2508,8 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/Provider/properties/id'
+            descriptor:
+              $ref: '#/components/schemas/ProviderDescriptor'
             locations:
               type: array
               maxItems: 1
@@ -104753,13 +104761,24 @@ x-validations:
       - _NAME_: SELECT_ORDER
         _RETURN_:
         - _NAME_: ORDER_PROVIDER
-          _RETURN_: &SELECT_PROVIDER
+          _RETURN_: 
           - _NAME_: ORDER_PROVIDER_ID
             attr: "$.message.order.provider.id"
             _RETURN_: attr are present
           - _NAME_: ORDER_PROVIDER_LOCATIONS_ID
             attr: "$.message.order.provider.locations[*].id"
             _RETURN_: attr are present
+          - _NAME_: ORDER_PROVIDER_DESCRIPTOR
+            _RETURN_:
+            - _NAME_: ORDER_PROVIDER_DESCRIPTOR_NAME
+              attr: "$.message.order.provider.descriptor.name"
+              _RETURN_: attr are present
+            - _NAME_: ORDER_PROVIDER_DESCRIPTOR_SHORT_DESC
+              attr: "$.message.order.provider.descriptor.short_desc"
+              _RETURN_: attr are present
+            - _NAME_: ORDER_PROVIDER_DESCRIPTOR_CODE
+              attr: "$.message.order.provider.descriptor.code"
+              _RETURN_: attr are present
         - _NAME_: ORDER_ITEMS
           _RETURN_:
           - _NAME_: ITEMS_ID
@@ -104869,16 +104888,28 @@ x-validations:
       - _NAME_: ON_SELECT_ORDER
         _RETURN_:
         - _NAME_: ORDER_PROVIDER
-          _RETURN_: *SELECT_PROVIDER
+          _RETURN_: &ON_SELECT_PROVIDER
+          - _NAME_: ORDER_PROVIDER_ID
+            attr: "$.message.order.provider.id"
+            _RETURN_: attr are present
+          - _NAME_: ORDER_PROVIDER_LOCATIONS_ID
+            attr: "$.message.order.provider.locations[*].id"
+            _RETURN_: attr are present
         - _NAME_: ORDER_ITEMS
-          _RETURN_:
+          _RETURN_: &ON_SELECT_ITEMS
           - _NAME_: ITEMS_ID
             attr: "$.message.order.items[*].id"
             _RETURN_: attr are present
           
-
+          - _NAME_: ITEMS_LOCATION_ID
+            attr: "$.message.order.items[*].location_id"
+            _RETURN_: attr are present
+          - _NAME_: ITEMS_QUANTITY_COUNT
+            attr: "$.message.order.items[*].quantity.count"
+            _RETURN_: attr are present
           - _NAME_: ITEMS_FULFILLMENT_ID
             attr: "$.message.order.items[*].fulfillment_id"
+            _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
         
         - _NAME_: ORDER_FULFILLMENTS
@@ -105050,7 +105081,7 @@ x-validations:
           - _NAME_: BREAKUP_ITEM_ITEM_TAGS_TAGS_OFFER_TYPE
             _CONTINUE_: "!(attr are present)"
             attr: "$.message.order.quote.breakup[*].item.tags[?(@.code=='offer')].list[?(@.code=='type')].value"
-            var_enum: ["delivery", "discount"]
+            var_enum: ["delivery", "discount", "buyXgetY","freebie","slab","combo"]
             _RETURN_: attr all in var_enum
           - _NAME_: BREAKUP_ITEM_ITEM_TAGS_TAGS_OFFER_AUTO
             _CONTINUE_: "!(attr are present)"
@@ -105099,22 +105130,22 @@ x-validations:
       - _NAME_: INIT_ORDER
         _RETURN_:
         - _NAME_: ORDER_PROVIDER
-          _RETURN_: *SELECT_PROVIDER
+          _RETURN_: *ON_SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
-          _RETURN_: &ON_INIT_ITEMS
-          - _NAME_: ITEMS_ID
-            attr: "$.message.order.items[*].id"
-            _RETURN_: attr are present
+          _RETURN_: *ON_SELECT_ITEMS
+          # - _NAME_: ITEMS_ID
+          #   attr: "$.message.order.items[*].id"
+          #   _RETURN_: attr are present
           
-          - _NAME_: ITEMS_LOCATION_ID
-            attr: "$.message.order.items[*].location_id"
-            _RETURN_: attr are present
-          - _NAME_: ITEMS_QUANTITY_COUNT
-            attr: "$.message.order.items[*].quantity.count"
-            _RETURN_: attr are present
-          - _NAME_: ITEMS_FULFILLMENT_ID
-            attr: "$.message.order.items[*].fulfillment_id"
-            _RETURN_: attr are present
+          # - _NAME_: ITEMS_LOCATION_ID
+          #   attr: "$.message.order.items[*].location_id"
+          #   _RETURN_: attr are present
+          # - _NAME_: ITEMS_QUANTITY_COUNT
+          #   attr: "$.message.order.items[*].quantity.count"
+          #   _RETURN_: attr are present
+          # - _NAME_: ITEMS_FULFILLMENT_ID
+          #   attr: "$.message.order.items[*].fulfillment_id"
+          #   _RETURN_: attr are present
             
         - _NAME_: ORDER_OFFERS
           _RETURN_:
@@ -105250,9 +105281,9 @@ x-validations:
       - _NAME_: ON_INIT_ORDER
         _RETURN_:
         - _NAME_: ORDER_PROVIDER
-          _RETURN_: *SELECT_PROVIDER
+          _RETURN_: *ON_SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
-          _RETURN_: *ON_INIT_ITEMS
+          _RETURN_: *ON_SELECT_ITEMS
         
         
         - _NAME_: ORDER_ITEMS_ADDITIONAL_TAGS
@@ -105542,9 +105573,9 @@ x-validations:
           var_enum: ["Created", "Accepted", "Cancelled"]
           _RETURN_: attr all in var_enum
         - _NAME_: ORDER_PROVIDER
-          _RETURN_: *SELECT_PROVIDER
+          _RETURN_: *ON_SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
-          _RETURN_: *ON_INIT_ITEMS
+          _RETURN_: *ON_SELECT_ITEMS
         - _NAME_: ORDER_ITEMS_ADDITIONAL_TAGS
           _RETURN_:
           - _NAME_: ITEMS_TAGS_NP_FEES
@@ -105952,7 +105983,7 @@ x-validations:
           var_enum: ["Created", "Accepted", "In-progress", "Completed", "Cancelled"]
           _RETURN_: attr all in var_enum
         - _NAME_: ORDER_PROVIDER
-          _RETURN_: *SELECT_PROVIDER
+          _RETURN_: *ON_SELECT_PROVIDER
         - _NAME_: ORDER_CANCELLATION
           _RETURN_:
           - _NAME_: CANCELLATION_CANCELLED_BY
@@ -105970,7 +106001,7 @@ x-validations:
               attr: "$.message.order.cancellation.reason.state"
               _RETURN_: attr are present
         - _NAME_: ORDER_ITEMS
-          _RETURN_: *ON_INIT_ITEMS
+          _RETURN_: *ON_SELECT_ITEMS
         - _NAME_: ORDER_BILLING
           _RETURN_: *INIT_BILLING
         - _NAME_: ORDER_FULFILLMENTS
@@ -106895,7 +106926,7 @@ x-validations:
             attr: "$.message.order.cancellation.reason.id"
             _RETURN_: attr are present
         - _NAME_: ORDER_PROVIDER
-          _RETURN_: *SELECT_PROVIDER
+          _RETURN_: *ON_SELECT_PROVIDER
         - _NAME_: ORDER_ITEMS
           _RETURN_: &ON_CANCEL_ITEMS
           - _NAME_: ORDER_ITEM_ID
