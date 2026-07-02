@@ -104897,9 +104897,11 @@ x-validations:
           
           - _NAME_: ITEMS_LOCATION_ID
             attr: "$.message.order.items[*].location_id"
+            _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: ITEMS_QUANTITY_COUNT
             attr: "$.message.order.items[*].quantity.count"
+            _CONTINUE_: "!(attr are present)"
             _RETURN_: attr are present
           - _NAME_: ITEMS_FULFILLMENT_ID
             attr: "$.message.order.items[*].fulfillment_id"
