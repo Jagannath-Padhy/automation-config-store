@@ -103872,8 +103872,6 @@ x-validations:
                 - _NAME_: BREAKUP_ITEM_ITEM_PRICE_VALUE
                   attr: "$.message.order.quote.breakup[*].item.price.value"
                   _RETURN_: attr are present
-                  attr: "$.message.order.quote.breakup[?(@['@ondc/org/title_type'] != 'delivery' && @['@ondc/org/title_type'] != 'packing')].item.price.value"
-                  _RETURN_: attr are present
                 - _NAME_: BREAKUP_ITEM_ITEM_TAGS
                   _RETURN_:
                   - _NAME_: BREAKUP_ITEM_ITEM_TAGS_TYPE
