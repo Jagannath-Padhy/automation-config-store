@@ -103867,11 +103867,11 @@ x-validations:
                   attr: "$.message.order.quote.breakup[*].item.quantity.maximum.count"
                   _RETURN_: attr are present
                 - _NAME_: BREAKUP_ITEM_ITEM_PRICE_CURRENCY
-                  _CONTINUE_: "!(attr are present)"
-                  attr: "$.message.order.quote.breakup[?(@['@ondc/org/title_type'] != 'delivery' && @['@ondc/org/title_type'] != 'packing')].item.price.currency"
+                  attr: "$.message.order.quote.breakup[*].item.price.currency"
                   _RETURN_: attr are present
                 - _NAME_: BREAKUP_ITEM_ITEM_PRICE_VALUE
-                  _CONTINUE_: "!(attr are present)"
+                  attr: "$.message.order.quote.breakup[*].item.price.value"
+                  _RETURN_: attr are present
                   attr: "$.message.order.quote.breakup[?(@['@ondc/org/title_type'] != 'delivery' && @['@ondc/org/title_type'] != 'packing')].item.price.value"
                   _RETURN_: attr are present
                 - _NAME_: BREAKUP_ITEM_ITEM_TAGS
@@ -106517,11 +106517,11 @@ x-validations:
                 _RETURN_:
                 - _NAME_: BREAKUP_ITEM_ITEM_PRICE_CURRENCY
                   _CONTINUE_: "!(attr are present)"
-                  attr: "$.message.order.quote.breakup[?(@['@ondc/org/title_type'] != 'delivery' && @['@ondc/org/title_type'] != 'packing')].item.price.currency"
+                  attr: "$.message.order.quote.breakup[*].item.price.currency"
                   _RETURN_: attr are present
                 - _NAME_: BREAKUP_ITEM_ITEM_PRICE_VALUE
                   _CONTINUE_: "!(attr are present)"
-                  attr: "$.message.order.quote.breakup[?(@['@ondc/org/title_type'] != 'delivery' && @['@ondc/org/title_type'] != 'packing')].item.price.value"
+                  attr: "$.message.order.quote.breakup[*].item.price.value"
                   _RETURN_: attr are present
                 # - _NAME_: BREAKUP_ITEM_ITEM_TAGS
                 #   _RETURN_:
